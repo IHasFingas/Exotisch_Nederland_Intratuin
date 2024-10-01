@@ -10,6 +10,7 @@ namespace Exotisch_Nederland_Intratuin
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Hello world");
         }
     }
 }
