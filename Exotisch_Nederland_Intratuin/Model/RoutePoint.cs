@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exotisch_Nederland_Intratuin
+namespace Exotisch_Nederland_Intratuin.Model
 {
     internal class RoutePoint
     {
@@ -12,7 +12,7 @@ namespace Exotisch_Nederland_Intratuin
         private string name;
         private string location;
         private List<Route> routes;
-        private POI poi;
+        private POI pointOfInterest;
     }
 }
 

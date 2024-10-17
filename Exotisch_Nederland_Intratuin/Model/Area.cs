@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exotisch_Nederland_Intratuin
+namespace Exotisch_Nederland_Intratuin.Model
 {
     internal class Area
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exotisch_Nederland_Intratuin
+namespace Exotisch_Nederland_Intratuin.Model
 {
     internal class User
     {
@@ -15,11 +15,9 @@ namespace Exotisch_Nederland_Intratuin
             private Route currentRoute;
             private List<Role> roles;
             private List<Observation> observations;
-    }
 
-    
-        public void AddObservation();
-        public void EditObservation();
-        public void RemoveObservation();
+        public void AddObservation() { }
+        public void EditObservation() { }
+        public void RemoveObservation() { }
     }
 }
