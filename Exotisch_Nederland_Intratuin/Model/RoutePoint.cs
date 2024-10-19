@@ -12,7 +12,7 @@ namespace Exotisch_Nederland_Intratuin.Model
         private string name;
         private string location;
         private List<Route> routes;
-        private POI pointOfInterest;
+        private List<POI> pointsOfInterest;
     }
 }
 

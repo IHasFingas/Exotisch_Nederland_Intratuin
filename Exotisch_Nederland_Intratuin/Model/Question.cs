@@ -10,7 +10,7 @@ namespace Exotisch_Nederland_Intratuin.Model
     {
         private int id;
         private string questionText;
-        private Answer answer;
+        private List<Answer> answers;
         private Game game;
 
     }
