@@ -11,14 +11,17 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         private int id;
         private string questionText;
-        private List<Answer> answers;
         private Game game;
+        private List<Answer> answers;
+        
 
         public Question(string questionText, Game game, List<Answer> answers) {
             this.questionText = questionText;
-            foreach (Answer answer in answers) { AddAnswer(answer); }
             this.game = game;
 
+            this.answers = new List<Answer>();
+            foreach (Answer answer in answers) { AddAnswer(answer); }
+            
             game.AddQuestion(this);
             SqlDal.AddQuestion(this);
         }

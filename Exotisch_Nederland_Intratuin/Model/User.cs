@@ -14,16 +14,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string email;
         private string currentLocation;
         private Route currentRoute;
-        private List<Role> roles;
         private List<Observation> observations;
+        private List<Role> roles;
 
         public User(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
-            foreach (Role role in roles) { AddRole(role); }
             this.observations = new List<Observation>();
+
+            this.roles = new List<Role>();
+            foreach (Role role in roles) { AddRole(role); }
 
             currentRoute.AddUser(this);
             SqlDal.AddUser(this);

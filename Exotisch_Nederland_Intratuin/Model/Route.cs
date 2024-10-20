@@ -14,18 +14,23 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string name;
         private double length;
         private Area area;
+        private List<User> users;
         private List<RoutePoint> routePoints;
         private List<Game> games;
-        private List<User> users;
+        
 
         public Route(string name, double length, Area area, List<RoutePoint> routePoints, List<Game> games) {
             this.name = name;
             this.length = length;
             this.area = area;
-            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint); }
-            foreach (Game game in games) { this.games.Add(game); }
             this.users = new List<User>();
 
+            this.routePoints = new List<RoutePoint>();
+            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint); }
+
+            this.games = new List<Game>();
+            foreach (Game game in games) { this.games.Add(game); }
+            
             area.AddRoute(this);
             SqlDal.AddRoute(this);
         }

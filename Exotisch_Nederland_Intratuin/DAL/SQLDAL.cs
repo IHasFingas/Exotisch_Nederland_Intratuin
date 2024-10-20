@@ -103,7 +103,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         foreach (Route route in routes) {
                             if (routeID == route.GetID()) {
                                 try {
-                                    games.Add(new Game(id, name, location, description, route));
+                                    games.Add(new Game(id, name, location, description, route, new List<Question>()));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create Game {id} from database");
                                     Console.WriteLine(e.Message);

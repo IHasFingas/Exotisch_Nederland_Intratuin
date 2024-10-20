@@ -23,6 +23,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.location = location;
             this.description = description;
             this.route = route;
+
+            this.questions = new List<Question>();
             foreach (Question question in questions) { AddQuestion(question); }
 
             route.AddGame(this);
