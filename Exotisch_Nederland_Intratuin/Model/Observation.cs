@@ -13,18 +13,33 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         private int id;
         private string name;
+        private string location;
         private string description;
         //private Image picture; To fix
-        private string location;
         private Specie specie;
         private Area area;
         private User user;
 
-        public Observation(string name, string description, string location, Specie specie, Area area, User user) {
+        public Observation(int id, string name, string location, string description, /*Image picture,*/ Specie specie, Area area, User user) {
+            this.id = id;
             this.name = name;
+            this.location = location;
             this.description = description;
             //this.picture = picture;
+            this.specie = specie;
+            this.area = area;
+            this.user = user;
+
+            area.AddObservation(this);
+            user.AddObservation(this);
+            specie.AddObservation(this);
+        }
+
+        public Observation(string name, string location, string description, /*Image picture,*/ Specie specie, Area area, User user) {
+            this.name = name;
             this.location = location;
+            this.description = description;
+            //this.picture = picture;
             this.specie = specie;
             this.area = area;
             this.user = user;
@@ -38,9 +53,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?
         public string GetName() { return name; }
 
-        public string GetDescription() { return description; }
-
         public string GetLocation() { return location; }
+
+        public string GetDescription() { return description; }
 
         public Specie GetSpecie() { return specie; }
 

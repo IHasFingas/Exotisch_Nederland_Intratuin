@@ -23,32 +23,10 @@ CREATE TABLE Area
     [Name] VARCHAR(50) NOT NULL,
     Size FLOAT NOT NULL);
 
-CREATE TABLE [Route]
+CREATE TABLE [Role]
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
-    [Length] FLOAT NOT NULL,
-    Area_ID int,
-    FOREIGN KEY (Area_ID) REFERENCES Area(ID));
-
-CREATE TABLE Game
-    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    [Name] VARCHAR(50) NOT NULL,
-    [Location] VARCHAR(50),
-    [Description] VARCHAR(255) NOT NULL,
-    Route_ID int,
-    FOREIGN KEY (Route_ID) REFERENCES Route(ID));
-
-CREATE TABLE Question
-    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    QuestionText VARCHAR(255) NOT NULL,
-    Game_ID int,
-    FOREIGN KEY (Game_ID) REFERENCES Game(ID));
-
-CREATE TABLE Answer
-    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    AnswerText VARCHAR(50) NOT NULL,
-    Question_ID int,
-    FOREIGN KEY (Question_ID) REFERENCES Question(ID));
+    [Key] VARCHAR(50) NOT NULL);
 
 CREATE TABLE Specie
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
@@ -61,43 +39,72 @@ CREATE TABLE Specie
     Familia VARCHAR(50) NOT NULL,
     Genus VARCHAR(50) NOT NULL);
 
+CREATE TABLE RoutePoint
+    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    [Name] VARCHAR(50) NOT NULL,
+    [Location] VARCHAR(50) NOT NULL);
+
+CREATE TABLE [Route]
+    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    [Name] VARCHAR(50) NOT NULL,
+    [Length] FLOAT NOT NULL,
+    Area_ID int NOT NULL,
+    FOREIGN KEY (Area_ID) REFERENCES Area(ID));
+
+CREATE TABLE POI
+    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    [Name] VARCHAR(50) NOT NULL,
+    [Location] VARCHAR(50) NOT NULL,
+    RoutePoint_ID int NOT NULL,
+    FOREIGN KEY (RoutePoint_ID) REFERENCES RoutePoint(ID));
+
 CREATE TABLE [User]
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
     Email VARCHAR(50) NOT NULL,
-    CurrentLocation VARCHAR(50),
-    Route_ID int,
+    CurrentLocation VARCHAR(50) NOT NULL,
+    Route_ID int NOT NULL,
+    FOREIGN KEY (Route_ID) REFERENCES Route(ID));
+
+CREATE TABLE Game
+    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    [Name] VARCHAR(50) NOT NULL,
+    [Location] VARCHAR(50) NOT NULL,
+    [Description] VARCHAR(255) NOT NULL,
+    Route_ID int NOT NULL,
     FOREIGN KEY (Route_ID) REFERENCES Route(ID));
 
 CREATE TABLE Observation
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
-    [Location] VARCHAR(50),
+    [Location] VARCHAR(50) NOT NULL,
     [Description] VARCHAR(255) NOT NULL,
     Picture IMAGE,
-    Specie_ID int,
-    Area_ID int,
-    [User_ID] int,
+    Specie_ID int NOT NULL,
+    Area_ID int NOT NULL,
+    [User_ID] int NOT NULL,
     FOREIGN KEY (Specie_ID) REFERENCES Specie(ID),
     FOREIGN KEY (Area_ID) REFERENCES Area(ID),
     FOREIGN KEY ([User_ID]) REFERENCES [User](ID));
 
-CREATE TABLE RoutePoint
+CREATE TABLE Question
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    [Name] VARCHAR(50) NOT NULL,
-    [Location] VARCHAR(50));
+    QuestionText VARCHAR(255) NOT NULL,
+    Game_ID int NOT NULL,
+    FOREIGN KEY (Game_ID) REFERENCES Game(ID));
 
-CREATE TABLE POI
+CREATE TABLE Answer
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    [Name] VARCHAR(50) NOT NULL,
-    [Location] VARCHAR(50),
-    RoutePoint_ID int,
-    FOREIGN KEY (RoutePoint_ID) REFERENCES RoutePoint(ID));
+    AnswerText VARCHAR(50) NOT NULL,
+    Question_ID int NOT NULL,
+    FOREIGN KEY (Question_ID) REFERENCES Question(ID));
 
-CREATE TABLE [Role]
-    (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    [Name] VARCHAR(50) NOT NULL,
-    [Key] VARCHAR(50) NOT NULL);
+CREATE TABLE UserRole
+    ([User_ID] int NOT NULL,
+    Role_ID int NOT NULL,
+    PRIMARY KEY ([User_ID], Role_ID),
+    FOREIGN KEY ([User_ID]) REFERENCES [User](ID),
+    FOREIGN KEY ([Role_ID]) REFERENCES Role(ID));
 
 CREATE TABLE RouteRoutePoint
     (Route_ID int NOT NULL,
@@ -112,13 +119,6 @@ CREATE TABLE UserQuestion
     PRIMARY KEY ([User_ID], Question_ID),
     FOREIGN KEY ([User_ID]) REFERENCES [User](ID),
     FOREIGN KEY ([Question_ID]) REFERENCES Question(ID));
-
-CREATE TABLE UserRole
-    ([User_ID] int NOT NULL,
-    Role_ID int NOT NULL,
-    PRIMARY KEY ([User_ID], Role_ID),
-    FOREIGN KEY ([User_ID]) REFERENCES [User](ID),
-    FOREIGN KEY ([Role_ID]) REFERENCES Role(ID));
 
 
 --Enter data
@@ -182,19 +182,6 @@ VALUES
 	('Heide Walk',		3.1,	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide')),			-- Between 'Heidezicht' and 'Schinveldse Bos' in Brunsummerheide
 	('Leudal Loop',		4.8,	(SELECT ID FROM Area WHERE [Name] = 'Het Leudal')),					-- Between 'Leubeek' and 'Exaten' in Het Leudal
 	('Meinweg Ridge',	2.7,	(SELECT ID FROM Area WHERE [Name] = 'De Meinweg'));					-- Between 'Elfenmeer' and 'Rolvennen' in De Meinweg
-
-
-INSERT INTO RouteRoutePoint (Route_ID, RoutePoint_ID)
-VALUES
-	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelzicht')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelven')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Kempenbos')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Maasvallei')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Heidezicht')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Schinveldse Bos')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Leudal Loop'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Leubeek')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Rolvennen'));
 
 
 INSERT INTO POI ([Name], [Location], RoutePoint_ID)
@@ -351,11 +338,32 @@ VALUES
     ('Sint-Pietersberg',	(SElECT ID FROM Question WHERE [QuestionText] = 'Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?')),
     ('Cauberg',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?'));
 
+INSERT INTO RouteRoutePoint (Route_ID, RoutePoint_ID)
+VALUES
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelzicht')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelven')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Kempenbos')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Maasvallei')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Heidezicht')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Schinveldse Bos')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Leudal Loop'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Leubeek')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Rolvennen'));
+
 
 -- Show tables
-select* FROM [User]
-select* FROM Game
-select* FROM Question
-select* FROM Answer
-select* FROM Specie
-select* FROM Observation
+SELECT * FROM Area
+SELECT * FROM [Role]
+SELECT * FROM Specie
+SELECT * FROM RoutePoint
+SELECT * FROM [Route]
+SELECT * FROM POI
+SELECT * FROM [User]
+SELECT * FROM Game
+SELECT * FROM Observation
+SELECT * FROM Question
+SELECT * FROM Answer
+
+SELECT * FROM UserRole
+SELECT * FROM RouteRoutePoint
+SELECT * FROM UserQuestion

@@ -14,6 +14,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string location;
         private RoutePoint routePoint;
 
+        public POI(int id, string name, string location, RoutePoint routePoint) {
+            this.id = id;
+            this.name = name;
+            this.location = location;
+            this.routePoint = routePoint;
+        }
+
         public POI(string name, string location, RoutePoint routePoint) {
             this.name = name;
             this.location = location;

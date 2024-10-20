@@ -14,6 +14,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string key;
         private List<User> users;
 
+        public Role(int id, string name, string key) {
+            this.id = id;
+            this.name = name;
+            this.key = key;
+            this.users = new List<User>();
+        }
+
         public Role(string name, string key) {
             this.name = name;
             this.key = key;

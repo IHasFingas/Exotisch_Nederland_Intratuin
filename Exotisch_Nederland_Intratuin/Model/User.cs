@@ -17,6 +17,20 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Observation> observations;
         private List<Role> roles;
 
+        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
+            this.currentLocation = currentLocation;
+            this.currentRoute = currentRoute;
+            this.observations = new List<Observation>();
+
+            this.roles = new List<Role>();
+            foreach (Role role in roles) { AddRole(role); }
+
+            currentRoute.AddUser(this);
+        }
+
         public User(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
             this.name = name;
             this.email = email;

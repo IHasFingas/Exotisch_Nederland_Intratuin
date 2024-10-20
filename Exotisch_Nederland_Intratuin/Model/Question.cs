@@ -13,7 +13,17 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string questionText;
         private Game game;
         private List<Answer> answers;
-        
+
+        public Question(int id, string questionText, Game game, List<Answer> answers) {
+            this.id = id;
+            this.questionText = questionText;
+            this.game = game;
+
+            this.answers = new List<Answer>();
+            foreach (Answer answer in answers) { AddAnswer(answer); }
+
+            game.AddQuestion(this);
+        }
 
         public Question(string questionText, Game game, List<Answer> answers) {
             this.questionText = questionText;

@@ -13,6 +13,14 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string answerText;
         private Question question;
 
+        public Answer(int id, string answerText, Question question) {
+            this.id = id;
+            this.answerText = answerText;
+            this.question = question;
+
+            question.AddAnswer(this);
+        }
+
         public Answer(string answerText, Question question) {
             this.answerText = answerText;
             this.question = question;

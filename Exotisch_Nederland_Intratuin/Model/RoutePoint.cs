@@ -15,6 +15,14 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Route> routes;
         private List<POI> pointsOfInterest;
 
+        public RoutePoint(int id, string name, string location) {
+            this.id = id;
+            this.name = name;
+            this.location = location;
+            this.routes = new List<Route>();
+            this.pointsOfInterest = new List<POI>();
+        }
+
         public RoutePoint(string name, string location) {
             this.name = name;
             this.location = location;
@@ -23,6 +31,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             SqlDal.AddRoutePoint(this);
         }
+
         public void AddRoute(Route route) {
             if (!routes.Contains(route)) {
                 routes.Add(route);

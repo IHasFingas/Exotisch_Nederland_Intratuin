@@ -17,7 +17,22 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<User> users;
         private List<RoutePoint> routePoints;
         private List<Game> games;
-        
+
+        public Route(int id, string name, double length, Area area, List<RoutePoint> routePoints, List<Game> games) {
+            this.id = id;
+            this.name = name;
+            this.length = length;
+            this.area = area;
+            this.users = new List<User>();
+
+            this.routePoints = new List<RoutePoint>();
+            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint); }
+
+            this.games = new List<Game>();
+            foreach (Game game in games) { this.games.Add(game); }
+
+            area.AddRoute(this);
+        }
 
         public Route(string name, double length, Area area, List<RoutePoint> routePoints, List<Game> games) {
             this.name = name;
@@ -39,6 +54,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (!routePoints.Contains(routePoint)) {
                 routePoints.Add(routePoint);
                 routePoint.AddRoute(this);
+                SqlDal.AddRouteRoutePoint(this, routePoint);
             }
         }
 
