@@ -1,50 +1,34 @@
-﻿using System;
+using Exotisch_Nederland_Intratuin.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Exotisch_Nederland_Intratuin.Model;
 
 namespace Exotisch_Nederland_Intratuin.DAL {
     internal class SQLDAL {
         private static SQLDAL instance;
-        private readonly string connectionString;
-        private SqlConnection connection;
-        private List<Area> areas;
-        private List<Route> routes;
-        private List<RoutePoint> routePoints;
-        private List<POI> pointsOfInterest;
-        private List<Game> games;
-        private List<Question> questions;
-        private List<Answer> answers;
-        private List<User> users;
-        private List<Role> roles;
-        private List<Specie> species;
-        private List<Observation> observations;
+        private readonly string connectionString = "Data Source =.; Initial Catalog = Intratuin; Trusted_Connection = True";
+        private readonly SqlConnection connection;
 
-        private SQLDAL() {
-            connectionString = "Data Source =.; Initial Catalog = Intratuin; Trusted_Connection = True";
-            connection = new SqlConnection(connectionString);
+        private List<Area> areas = new List<Area>();
+        private List<Role> roles = new List<Role>();
+        private List<Specie> species = new List<Specie>();
+        private List<RoutePoint> routePoints = new List<RoutePoint>();
 
-            areas = GetAllAreas();
-            roles = GetAllRoles();
-            species = GetAllSpecies();
-            routePoints = GetAllRoutePoints();
+        private List<Route> routes = new List<Route>();
+        private List<POI> pointsOfInterest = new List<POI>();
 
-            routes = GetAllRoutes();
-            pointsOfInterest = GetAllPOIs();
+        private List<User> users = new List<User>();
+        private List<Game> games = new List<Game>();
 
-            users = GetAllUsers();
-            games = GetAllGames();
+        private List<Observation> observations = new List<Observation>();
+        private List<Question> questions = new List<Question>();
 
-            observations = GetALlObservations();
-            questions = GetAllQuestions();
+        private List<Answer> answers = new List<Answer>();
 
-            answers = GetAllAnswers();
-        }
 
+        /// <summary>
+        /// Static Instance attribute to ensure singleton
+        /// </summary>
         public static SQLDAL Instance {
             get {
                 if (instance == null) {
@@ -54,6 +38,18 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
         }
 
+        private SQLDAL() {
+            connection = new SqlConnection(connectionString);
+        }
+
+
+        //Getting methods
+
+        /// <summary>
+        /// Gets all area's currently in the database<para/>
+        /// Also updates areas list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Area"/> objects</returns>
         public List<Area> GetAllAreas() {
             areas.Clear();
             connection.Open();
@@ -78,10 +74,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return areas;
         }
 
+        /// <summary>
+        /// Gets all roles currently in the database<para/>
+        /// Also updates roles list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Role"/> objects</returns>
         public List<Role> GetAllRoles() {
             roles.Clear();
             connection.Open();
@@ -106,10 +106,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return roles;
         }
 
+        /// <summary>
+        /// Gets all species currently in the database<para/>
+        /// Also updates species list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Specie"/> objects</returns>
         public List<Specie> GetAllSpecies() {
             species.Clear();
             connection.Open();
@@ -140,10 +144,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return species;
         }
 
+        /// <summary>
+        /// Gets all routepoints currently in the database<para/>
+        /// Also updates routepoints list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="RoutePoint"/> objects</returns>
         public List<RoutePoint> GetAllRoutePoints() {
             routePoints.Clear();
             connection.Open();
@@ -168,10 +176,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return routePoints;
         }
 
+        /// <summary>
+        /// Gets all routes currently in the database<para/>
+        /// Also updates routes list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Route"/> objects</returns>
         public List<Route> GetAllRoutes() {
             routes.Clear();
             connection.Open();
@@ -201,10 +213,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return routes;
         }
 
+        /// <summary>
+        /// Gets all POI's currently in the database<para/>
+        /// Also updates POI list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="POI"/> objects</returns>
         public List<POI> GetAllPOIs() {
             pointsOfInterest.Clear();
             connection.Open();
@@ -234,15 +250,19 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return pointsOfInterest;
         }
 
+        /// <summary>
+        /// Gets all users currently in the database<para/>
+        /// Also updates users list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="User"/> objects</returns>
         public List<User> GetAllUsers() {
             users.Clear();
             connection.Open();
 
-            string query = "SELECT * FROM User";
+            string query = "SELECT * FROM [User]";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 using (SqlDataReader reader = command.ExecuteReader()) {
@@ -268,10 +288,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return users;
         }
 
+        /// <summary>
+        /// Gets all games currently in the database<para/>
+        /// Also updates games list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Game"/> objects</returns>
         public List<Game> GetAllGames() {
             games.Clear();
             connection.Open();
@@ -304,11 +328,15 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return games;
         }
 
-        public List<Observation> GetALlObservations() {
+        /// <summary>
+        /// Gets all observations currently in the database<para/>
+        /// Also updates observations list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Observation"/> objects</returns>
+        public List<Observation> GetAllObservations() {
             observations.Clear();
             connection.Open();
 
@@ -357,10 +385,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return observations;
         }
 
+        /// <summary>
+        /// Gets all questions currently in the database<para/>
+        /// Also updates questions list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Question"/> objects</returns>
         public List<Question> GetAllQuestions() {
             questions.Clear();
             connection.Open();
@@ -391,10 +423,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return questions;
         }
 
+        /// <summary>
+        /// Gets all answers currently in the database<para/>
+        /// Also updates answers list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <returns><see langword="List"/> of <see cref="Answer"/> objects</returns>
         public List<Answer> GetAllAnswers() {
             answers.Clear();
             connection.Open();
@@ -425,17 +461,25 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
-
             return answers;
         }
 
-        //public List<Tuple<int, int>> GetAllUserRoles() { }
+        /*public List<Tuple<int, int>> GetAllUserRoles() { }
 
-        //public List<Tuple<int, int>> GetAllRouteRoutePoints() { }
+        public List<Tuple<int, int>> GetAllRouteRoutePoints() { }
 
-        //public List<Tuple<int, int>> GetAllUserQuestions() { }
+        public List<Tuple<int, int>> GetAllUserQuestions() { }*/
 
+
+        //Adding (Setting) methods
+
+        /// <summary>
+        /// Adds an <see cref="Area"/> to the database<para/>
+        /// Also updates areas list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="area"><see cref="Area"/> to add</param>
         public void AddArea(Area area) {
+            areas.Add(area);
             connection.Open();
 
             string query = "INSERT INTO Area(Name, Size) VALUES (@Name, @Size)";
@@ -453,7 +497,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds a <see cref="Role"/> to the database<para/>
+        /// Also updates roles list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="role"><see cref="Role"/> to add</param>
         public void AddRole(Role role) {
+            roles.Add(role);
             connection.Open();
 
             string query = "INSERT INTO Role(Name, Key) VALUES (@Name, @Key)";
@@ -471,7 +521,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds a <see cref="Specie"/> to the database<para/>
+        /// Also updates species list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="specie"><see cref="Specie"/> to add</param>
         public void AddSpecie(Specie specie) {
+            species.Add(specie);
             connection.Open();
 
             string query = "INSERT INTO Specie(Name, Domain, Regnum, Phylum, Classus, Ordo, Familia, Genus) VALUES (@Name, @Domain, @Regnum, @Phylum, @Classus, @Ordo, @Familia, @Genus)";
@@ -494,7 +550,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds a <see cref="RoutePoint"/> to the database<para/>
+        /// Also updates routepoints list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="routePoint"><see cref="RoutePoint"/> to add</param>
         public void AddRoutePoint(RoutePoint routePoint) {
+            routePoints.Add(routePoint);
             connection.Open();
 
             string query = "INSERT INTO RoutePoint(Name, Location) VALUES (@Name, @Location)";
@@ -511,7 +573,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds a <see cref="Route"/> to the database<para/>
+        /// Also updates routes list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="route"><see cref="Route"/> to add</param>
         public void AddRoute(Route route) {
+            routes.Add(route);
             connection.Open();
 
             string query = "INSERT INTO Route(Name, Length, Area_ID) VALUES (@Name, @Length, @Area_ID)";
@@ -529,7 +597,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds a <see cref="POI"/> to the database<para/>
+        /// Also updates POI's list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="poi"><see cref="POI"/> to add</param>
         public void AddPOI(POI poi) {
+            pointsOfInterest.Add(poi);
             connection.Open();
 
             string query = "INSERT INTO POI(Name, Location, RoutePoint_ID) VALUES (@Name, @Location, @RoutePoint_ID)";
@@ -547,7 +621,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds an <see cref="User"/> to the database<para/>
+        /// Also updates users list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="user"><see cref="User"/> to add</param>
         public void AddUser(User user) {
+            users.Add(user);
             connection.Open();
 
             string query = "INSERT INTO User(Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
@@ -567,7 +647,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds a <see cref="Game"/> to the database<para/>
+        /// Also updates games list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="game"><see cref="Game"/> to add</param>
         public void AddGame(Game game) {
+            games.Add(game);
             connection.Open();
 
             string query = "INSERT INTO Game(Name, Location, Description, Route_ID) VALUES (@Name, @Location, @Description, @Route_ID)";
@@ -586,7 +672,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds an <see cref="Observation"/> to the database<para/>
+        /// Also updates observations list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="observation"><see cref="Observation"/> to add</param>
         public void AddObservation(Observation observation) {
+            observations.Add(observation);
             connection.Open();
 
             string query = "INSERT INTO Observation(Name, Location, Description, Picture, Specie_ID, Area_ID, User_ID) VALUES (@Name, @Location, @Description, @Picture, @Specie_ID, @Area_ID, @User_ID)";
@@ -613,7 +705,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds an <see cref="Question"/> to the database<para/>
+        /// Also updates questions list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="question"><see cref="Question"/> to add</param>
         public void AddQuestion(Question question) {
+            questions.Add(question);
             connection.Open();
 
             string query = "INSERT INTO Question(QuestionText, Game_ID) VALUES (@QuestionText, @Game_ID)";
@@ -630,7 +728,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds an <see cref="Answer"/> to the database<para/>
+        /// Also updates answers list in <see cref="SQLDAL"/>
+        /// </summary>
+        /// <param name="answer"><see cref="Answer"/> to add</param>
         public void AddAnswer(Answer answer) {
+            answers.Add(answer);
             connection.Open();
 
             string query = "INSERT INTO Answer(AnswerText, Question_ID) VALUES (@AnswerText, @Question_ID)";
@@ -647,6 +751,11 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
+        /// <summary>
+        /// Adds an RouteRoutePoint entry to the linking table between <see cref="Route"/> and <see cref="RoutePoint"/><para/>
+        /// </summary>
+        /// <param name="route"><see cref="Route"/> to link</param>
+        /// <param name="routePoint"><see cref="RoutePoint"/> to link</param>
         public void AddRouteRoutePoint(Route route, RoutePoint routePoint) {
             connection.Open();
 
