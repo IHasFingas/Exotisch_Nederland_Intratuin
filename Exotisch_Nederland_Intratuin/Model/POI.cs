@@ -8,14 +8,16 @@ using System.Threading.Tasks;
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class POI {
         private SQLDAL SqlDal = SQLDAL.Instance;
+
         private int id;
         private string name;
         private string location;
         private RoutePoint routePoint;
 
-        public POI(string name, string location) {
+        public POI(string name, string location, RoutePoint routePoint) {
             this.name = name;
             this.location = location;
+            this.routePoint = routePoint;
 
             SqlDal.AddPOI(this);
         }

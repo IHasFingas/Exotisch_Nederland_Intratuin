@@ -30,6 +30,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.familia = familia;
             this.genus = genus;
             this.name = name;
+            this.observations = new List<Observation>();
         }
 
         public Specie(string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus, string name) {
@@ -41,12 +42,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.familia = familia;
             this.genus = genus;
             this.name = name;
+            this.observations = new List<Observation>();
 
             SqlDal.AddSpecie(this);
         }
 
         public void AddObservation(Observation observation) {
-            observations.Add(observation);
+            if (!observations.Contains(observation)) {
+                observations.Add(observation);
+            }
         }
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?

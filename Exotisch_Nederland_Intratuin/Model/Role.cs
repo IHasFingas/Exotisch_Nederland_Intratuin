@@ -14,12 +14,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string key;
         private List<User> users;
 
-        public Role(string name, string key, List<User> users) {
+        public Role(string name, string key) {
             this.name = name;
             this.key = key;
-            foreach (User user in users) { this.users.Add(user); }
+            this.users = new List<User>();
 
             SqlDal.AddRole(this);
+        }
+
+        public void AddUser(User user) {
+            if (!users.Contains(user)) {
+                users.Add(user);
+            }
         }
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?

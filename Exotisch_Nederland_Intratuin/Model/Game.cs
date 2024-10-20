@@ -17,34 +17,36 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private Route route;
         private List<Question> questions;
 
-        public Game(int id, string name, string location, string description, Route route) {
+        public Game(int id, string name, string location, string description, Route route, List<Question> questions) {
             this.id = id;
             this.name = name;
             this.location = location;
             this.description = description;
             this.route = route;
-            this.questions = new List<Question>();
+            foreach (Question question in questions) { AddQuestion(question); }
 
             route.AddGame(this);
         }
 
-        public Game(string name, string location, string description, Route route) {
+        public Game(string name, string location, string description, Route route, List<Question> questions) {
             this.name = name;
             this.location = location;
             this.description = description;
             this.route = route;
-            this.questions = new List<Question>();
+            foreach (Question question in questions) { AddQuestion(question); }
 
             route.AddGame(this);
             SqlDal.AddGame(this);
         }
 
         public void AddQuestion(Question question) {
-            questions.Add(question);
+            if (!questions.Contains(question)) {
+                questions.Add(question);
+            }
         }
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?
-        public int GetID() {  return id; }
+        public int GetID() { return id; }
 
         public string GetName() { return name; }
 

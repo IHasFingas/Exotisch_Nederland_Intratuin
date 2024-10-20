@@ -31,16 +31,22 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public void AddRoutePoint(RoutePoint routePoint) {
-            routePoints.Add(routePoint);
-            routePoint.AddRoute(this);
+            if (!routePoints.Contains(routePoint)) {
+                routePoints.Add(routePoint);
+                routePoint.AddRoute(this);
+            }
         }
 
         public void AddGame(Game game) {
-            games.Add(game);
+            if (!games.Contains(game)) {
+                games.Add(game);
+            }
         }
 
         public void AddUser(User user) {
-            users.Add(user);
+            if (!users.Contains(user)) {
+                users.Add(user);
+            }
         }
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?

@@ -14,8 +14,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Answer> answers;
         private Game game;
 
-        public Question(string questionText, Game game) {
+        public Question(string questionText, Game game, List<Answer> answers) {
             this.questionText = questionText;
+            foreach (Answer answer in answers) { AddAnswer(answer); }
             this.game = game;
 
             game.AddQuestion(this);
@@ -23,7 +24,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public void AddAnswer(Answer answer) {
-            answers.Add(answer);
+            if (!answers.Contains(answer)) {
+                answers.Add(answer);
+            }
         }
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?

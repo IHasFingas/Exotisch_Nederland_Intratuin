@@ -19,21 +19,29 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.id = id;
             this.name = name;
             this.size = size;
+            this.routes = new List<Route>();
+            this.observations = new List<Observation>();
         }
 
         public Area(string name, double size) {
             this.name = name;
             this.size = size;
+            this.routes = new List<Route>();
+            this.observations = new List<Observation>();
 
             SqlDal.AddArea(this);
         }
 
         public void AddRoute(Route route) {
-            routes.Add(route);
+            if (!routes.Contains(route)) {
+                routes.Add(route);
+            }
         }
 
         public void AddObservation(Observation observation) {
-            observations.Add(observation);
+            if (!observations.Contains(observation)) {
+                observations.Add(observation);
+            }
         }
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?

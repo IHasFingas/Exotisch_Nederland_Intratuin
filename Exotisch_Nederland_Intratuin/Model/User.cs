@@ -17,25 +17,42 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Role> roles;
         private List<Observation> observations;
 
-        public User(string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<Observation> observations) {
+        public User(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
-            foreach (Role role in roles) { this.roles.Add(role); }
-            foreach (Observation observation in observations) { this.observations.Add(observation); }
+            foreach (Role role in roles) { AddRole(role); }
+            this.observations = new List<Observation>();
 
             currentRoute.AddUser(this);
             SqlDal.AddUser(this);
         }
 
-        public void AddObservation(Observation observation) {
-            observations.Add(observation);
+        public void AddRole(Role role) {
+            if (!roles.Contains(role)) {
+                roles.Add(role);
+                role.AddUser(this);
+            }
         }
 
-        public void EditObservation(Observation observation) { }
+        public void AddObservation(Observation observation) {
+            if (!observations.Contains(observation)) {
+                observations.Add(observation);
+            }
+        }
 
-        public void RemoveObservation(Observation observation) { }
+        //public void EditObservation(Observation observation) {
+        //    //Check of deze observation in user's list zit
+        //    //zo ja, edit dit observation object aan de hand van setters op observation's attributes
+        //    //update deze observation in de tabel (UpdateObservation() in SQLDAL)
+        //}
+
+        //public void RemoveObservation(Observation observation) {
+        //    //Check of deze observation in user's list zit
+        //    //zo ja, verwijder deze uit de lijst
+        //    //verwijder deze observation in de tabel (DeleteObservation() in SQLDAL)
+        //}
 
         //Getters and Setters (veranderen we private attributen naar public incl { get; set; }?
         public int GetID() { return id; }
