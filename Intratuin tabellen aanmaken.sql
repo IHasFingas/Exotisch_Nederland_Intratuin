@@ -2,19 +2,24 @@ USE [Intratuin]
 
 --Delete tables
 DROP TABLE IF EXISTS UserQuestion;
-DROP TABLE IF EXISTS UserRole;
 DROP TABLE IF EXISTS RouteRoutePoint;
-DROP TABLE IF EXISTS Observation;
+DROP TABLE IF EXISTS UserRole;
+
 DROP TABLE IF EXISTS Answer;
+
 DROP TABLE IF EXISTS Question;
+DROP TABLE IF EXISTS Observation;
+
 DROP TABLE IF EXISTS Game;
 DROP TABLE IF EXISTS [User];
-DROP TABLE IF EXISTS [Route];
-DROP TABLE IF EXISTS Area;
+
 DROP TABLE IF EXISTS POI;
+DROP TABLE IF EXISTS [Route];
+
 DROP TABLE IF EXISTS RoutePoint;
 DROP TABLE IF EXISTS Specie;
 DROP TABLE IF EXISTS [Role];
+DROP TABLE IF EXISTS Area;
 
 
 --Create tables
@@ -133,7 +138,7 @@ VALUES
 
 INSERT INTO [Role] ([Name], [Key])
 VALUES
-	('Hiker',			'hJ4xW8lPnQ'),
+	('Hiker',			'0000000000'),
 	('Volunteer',		'gT9cR2vLmD'),
 	('Validator',		'Zk3qY7sHpB');
 
@@ -141,24 +146,26 @@ VALUES
 INSERT INTO Specie ([Name], Domain, Regnum, Phylum, Classus, Ordo, Familia, Genus) 
 VALUES
 -- Plants
-	('Eikenboom',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Rosales',			'Fagaceae',		'Quercus'),
-	('Beuk',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Fagales',			'Fagaceae',		'Fagus'),
-	('Edelweiss',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Asterales',		'Asteraceae',	'Leontopodium'),
-	('Brandnetel',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Rosales',			'Urticaceae',	'Urtica'),
-	('Zevenblad',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Apiales',			'Apiaceae',		'Aegopodium'),
-	('Berenklauw',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Apiales',			'Apiaceae',		'Heracleum'),
-	('Hondsdraf',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Lamiales',		'Lamiaceae',	'Glechoma'),
-	('Paardenbloem',	'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Asterales',		'Asteraceae',	'Taraxacum'),
+	('Eikenboom',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Rosales',			'Fagaceae',		'Quercus'),
+	('Beuk',				'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Fagales',			'Fagaceae',		'Fagus'),
+	('Edelweiss',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Asterales',		'Asteraceae',	'Leontopodium'),
+	('Brandnetel',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Rosales',			'Urticaceae',	'Urtica'),
+	('Zevenblad',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Apiales',			'Apiaceae',		'Aegopodium'),
+	('Berenklauw',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Apiales',			'Apiaceae',		'Heracleum'),
+	('Hondsdraf',			'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Lamiales',		'Lamiaceae',	'Glechoma'),
+	('Paardenbloem',		'Eukarya', 'Plantae', 'Angiosperms', 'Eudicots', 'Asterales',		'Asteraceae',	'Taraxacum'),
 
 -- Animals
-	('Gewone Vos',		'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Carnivora',		'Canidae',		'Vulpes'),
-	('Eurasische Egel', 'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Eulipotyphla',	'Erinaceidae',	'Erinaceus'),
-	('Roodborst',		'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Passeriformes',	'Muscicapidae', 'Erithacus'),
-	('Zilverreiger',	'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Pelecaniformes',	'Ardeidae',		'Ardea'),
-	('Groene Specht',	'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Piciformes',		'Picidae',		'Picus'),
-	('Haas',			'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Lagomorpha',		'Leporidae',	'Lepus'),
-	('Veldmuis',		'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Rodentia',		'Cricetidae',	'Microtus'),
-	('Zwarte Kraai',	'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Passeriformes',	'Corvidae',		'Corvus');
+	('Gewone Vos',			'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Carnivora',		'Canidae',		'Vulpes'),
+	('Eurasische Egel',		'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Eulipotyphla',	'Erinaceidae',	'Erinaceus'),
+	('Roodborst',			'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Passeriformes',	'Muscicapidae', 'Erithacus'),
+	('Zilverreiger',		'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Pelecaniformes',	'Ardeidae',		'Ardea'),
+	('Groene Specht',		'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Piciformes',		'Picidae',		'Picus'),
+	('Haas',				'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Lagomorpha',		'Leporidae',	'Lepus'),
+	('Veldmuis',			'Eukarya', 'Animalia', 'Chordata', 'Mammalia',	 'Rodentia',		'Cricetidae',	'Microtus'),
+	('Zwarte Kraai',		'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Passeriformes',	'Corvidae',		'Corvus'),
+	('Grote Kamsalamander',	'Eukarya', 'Animalia', 'Chordata', 'Amphibia',	 'Urodela',			'Salamandridae','Triturus'),
+	('Grote Bonte Specht',	'Eukarya', 'Animalia', 'Chordata', 'Aves',		 'Piciformes',		'Picidae',		'Dendrocopos');
 
 
 INSERT INTO RoutePoint ([Name], [Location])
