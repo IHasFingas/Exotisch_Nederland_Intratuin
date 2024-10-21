@@ -1,13 +1,9 @@
 ﻿using Exotisch_Nederland_Intratuin.DAL;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class User {
-        private SQLDAL SqlDal = SQLDAL.Instance;
+        private static SQLDAL SqlDal = SQLDAL.Instance;
 
         private int id;
         private string name;
@@ -45,9 +41,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
             SqlDal.AddUser(this);
         }
 
+        public static List<User> GetAllUsers() {
+            return SqlDal.GetAllUsers();
+        }
+
         public void AddRole(Role role) {
             if (!roles.Contains(role)) {
                 roles.Add(role);
+
+                //Tell role this user was given the role
                 role.AddUser(this);
             }
         }
