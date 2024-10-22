@@ -56,8 +56,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public override string ToString()
+        {
+            return $"Role {id}: {name}, Key => {key}";
+        }
+
 
         //Getters and Setters
+
+        public int GetID() { return id; }
 
         public string GetName() { return name; }
 

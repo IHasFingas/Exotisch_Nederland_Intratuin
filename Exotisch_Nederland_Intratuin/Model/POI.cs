@@ -54,6 +54,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllPOIs();
         }
 
+        public override string ToString()
+        {
+            return $"POI {id}: {name}, {location}, RoutePoint {routePoint.GetID()}";
+        }
+
 
         //Getters and Setters
 

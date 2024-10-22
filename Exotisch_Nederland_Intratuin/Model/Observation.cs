@@ -6,7 +6,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private static SQLDAL SqlDal = SQLDAL.Instance;
 
         private int id;
-        private string name;
+        private string name; // verwijderen? specie heeft al een naam
         private string location;
         private string description;
         //private Image picture; To fix
@@ -83,6 +83,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
         /// <returns><see langword="List"/> of all <see cref="Observation"/>s currently in the database</returns>
         public static List<Observation> GetAllObservations() {
             return SqlDal.GetAllObservations();
+        }
+
+        public override string ToString()
+        {
+            return $"Observation {id}: {specie.GetName()}, {location}, Area {area.GetID()}, User {user.GetID()}";
         }
 
 

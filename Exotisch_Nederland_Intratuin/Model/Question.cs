@@ -67,6 +67,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public override string ToString()
+        {
+            return $"Question {id}: {questionText}, Game {game.GetID()}";
+        }
+
 
         //Getters and Setters
 

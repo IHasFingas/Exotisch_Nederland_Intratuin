@@ -50,6 +50,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllAnswers();
         }
 
+        public override string ToString()
+        {
+            return $"Answer {id}: {answerText}, Question {question.GetID()}";
+        }
+
 
         //Getters and Setters
 

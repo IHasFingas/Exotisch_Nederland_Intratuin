@@ -7,7 +7,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         private int id;
         private string name;
-        private string location;
+        private string location; // verwijderen?
         private string description;
         private Route route;
         private List<Question> questions;
@@ -73,6 +73,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (!questions.Contains(question)) {
                 questions.Add(question);
             }
+        }
+
+        public override string ToString()
+        {
+            return $"Game {id}: {name}, {description}, Route {route.GetID()}";
         }
 
 

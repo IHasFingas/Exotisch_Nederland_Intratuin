@@ -1,4 +1,5 @@
 ﻿using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -58,6 +59,16 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
             }
+        }
+
+        public override string ToString()
+        {
+            string roleNames = string.Empty;
+            foreach (Role role in roles)
+            {
+                roleNames += " " + role.GetName();
+            }
+            return $"User {id}: {name}, {email}, Roles ={roleNames}";
         }
 
         //public void EditObservation(Observation observation) {

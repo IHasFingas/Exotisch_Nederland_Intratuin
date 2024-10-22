@@ -1,4 +1,5 @@
 ﻿using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -104,6 +105,17 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (!users.Contains(user)) {
                 users.Add(user);
             }
+        }
+
+        public override string ToString()
+        {
+            string routePointIDs = string.Empty;
+            foreach (RoutePoint routePoint in routePoints)
+            {
+                routePointIDs += routePoint.GetID();
+            }
+            return $"Route {id}: {name}, {length}km, Area {area.GetID()}, RoutePoints = {routePointIDs}";
+            
         }
 
 

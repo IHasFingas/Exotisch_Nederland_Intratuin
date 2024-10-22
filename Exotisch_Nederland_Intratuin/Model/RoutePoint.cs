@@ -68,6 +68,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public override string ToString()
+        {
+            return $"RoutePoint {id}: {name}, {location}";
+        }
+
 
         //Getters and Setter
 

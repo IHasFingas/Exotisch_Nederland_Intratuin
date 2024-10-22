@@ -87,6 +87,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public override string ToString()
+        {
+            return $"Specie {id}: {name}, {domain}, {regnum}, {phylum}, {classus}, {ordo}, {familia}, {genus}";
+        }
+
 
         //Getters and Setters
 
