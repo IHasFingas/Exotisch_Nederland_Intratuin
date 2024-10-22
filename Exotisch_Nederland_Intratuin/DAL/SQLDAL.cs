@@ -192,6 +192,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             string query = "SELECT * FROM Route";
 
+            List<Tuple<int, string, double, Area>> baseData = new List<Tuple<int, string, double, Area>>();
+
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
@@ -199,51 +201,32 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string name = (string)reader["Name"];
                         double length = (double)reader["Length"];
                         int areaID = (int)reader["Area_ID"];
-                        List<RoutePoint> routePoints = GetRoutePointsForRoute(id);
 
                         foreach (Area area in areas) {
                             if (areaID == area.GetID()) {
-                                try {
-                                    routes.Add(new Route(id, name, length, area, routePoints, new List<Game>()));
-                                } catch (Exception e) {
-                                    Console.WriteLine($"Failed to create Route {id} from database");
-                                    Console.WriteLine(e.Message);
-                                }
+                                baseData.Add(new Tuple<int, string, double, Area>(id, name, length, area));
                             }
                         }
                     }
+                }
+            }
+
+            foreach (Tuple<int, string, double, Area> data in baseData) {
+                try {
+                    int id = data.Item1;
+                    string name = data.Item2;
+                    double length = data.Item3;
+                    Area area = data.Item4;
+
+                    routes.Add(new Route(id, name, length, area, GetRoutePointsForRoute(id), new List<Game>()));
+                } catch (Exception e) {
+                    Console.WriteLine($"Failed to create Route {data.Item1} from database");
+                    Console.WriteLine(e.Message);
                 }
             }
 
             connection.Close();
             return routes;
-        }
-
-        private List<RoutePoint> GetRoutePointsForRoute(int routeID) {
-            using(SqlConnection newConnection = new SqlConnection(connectionString)) {
-                newConnection.Open();
-
-                string query = "SELECT RoutePoint_ID FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
-                List<RoutePoint> routePoints = new List<RoutePoint>();
-
-                using (SqlCommand command = new SqlCommand(query, connection)) {
-                    command.Parameters.AddWithValue("@Route_ID", routeID);
-
-                    using (SqlDataReader reader = command.ExecuteReader()) {
-                        while (reader.Read()) {
-                            foreach (RoutePoint routePoint in this.routePoints) {
-                                if ((int)reader["RoutePoint_ID"] == routePoint.GetID()) {
-                                    routePoints.Add(routePoint);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                newConnection.Close();
-            }
-            
-            return routePoints;
         }
 
         /// <summary>
@@ -294,6 +277,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             string query = "SELECT * FROM [User]";
 
+            List<Tuple<int, string, string, string, Route>> baseData = new List<Tuple<int, string, string, string, Route>>();
+
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
@@ -305,15 +290,25 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
                         foreach (Route route in routes) {
                             if (routeID == route.GetID()) {
-                                try {
-                                    users.Add(new User(id, name, email, currentLocation, route, new List<Role>()));
-                                } catch (Exception e) {
-                                    Console.WriteLine($"Failed to create User {id} from database");
-                                    Console.WriteLine(e.Message);
-                                }
+                                baseData.Add(new Tuple<int, string, string, string, Route>(id, name, email, currentLocation, route));
                             }
                         }
                     }
+                }
+            }
+
+            foreach (Tuple<int, string, string, string, Route> data in baseData) {
+                try {
+                    int id = data.Item1;
+                    string name = data.Item2;
+                    string email = data.Item3;
+                    string currentLocation = data.Item4;
+                    Route route = data.Item5;
+
+                    users.Add(new User(id, name, email, currentLocation, route, GetRolesForUser(id)));
+                } catch (Exception e) {
+                    Console.WriteLine($"Failed to create Route {data.Item1} from database");
+                    Console.WriteLine(e.Message);
                 }
             }
 
@@ -502,11 +497,77 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return answers;
         }
 
-        /*public List<Tuple<int, int>> GetAllUserRoles() { }
+        /// <summary>
+        /// Gets all <see cref="RoutePoint"/>s associated with a certain user from linking table RouteRoutePoint
+        /// </summary>
+        /// <param name="routeID"> ID of <see cref="Route"/></param>
+        /// <returns><see langword="List"/> of <see cref="RoutePoint"/>s of the input route</returns>
+        private List<RoutePoint> GetRoutePointsForRoute(int routeID) {
+            List<RoutePoint> routePointsForRoute = new List<RoutePoint>();
 
-        public List<Tuple<int, int>> GetAllRouteRoutePoints() { }
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
 
-        public List<Tuple<int, int>> GetAllUserQuestions() { }*/
+                string query = "SELECT RoutePoint_ID FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
+
+                using (SqlCommand command = new SqlCommand(query, connection)) {
+                    command.Parameters.AddWithValue("@Route_ID", routeID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int routePointID = (int)reader["RoutePoint_ID"];
+
+                            foreach (RoutePoint routePoint in this.routePoints) {
+                                if (routePointID == routePoint.GetID()) {
+                                    routePointsForRoute.Add(routePoint);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return routePointsForRoute;
+        }
+
+        /// <summary>
+        /// Gets all <see cref="Role"/>s associated with a certain user from linking table UserRole
+        /// </summary>
+        /// <param name="userID"> ID of <see cref="User"/></param>
+        /// <returns><see langword="List"/> of <see cref="Role"/>s of the input user</returns>
+        private List<Role> GetRolesForUser(int userID) {
+            List<Role> rolesForUser = new List<Role>();
+
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT Role_ID FROM UserRole WHERE User_ID = @User_ID";
+
+                using (SqlCommand command = new SqlCommand(query, connection)) {
+                    command.Parameters.AddWithValue("@User_ID", userID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int roleID = (int)reader["Role_ID"];
+
+                            foreach (Role role in this.roles) {
+                                if (roleID == role.GetID()) {
+                                    rolesForUser.Add(role);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return rolesForUser;
+        }
+
+        /*public List<Tuple<int, int>> GetAllUserQuestions() { }*/
 
 
         //Adding (Setting) methods
@@ -780,7 +841,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
                 command.Parameters.AddWithValue("@Question_ID", answer.GetQuestion().GetID());
-                command.Parameters.AddWithValue("@Correct", answer.GetCorrect());
+                command.Parameters.AddWithValue("@Correct", answer.GetCorrectAnswer());
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
@@ -796,17 +857,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         /// <param name="route"><see cref="Route"/> to link</param>
         /// <param name="routePoint"><see cref="RoutePoint"/> to link</param>
         public void AddRouteRoutePoint(Route route, RoutePoint routePoint) {
-            connection.Open();
+            //connection.Open();
 
-            string query = "INSERT INTO RouteRoutePoint(Route_ID, RoutePoint_ID) VALUES ((SELECT ID FROM Route WHERE Name = @RouteName), (SELECT ID FROM RoutePoint WHERE Name = @RoutePointName))";
+            //string query = "INSERT INTO RouteRoutePoint(Route_ID, RoutePoint_ID) VALUES ((SELECT ID FROM Route WHERE Name = @RouteName), (SELECT ID FROM RoutePoint WHERE Name = @RoutePointName))";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@RouteName", route.GetName());
-                command.Parameters.AddWithValue("@RoutePointName", routePoint.GetName());
-                command.ExecuteNonQuery();
-            }
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("@RouteName", route.GetName());
+            //    command.Parameters.AddWithValue("@RoutePointName", routePoint.GetName());
+            //    command.ExecuteNonQuery();
+            //}
 
-            connection.Close();
+            //connection.Close();
         }
     }
 }
