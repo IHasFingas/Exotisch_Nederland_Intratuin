@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +17,19 @@ namespace Exotisch_Nederland_Intratuin.Model
             private List<Role> roles;
             private List<Observation> observations;
 
-        public void AddObservation() { }
-        public void EditObservation() { }
-        public void RemoveObservation() { }
+        public void EditUser(string name, string email)
+        {
+            this.name = name;
+            this.email = email;
+             SqlDal.EditUser(this);
+        }
+
+        public void RemoveUser()
+        {
+            SQLDAL.DeleteUser(this);
+        }
+
+
     }
+       
 }

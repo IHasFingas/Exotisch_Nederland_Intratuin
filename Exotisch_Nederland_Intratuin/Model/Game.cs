@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,18 @@ namespace Exotisch_Nederland_Intratuin.Model
         private string description;
         private Route route;
         private List<Question> questions;
+
+        public void EditGame(string name, string description, string location)
+        {
+            this.name = name;
+            this.description = description;
+            this.location = location;
+            SqlDal.EditGame (this);
+        }
+
+        public void DeleteGame()
+        {
+            SqlDal.DeleteGame(this);
+        }
     }
 }

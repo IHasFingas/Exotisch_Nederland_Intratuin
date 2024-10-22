@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,19 @@ namespace Exotisch_Nederland_Intratuin.Model
         private string location;
         private List<Route> routes;
         private List<POI> pointsOfInterest;
+
+        public void EditRoutePoint(string name, string location)
+        {
+            this.name = name;
+            this.location = location;
+            SqlDal.Editlocation(this);
+        }
+
+        public void DeleteRoutePoint()
+        {
+            SqlDal.DeleteRoutePoint(this);
+        }
     }
 }
+
 
