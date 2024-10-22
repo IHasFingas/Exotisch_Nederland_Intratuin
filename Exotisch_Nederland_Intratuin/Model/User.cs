@@ -1,5 +1,4 @@
 using Exotisch_Nederland_Intratuin.DAL;
-using System;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -11,21 +10,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string email;
         private string currentLocation;
         private Route currentRoute;
-        private List<Observation> observations;
         private List<Role> roles;
+        private List<Observation> observations;
 
 
-        //Constructors
-
-        /// <summary>
-        /// Constructor for creating a <see cref="User"/> from database
-        /// </summary>
-        /// <param name="id">ID of the user</param>
-        /// <param name="name">Name of the user</param>
-        /// <param name="email">Email of the game</param>
-        /// <param name="currentLocation">Current location of the user</param>
-        /// <param name="currentRoute"><see cref="Route"/> the user is on</param>
-        /// <param name="roles"><see langword="List"/> of <see cref="Role"/>s the user has (use empty list if there are none)</param>
+        //Constructor for creating an User from database
         public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
             this.id = id;
             this.name = name;
@@ -41,14 +30,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             currentRoute.AddUser(this);
         }
 
-        /// <summary>
-        /// Constructor for creating a <see cref="User"/> from database
-        /// </summary>
-        /// <param name="name">Name of the user</param>
-        /// <param name="email">Email of the game</param>
-        /// <param name="currentLocation">Current location of the user</param>
-        /// <param name="currentRoute"><see cref="Route"/> the user is on</param>
-        /// <param name="roles"><see langword="List"/> of <see cref="Role"/>s the user has (use empty list if there are none)</param>
+        //Constructor for creating an User from scratch (automatically adds it to the database)
         public User(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
             this.name = name;
             this.email = email;
@@ -67,28 +49,39 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        /// <returns><see langword="List"/> of all <see cref="User"/>s currently in the database</returns>
         public static List<User> GetAllUsers() {
             return SqlDal.GetAllUsers();
         }
 
-        /// <summary>Adds a <see cref="Role"/> to <see cref="User"/>'s list of roles it contains</summary>
-        /// <param name="role"><see cref="Role"/> to be added to <see langword="this"/> <see cref="User"/></param>
         public void AddRole(Role role) {
             if (!roles.Contains(role)) {
                 roles.Add(role);
 
                 //Tell role this user was given the role
                 role.AddUser(this);
+
+                //Add new entry to linking table
+                SqlDal.AddUserRole(this, role);
             }
         }
 
-        /// <summary>Adds a <see cref="Observation"/> to <see cref="User"/>'s list of observations it has made</summary>
-        /// <param name="observation"><see cref="Observation"/> to be added to <see langword="this"/> <see cref="User"/></param>
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
             }
+        }
+
+        public void EditUser(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+            this.name = name;
+            this.email = email;
+            this.currentLocation = currentLocation;
+            this.currentRoute = currentRoute;
+            this.roles = roles;
+            SqlDal.EditUser(this);
+        }
+
+        public void RemoveUser() {
+            SqlDal.DeleteUser(this);
         }
 
         public override string ToString() {
@@ -99,19 +92,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return $"User {id}: {name}, {email}, Roles ={roleNames}";
         }
 
-        //public void EditObservation(Observation observation) {
-        //    //Check of deze observation in user's list zit
-        //    //zo ja, edit dit observation object aan de hand van setters op observation's attributes
-        //    //update deze observation in de tabel (UpdateObservation() in SQLDAL)
-        //}
-
-        //public void RemoveObservation(Observation observation) {
-        //    //Check of deze observation in user's list zit
-        //    //zo ja, verwijder deze uit de lijst
-        //    //verwijder deze observation in de tabel (DeleteObservation() in SQLDAL)
-        //}
 
         //Getters and Setters
+
         public int GetID() { return id; }
 
         public string GetName() { return name; }
@@ -122,20 +105,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public Route GetRoute() { return currentRoute; }
 
+        public List<Role> GetRoles() { return roles; }
+
         public void SetID(int id) { this.id = id; }
-        public void EditUser(string name, string email)
-        {
-            this.name = name;
-            this.email = email;
-             SqlDal.EditUser(this);
-        }
-
-        public void RemoveUser()
-        {
-            SQLDAL.DeleteUser(this);
-        }
-
-
     }
-       
 }

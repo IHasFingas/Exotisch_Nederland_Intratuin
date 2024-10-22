@@ -12,14 +12,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Observation> observations;
 
 
-        //Constructors
-
-        /// <summary>
-        /// Constructor for creating an <see cref="Area"/> from database
-        /// </summary>
-        /// <param name="id">ID of the area</param>
-        /// <param name="name">Name of the area</param>
-        /// <param name="size">Size of the area</param>
+        //Constructor for creating an Area from database
         public Area(int id, string name, double size) {
             this.id = id;
             this.name = name;
@@ -28,12 +21,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
         }
 
-        /// <summary>
-        /// Constructor for creating an <see cref="Area"/> from scratch<para/>
-        /// Automatically adds it to the database
-        /// </summary>
-        /// <param name="name">Name of the area</param>
-        /// <param name="size">Size of the area</param>
+        //Constructor for creating an Area from scratch (automatically adds it to the database)
         public Area(string name, double size) {
             this.name = name;
             this.size = size;
@@ -46,31 +34,35 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        /// <returns><see langword="List"/> of all <see cref="Area"/>'s currently in the database</returns>
         public static List<Area> GetAllAreas() {
             return SqlDal.GetAllAreas();
         }
 
-        /// <summary>Adds a <see cref="Route"/> to <see cref="Area"/>'s list of routes</summary>
-        /// <param name="route"><see cref="Route"/> to be added to <see langword="this"/> <see cref="Area"/></param>
         public void AddRoute(Route route) {
             if (!routes.Contains(route)) {
                 routes.Add(route);
             }
         }
 
-        /// <summary>Adds a <see cref="Observation"/> to <see cref="Area"/>'s list of observations</summary>
-        /// <param name="observation"><see cref="Observation"/> to be added to <see langword="this"/> <see cref="Area"/></param>
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
             }
         }
 
+        public void EditArea(string name, double size) {
+            this.name = name;
+            this.size = size;
+            SqlDal.EditArea(this);
+        }
+
+        public void DeleteArea() {
+            SqlDal.DeleteArea(this);
+        }
+
         public override string ToString() {
             return $"Area {id}: {name}, {size}ha";
         }
-
 
         //Getters and Setters
 
@@ -81,19 +73,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public double GetSize() { return size; }
 
         public void SetID(int id) { this.id = id; }
-
-        public void EditArea(string name, double size)
-        {
-            this.name = name;
-            this.size = size;
-            SqlDal.EditArea(this);
-        }
-
-        public void DeleteArea()
-        {
-            SqlDal.DeleteArea(this);
-        }
     }
 }
-
-

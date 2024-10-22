@@ -17,20 +17,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Observation> observations;
 
 
-        //Constructors
-
-        /// <summary>
-        /// Constructor for creating a <see cref="Specie"/> from database
-        /// </summary>
-        /// <param name="id">ID of the specie</param>
-        /// <param name="domain">Domain of the specie</param>
-        /// <param name="regnum">Regnum of the specie</param>
-        /// <param name="phylum">Phylum of the specie</param>
-        /// <param name="classus">Classus of the specie</param>
-        /// <param name="ordo">Ordo of the specie</param>
-        /// <param name="familia">Familia of the specie</param>
-        /// <param name="genus">Genus of the specie</param>
-        /// <param name="name">Name of the specie</param>
+        //Constructor for creating a Specie from database
         public Specie(int id, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus, string name) {
             this.id = id;
             this.domain = domain;
@@ -44,19 +31,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
         }
 
-        /// <summary>
-        /// Constructor for creating a <see cref="Specie"/> from scratch<para/>
-        /// Automatically adds it to the database
-        /// </summary>
-        /// <param name="id">ID of the specie</param>
-        /// <param name="domain">Domain of the specie</param>
-        /// <param name="regnum">Regnum of the specie</param>
-        /// <param name="phylum">Phylum of the specie</param>
-        /// <param name="classus">Classus of the specie</param>
-        /// <param name="ordo">Ordo of the specie</param>
-        /// <param name="familia">Familia of the specie</param>
-        /// <param name="genus">Genus of the specie</param>
-        /// <param name="name">Name of the specie</param>
+        //Constructor for creating a Specie from scratch (automatically adds it to the database)
         public Specie(string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus, string name) {
             this.domain = domain;
             this.regnum = regnum;
@@ -74,17 +49,30 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        /// <returns><see langword="List"/> of all <see cref="Specie"/>s currently in the database</returns>
         public static List<Specie> GetAllSpecies() {
             return SqlDal.GetAllSpecies();
         }
 
-        /// <summary>Adds an <see cref="Observation"/> to <see cref="Specie"/>'s list of observations</summary>
-        /// <param name="observation"><see cref="Observation"/> to be added to <see langword="this"/> <see cref="Specie"/></param>
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
             }
+        }
+
+        public void EditSpecie(string name, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus) {
+            this.name = name;
+            this.domain = domain;
+            this.regnum = regnum;
+            this.phylum = phylum;
+            this.classus = classus;
+            this.ordo = ordo;
+            this.familia = familia;
+            this.genus = genus;
+            SqlDal.EditSpecie(this);
+        }
+
+        public void DeleteSpecie() {
+            SqlDal.DeleteSpecie(this);
         }
 
         public override string ToString() {
@@ -113,23 +101,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetName() { return name; }
 
         public void SetID(int id) { this.id = id; }
-        public void EditSpecie(string name, string regnum, string phylum, string classus, string ordo, string familia, string genus, string domain)
-        {
-            this.name = name;
-            this.regnum = regnum;
-            this.phylum = phylum;   
-            this.classus = classus;
-            this.ordo = ordo;   
-            this.familia = familia;
-            this.genus = genus;
-            this.domain = domain;
-            SqlDal.EditSpecie(this);
-        }
-
-        public void DeleteSpecie()
-        {
-            SqlDal.DeleteSpecie(this);
-        }
-
     }
 }

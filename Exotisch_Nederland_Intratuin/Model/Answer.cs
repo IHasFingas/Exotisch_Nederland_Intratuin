@@ -11,15 +11,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private bool correctAnswer;
 
 
-        //Constructors
-
-        /// <summary>
-        /// Constructor for creating an <see cref="Answer"/> from database
-        /// </summary>
-        /// <param name="id">ID of the answer</param>
-        /// <param name="answerText">Text of the answer</param>
-        /// <param name="question"><see cref="Question"/> the answer belongs to</param>
-        /// <param name="correctAnswer">Whether the answer is correct</param>
+        //Constructor for creating an Answer from database
         public Answer(int id, string answerText, Question question, bool correctAnswer) {
             this.id = id;
             this.answerText = answerText;
@@ -30,13 +22,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.question.AddAnswer(this);
         }
 
-        /// <summary>
-        /// Constructor for creating a <see cref="RoutePoint"/> from scratch<para/>
-        /// Automatically adds it to the database
-        /// </summary>
-        /// <param name="answerText">Text of the answer</param>
-        /// <param name="question"><see cref="Question"/> the answer belongs to</param>
-        /// <param name="correctAnswer">Whether the answer is correct</param>
+        //Constructor for creating an Answer from scratch (automatically adds it to the database)
         public Answer(string answerText, Question question, bool correctAnswer) {
             this.answerText = answerText;
             this.question = question;
@@ -50,9 +36,19 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        /// <returns><see langword="List"/> of all <see cref="Answer"/>s currently in the database</returns>
         public static List<Answer> GetAllAnswers() {
             return SqlDal.GetAllAnswers();
+        }
+
+        public void EditAnswer(string answerText, Question question, bool correctAnswer) {
+            this.answerText = answerText;
+            this.question = question;
+            this.correctAnswer = correctAnswer;
+            SqlDal.EditAnswer(this);
+        }
+
+        public void DeleteAnswer() {
+            SqlDal.DeleteAnswer(this);
         }
 
         public override string ToString() {
@@ -71,16 +67,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public bool GetCorrectAnswer() { return correctAnswer; }
 
         public void SetID(int id) { this.id = id; }
-        public void EditAnswer(string answertext)
-        {
-            this.answertext = answertext;
-            SqlDal.EditAnswer(this);
-        }
-
-        public void DeleteAnswer()
-        {
-            SqlDal.DeleteAnswer(this);
-        }
-
     }
 }

@@ -11,14 +11,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<User> users;
 
 
-        //Constructors
-
-        /// <summary>
-        /// Constructor for creating a <see cref="Role"/> from database
-        /// </summary>
-        /// <param name="id">ID of the role</param>
-        /// <param name="name">Name of the role</param>
-        /// <param name="key">Key of the role</param>
+        //Constructor for creating a Role from database
         public Role(int id, string name, string key) {
             this.id = id;
             this.name = name;
@@ -26,12 +19,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.users = new List<User>();
         }
 
-        /// <summary>
-        /// Constructor for creating a <see cref="Role"/> from scratch<para/>
-        /// Automatically adds it to the database
-        /// </summary>
-        /// <param name="name">Name of the role</param>
-        /// <param name="key">Key of the role</param>
+        //Constructor for creating a Role from scratch (automatically adds it to the database)
         public Role(string name, string key) {
             this.name = name;
             this.key = key;
@@ -43,17 +31,24 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        /// <returns><see langword="List"/> of all <see cref="Role"/>s currently in the database</returns>
         public static List<Role> GetALlRoles() {
             return SqlDal.GetAllRoles();
         }
 
-        /// <summary>Adds a <see cref="User"/> to <see cref="Role"/>'s list of users</summary>
-        /// <param name="user"><see cref="User"/> to be added to <see langword="this"/> <see cref="Role"/></param>
         public void AddUser(User user) {
             if (!users.Contains(user)) {
                 users.Add(user);
             }
+        }
+
+        public void EditRole(string name, string key) {
+            this.name = name;
+            this.key = key;
+            SqlDal.EditRole(this);
+        }
+
+        public void DeleteRole() {
+            SqlDal.DeleteRole(this);
         }
 
         public override string ToString() {
@@ -70,17 +65,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetKey() { return key; }
 
         public void SetID(int id) { this.id = id; }
-
-        public void EditRole(string name, string key)
-        {
-            this.name = name;
-            this.key = key;
-            SqlDal.EditRole(this);
-        }
-
-        public void DeleteRole()
-        {
-            SqlDal.DeleteRole(this);
-        }
     }
 }

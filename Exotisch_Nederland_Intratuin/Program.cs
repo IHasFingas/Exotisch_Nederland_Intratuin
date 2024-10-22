@@ -1,12 +1,16 @@
-﻿using Exotisch_Nederland_Intratuin.DAL;
-using Exotisch_Nederland_Intratuin.Model;
+﻿using Exotisch_Nederland_Intratuin.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Exotisch_Nederland_Intratuin {
     internal class Program {
         static void Main(string[] args) {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             //Filling lists with all pre-entered data from database
+            Console.WriteLine("Reading all data from database...");
             List<Area> areas = Area.GetAllAreas();
             List<Role> roles = Role.GetALlRoles();
             List<Specie> species = Specie.GetAllSpecies();
@@ -18,8 +22,11 @@ namespace Exotisch_Nederland_Intratuin {
             List<Observation> observations = Observation.GetAllObservations();
             List<Question> questions = Question.GetAllQuestions();
             List<Answer> answers = Answer.GetAllAnswers();
+            Console.WriteLine("Done!");
 
-            Console.WriteLine("Done!\n");
+            stopwatch.Stop();
+            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms\n");
+
             foreach (Area area in areas) { Console.WriteLine(area); }
             Console.WriteLine();
             foreach (Role role in roles) { Console.WriteLine(role); }

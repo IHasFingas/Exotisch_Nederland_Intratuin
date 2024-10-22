@@ -13,17 +13,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Question> questions;
 
 
-        //Constructors
-
-        /// <summary>
-        /// Constructor for creating a <see cref="Game"/> from database
-        /// </summary>
-        /// <param name="id">ID of the game</param>
-        /// <param name="name">Name of the game</param>
-        /// <param name="location">Location of the game</param>
-        /// <param name="description">Description of the game</param>
-        /// <param name="route"><see cref="Route"/> the game is located on</param>
-        /// <param name="questions"><see langword="List"/> of <see cref="Question"/>s in the game (use empty list if there are none)</param>
+        //Constructor for creating a Game from database
         public Game(int id, string name, string location, string description, Route route, List<Question> questions) {
             this.id = id;
             this.name = name;
@@ -38,15 +28,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.route.AddGame(this);
         }
 
-        /// <summary>
-        /// Constructor for creating a <see cref="Game"/> from scratch<para/>
-        /// Automatically adds it to the database
-        /// </summary>
-        /// <param name="name">Name of the game</param>
-        /// <param name="location">Location of the game</param>
-        /// <param name="description">Description of the game</param>
-        /// <param name="route"><see cref="Route"/> the game is located on</param>
-        /// <param name="questions"><see langword="List"/> of <see cref="Question"/>s in the game (use empty list if there are none)</param>
+        //Constructor for creating a Game from scratch (automatically adds it to the database)
         public Game(string name, string location, string description, Route route, List<Question> questions) {
             this.name = name;
             this.location = location;
@@ -62,17 +44,25 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        /// <returns><see langword="List"/> of all <see cref="Game"/>s currently in the database</returns>
         public static List<Game> GetAllGames() {
             return SqlDal.GetAllGames();
         }
 
-        /// <summary>Adds a <see cref="Question"/> to <see cref="Game"/>'s list of questions it contains</summary>
-        /// <param name="question"><see cref="Question"/> to be added to <see langword="this"/> <see cref="Game"/></param>
         public void AddQuestion(Question question) {
             if (!questions.Contains(question)) {
                 questions.Add(question);
             }
+        }
+
+        public void EditGame(string name, string location, string description) {
+            this.name = name;
+            this.location = location;
+            this.description = description;
+            SqlDal.EditGame(this);
+        }
+
+        public void DeleteGame() {
+            SqlDal.DeleteGame(this);
         }
 
         public override string ToString() {
@@ -93,18 +83,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Route GetRoute() { return route; }
 
         public void SetID(int id) { this.id = id; }
-
-        public void EditGame(string name, string description, string location)
-        {
-            this.name = name;
-            this.description = description;
-            this.location = location;
-            SqlDal.EditGame (this);
-        }
-
-        public void DeleteGame()
-        {
-            SqlDal.DeleteGame(this);
-        }
     }
 }
