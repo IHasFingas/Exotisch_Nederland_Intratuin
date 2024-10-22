@@ -869,5 +869,401 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             //connection.Close();
         }
+
+
+        // Editing methods
+
+        public void EditArea(Area area)
+        {
+            connection.Open();
+
+            string query = "UPDATE Area SET Name = @Name, Size = @Size WHERE Area_ID = @Area_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", area.GetName());
+                command.Parameters.AddWithValue("@Size", area.GetSize());
+                command.Parameters.AddWithValue("@Area_ID", area.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditRole(Role role)
+        {
+            connection.Open();
+
+            string query = "UPDATE Role SET Name = @Name, Key = @Key WHERE Role_ID = @Role_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", role.GetName());
+                command.Parameters.AddWithValue("@Size", role.GetKey());
+                command.Parameters.AddWithValue("@Role_ID", role.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditSpecie(Specie specie)
+        {
+            connection.Open();
+
+            string query = "UPDATE Specie SET Name = @Name, Domain = @Domain, Regnum = @Regnum, Phylum = @Phylum, Classus = @Classus, Ordo = @Ordo, Familia = @Familia, Genus = @Genus WHERE Specie_ID = @Specie_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", specie.GetName());
+                command.Parameters.AddWithValue("@Domain", specie.GetDomain());
+                command.Parameters.AddWithValue("@Regnum", specie.GetRegnum());
+                command.Parameters.AddWithValue("@Phylum", specie.GetPhylum());
+                command.Parameters.AddWithValue("@Classus", specie.GetClassus());
+                command.Parameters.AddWithValue("@Ordo", specie.GetOrdo());
+                command.Parameters.AddWithValue("@Familia", specie.GetFamilia());
+                command.Parameters.AddWithValue("@Genus", specie.GetGenus());
+                command.Parameters.AddWithValue("@Specie_ID", specie.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditRoutePoint(RoutePoint routePoint)
+        {
+            connection.Open();
+
+            string query = "UPDATE RoutePoint SET Name = @Name, Location = @Location WHERE RoutePoint_ID = @RoutePoint_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", routePoint.GetName());
+                command.Parameters.AddWithValue("@Location", routePoint.GetLocation());
+                command.Parameters.AddWithValue("@Area_ID", routePoint.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditRoute(Route route)
+        {
+            connection.Open();
+
+            string query = "UPDATE Route SET Name = @Name, Length = @Length, Area = @Area WHERE Route_ID = @Route_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", route.GetName());
+                command.Parameters.AddWithValue("@Length", route.GetLength());
+                command.Parameters.AddWithValue("@Area", route.GetArea().GetID());
+                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditPOI(POI poi)
+        {
+            connection.Open();
+
+            string query = "UPDATE POI SET Name = @Name, Location = @Location, RoutePoint = @RoutePoint WHERE POI_ID = @POI_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", poi.GetName());
+                command.Parameters.AddWithValue("@Location", poi.GetLocation());
+                command.Parameters.AddWithValue("@RoutePoint", poi.GetRoutePoint().GetID());
+                command.Parameters.AddWithValue("@POI_ID", poi.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditUser(User user)
+        {
+            connection.Open();
+
+            string query = "UPDATE User SET Name = @Name, Email = @Email, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE User_ID = @User_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", user.GetName());
+                command.Parameters.AddWithValue("@Email", user.GetEmail());
+                command.Parameters.AddWithValue("@CurrentLocation", user.GetCurrentLocation());
+                command.Parameters.AddWithValue("@Route_ID", user.GetRoute().GetID());
+                command.Parameters.AddWithValue("@User_ID", user.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditGame(Game game)
+        {
+            connection.Open();
+
+            string query = "UPDATE Game SET Name = @Name, Location = @Location, Description = @Description, Route_ID = @Route_ID WHERE Game_ID = @Game_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", game.GetName());
+                command.Parameters.AddWithValue("@Location", game.GetLocation());
+                command.Parameters.AddWithValue("@Description", game.GetDescription());
+                command.Parameters.AddWithValue("@Route_ID", game.GetRoute().GetID());
+                command.Parameters.AddWithValue("@Game_ID", game.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditObservation(Observation observation)
+        {
+            connection.Open();
+
+            string query = "UPDATE Observation SET Name = @Name, Location = @Location, Description = @Description, Specie_ID = @Specie_ID, Area_ID = Area_ID WHERE Observation_ID = @Observation_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Name", observation.GetName());
+                command.Parameters.AddWithValue("@Location", observation.GetLocation());
+                command.Parameters.AddWithValue("@Description", observation.GetDescription());
+                command.Parameters.AddWithValue("@Specie_ID", observation.GetSpecie().GetID());
+                command.Parameters.AddWithValue("@Area_ID", observation.GetArea().GetID());
+                command.Parameters.AddWithValue("@Observation_ID", observation.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditQuestion(Question question)
+        {
+            connection.Open();
+
+            string query = "UPDATE Question SET QuestionText = @QuestionText, Game_ID = @Game_ID WHERE Question_ID = @Question_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@QuestionText", question.GetQuestionText());
+                command.Parameters.AddWithValue("@Game_ID", question.GetGame().GetID());
+                command.Parameters.AddWithValue("@Question_ID", question.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void EditAnwser(Answer answer)
+        {
+            connection.Open();
+
+            string query = "UPDATE Question SET AnswerText = @AnswerText, Question_ID = @Question_ID, CorrectAnswer = @CorrectAnswer WHERE Question_ID = @Question_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
+                command.Parameters.AddWithValue("@Question_ID", answer.GetQuestion().GetID());
+                command.Parameters.AddWithValue("@CorrectAnswer", answer.GetCorrectAnswer());
+                command.Parameters.AddWithValue("@Answer_ID", answer.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+
+        // Removing methods
+
+        public void DeleteArea(Area area)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Area WHERE Area_ID = @Area_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Area_ID", area.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteRole(Role role)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Role WHERE Role_ID = @Role_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Role_ID", role.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteSpecie(Specie specie)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Specie WHERE Specie_ID = @Specie_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Specie_ID", specie.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteRoutePoint(RoutePoint routePoint)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM RoutePoint WHERE RoutePoint_ID = @RoutePoint_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteRoute(Route route)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Route WHERE Route_ID = @Route_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeletePOI(POI poi)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM POI WHERE POI_ID = @POI_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@POI_ID", poi.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteUser(User user)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM User WHERE User_ID = @User_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@User_ID", user.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteGame(Game game)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Game WHERE Game_ID = @Game_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Game_ID", game.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteObservation(Observation observation)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Observation WHERE Observation_ID = @Observation_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Observation_ID", observation.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteQuestion(Question question)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Question WHERE Question_ID = @Question_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Question_ID", question.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void DeleteAnswer(Answer answer)
+        {
+            connection.Open();
+
+            string query = "DELETE FROM Answer WHERE Answer_ID = @Answer_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Answer_ID", answer.GetID());
+
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
     }
 }

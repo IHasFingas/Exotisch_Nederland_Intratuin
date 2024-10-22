@@ -62,11 +62,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Getters and Setters
 
+        public int GetID() { return id; }
+
         public string GetAnswerText() { return answerText; }
 
         public Question GetQuestion() { return question; }
 
-        public bool GetCorrect() { return correctAnswer; }
+        public bool GetCorrectAnswer() { return correctAnswer; }
 
         public void SetID(int id) { this.id = id; }
     }
