@@ -1,4 +1,4 @@
-﻿using Exotisch_Nederland_Intratuin.DAL;
+using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -71,5 +71,16 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public bool GetCorrectAnswer() { return correctAnswer; }
 
         public void SetID(int id) { this.id = id; }
+        public void EditAnswer(string answertext)
+        {
+            this.answertext = answertext;
+            SqlDal.EditAnswer(this);
+        }
+
+        public void DeleteAnswer()
+        {
+            SqlDal.DeleteAnswer(this);
+        }
+
     }
 }

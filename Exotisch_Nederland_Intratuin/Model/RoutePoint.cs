@@ -1,4 +1,4 @@
-﻿using Exotisch_Nederland_Intratuin.DAL;
+using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -81,6 +81,19 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetLocation() { return location; }
 
         public void SetID(int id) { this.id = id; }
+
+        public void EditRoutePoint(string name, string location)
+        {
+            this.name = name;
+            this.location = location;
+            SqlDal.Editlocation(this);
+        }
+
+        public void DeleteRoutePoint()
+        {
+            SqlDal.DeleteRoutePoint(this);
+        }
     }
 }
+
 

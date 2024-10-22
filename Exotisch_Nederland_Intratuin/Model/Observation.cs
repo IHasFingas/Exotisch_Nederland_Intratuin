@@ -1,4 +1,4 @@
-﻿using Exotisch_Nederland_Intratuin.DAL;
+using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -107,6 +107,19 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public User GetUser() { return user; }
 
         public void SetID(int id) { this.id = id; }
+
+        public void EditObservation(string name, string description, string location)
+        {
+            this.name = name;
+            this.description = description;
+            this.location = location;
+            SqlDal.EditObservation(this);
+        }
+
+        public void DeleteObservation()
+        {
+            SqlDal.DeleteObservation(this);
+        }
     }
 }
 

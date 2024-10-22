@@ -1,4 +1,4 @@
-﻿using Exotisch_Nederland_Intratuin.DAL;
+using Exotisch_Nederland_Intratuin.DAL;
 using System;
 using System.Collections.Generic;
 
@@ -128,5 +128,17 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Area GetArea() { return area; }
 
         public void SetID(int id) { this.id = id; }
+
+        public void EditRoute(string name, double length)
+        {
+            this.name = name;
+            this.length = length;
+            SqlDal.EditRoute(this);
+        }
+
+        public void DeleteRoute()
+        {
+            SqlDal.DeleteRoute(this);
+        }
     }
 }

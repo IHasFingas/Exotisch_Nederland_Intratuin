@@ -1,4 +1,4 @@
-﻿using Exotisch_Nederland_Intratuin.DAL;
+using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -113,5 +113,23 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetName() { return name; }
 
         public void SetID(int id) { this.id = id; }
+        public void EditSpecie(string name, string regnum, string phylum, string classus, string ordo, string familia, string genus, string domain)
+        {
+            this.name = name;
+            this.regnum = regnum;
+            this.phylum = phylum;   
+            this.classus = classus;
+            this.ordo = ordo;   
+            this.familia = familia;
+            this.genus = genus;
+            this.domain = domain;
+            SqlDal.EditSpecie(this);
+        }
+
+        public void DeleteSpecie()
+        {
+            SqlDal.DeleteSpecie(this);
+        }
+
     }
 }
