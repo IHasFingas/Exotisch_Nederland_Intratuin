@@ -92,6 +92,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Getters and Setters
 
+        public int GetID() { return id ; }
+
         public string GetName() { return name; }
 
         public string GetLocation() { return location; }
