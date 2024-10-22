@@ -102,6 +102,7 @@ CREATE TABLE Answer
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     AnswerText VARCHAR(50) NOT NULL,
     Question_ID int NOT NULL,
+	CorrectAnswer bit NOT NULL,
     FOREIGN KEY (Question_ID) REFERENCES Question(ID));
 
 CREATE TABLE UserRole
@@ -253,97 +254,97 @@ VALUES
     ('Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?',														3);
 
 
-INSERT INTO Answer (AnswerText, Question_ID)
+INSERT INTO Answer (AnswerText, Question_ID, CorrectAnswer)
 VALUES 
 -- Answers Question 1
-    ('Eekhoorn',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en graag noten eet?')), -- True
-    ('Das',					(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en graag noten eet?')),
-    ('Vos',					(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en graag noten eet?')),
-    ('Konijn',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en graag noten eet?')),
+    ('Eekhoorn',			(SElECT ID FROM Question WHERE [ID] = '1'), 1), 
+    ('Das',					(SElECT ID FROM Question WHERE [ID] = '1'), 0),
+    ('Vos',					(SElECT ID FROM Question WHERE [ID] = '1'), 0),
+    ('Konijn',				(SElECT ID FROM Question WHERE [ID] = '1'), 0),
 
 -- Answers Question 2
-    ('Ree',					(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?')), -- True
-    ('Hert',				(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?')),
-    ('Haas',				(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?')),
-    ('Wild zwijn',			(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?')),
+    ('Ree',					(SElECT ID FROM Question WHERE [ID] = '2'), 1), 
+    ('Hert',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
+    ('Haas',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
+    ('Wild zwijn',			(SElECT ID FROM Question WHERE [ID] = '2'), 0),
 
 -- Answers Question 3
-    ('IJsvogel',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?')), -- True
-    ('Merel',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?')),
-    ('Ekster',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?')),
-    ('Specht',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?')),
+    ('IJsvogel',			(SElECT ID FROM Question WHERE [ID] = '3'), 1), 
+    ('Merel',				(SElECT ID FROM Question WHERE [ID] = '3'), 0),
+    ('Ekster',				(SElECT ID FROM Question WHERE [ID] = '3'), 0),
+    ('Specht',				(SElECT ID FROM Question WHERE [ID] = '3'), 0),
 
 -- Answers Question 4
-    ('Vos',					(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is een vossen, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?')), -- True
-    ('Wolf',				(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is een vossen, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?')),
-    ('Lynx',				(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is een vossen, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?')),
-    ('Wasbeerhond',			(SElECT ID FROM Question WHERE [QuestionText] = 'Wat voor soort dier is een vossen, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?')),
+    ('Vos',					(SElECT ID FROM Question WHERE [ID] = '4'), 1), 
+    ('Wolf',				(SElECT ID FROM Question WHERE [ID] = '4'), 0),
+    ('Lynx',				(SElECT ID FROM Question WHERE [ID] = '4'), 0),
+    ('Wasbeerhond',			(SElECT ID FROM Question WHERE [ID] = '4'), 0),
 
 -- Answers Question 5
-    ('Kikker',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke amfibie, die vaak in Limburgse poelen en vijvers leeft, staat bekend om zijn grote, platte lichaam en groene kleur?')), -- True
-    ('Pad',					(SElECT ID FROM Question WHERE [QuestionText] = 'Welke amfibie, die vaak in Limburgse poelen en vijvers leeft, staat bekend om zijn grote, platte lichaam en groene kleur?')),
-    ('Salamander',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke amfibie, die vaak in Limburgse poelen en vijvers leeft, staat bekend om zijn grote, platte lichaam en groene kleur?')),
-    ('Waterslang',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke amfibie, die vaak in Limburgse poelen en vijvers leeft, staat bekend om zijn grote, platte lichaam en groene kleur?')),
+    ('Kikker',				(SElECT ID FROM Question WHERE [ID] = '5'), 1), 
+    ('Pad',					(SElECT ID FROM Question WHERE [ID] = '5'), 0),
+    ('Salamander',			(SElECT ID FROM Question WHERE [ID] = '5'), 0),
+    ('Waterslang',			(SElECT ID FROM Question WHERE [ID] = '5'), 0),
 
 -- Answers Question 6
-	('Bosanemoon',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke plant, die je veel ziet in Limburgse bossen, staat bekend om zijn witte bloemen en wordt vaak in verband gebracht met de lente?')), -- True
-    ('Zonnebloem',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke plant, die je veel ziet in Limburgse bossen, staat bekend om zijn witte bloemen en wordt vaak in verband gebracht met de lente?')), 
-    ('Narcis',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke plant, die je veel ziet in Limburgse bossen, staat bekend om zijn witte bloemen en wordt vaak in verband gebracht met de lente?')), 
-    ('Klaproos',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke plant, die je veel ziet in Limburgse bossen, staat bekend om zijn witte bloemen en wordt vaak in verband gebracht met de lente?')),
+	('Bosanemoon',			(SElECT ID FROM Question WHERE [ID] = '6'), 2), 
+    ('Zonnebloem',			(SElECT ID FROM Question WHERE [ID] = '6'), 0), 
+    ('Narcis',				(SElECT ID FROM Question WHERE [ID] = '6'), 0), 
+    ('Klaproos',			(SElECT ID FROM Question WHERE [ID] = '6'), 0),
 
 -- Answers Question 7
-    ('Tamme kastanje',		(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort vind je vaak in de Limburgse heuvels en staat bekend om zijn diep ingesneden bladeren en stekelige vruchten?')), -- True
-    ('Esdoorn',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort vind je vaak in de Limburgse heuvels en staat bekend om zijn diep ingesneden bladeren en stekelige vruchten?')), 
-    ('Beuk',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort vind je vaak in de Limburgse heuvels en staat bekend om zijn diep ingesneden bladeren en stekelige vruchten?')), 
-    ('Wilg',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort vind je vaak in de Limburgse heuvels en staat bekend om zijn diep ingesneden bladeren en stekelige vruchten?')),
+    ('Tamme kastanje',		(SElECT ID FROM Question WHERE [ID] = '7'), 1), 
+    ('Esdoorn',				(SElECT ID FROM Question WHERE [ID] = '7'), 0), 
+    ('Beuk',				(SElECT ID FROM Question WHERE [ID] = '7'), 0), 
+    ('Wilg',				(SElECT ID FROM Question WHERE [ID] = '7'), 0),
 
 -- Answers Question 8
-    ('Wilde tijm',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke bloem, vaak te vinden op kalkrijke gronden in Zuid-Limburg, staat bekend om zijn paarse bloemen en wordt vaak geassocieerd met droog grasland?')), -- True
-    ('Lavendel',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke bloem, vaak te vinden op kalkrijke gronden in Zuid-Limburg, staat bekend om zijn paarse bloemen en wordt vaak geassocieerd met droog grasland?')), 
-    ('Blauwe druifjes',		(SElECT ID FROM Question WHERE [QuestionText] = 'Welke bloem, vaak te vinden op kalkrijke gronden in Zuid-Limburg, staat bekend om zijn paarse bloemen en wordt vaak geassocieerd met droog grasland?')), 
-    ('Paardenbloem',		(SElECT ID FROM Question WHERE [QuestionText] = 'Welke bloem, vaak te vinden op kalkrijke gronden in Zuid-Limburg, staat bekend om zijn paarse bloemen en wordt vaak geassocieerd met droog grasland?')),
+    ('Wilde tijm',			(SElECT ID FROM Question WHERE [ID] = '8'), 1), 
+    ('Lavendel',			(SElECT ID FROM Question WHERE [ID] = '8'), 0), 
+    ('Blauwe druifjes',		(SElECT ID FROM Question WHERE [ID] = '8'), 0), 
+    ('Paardenbloem',		(SElECT ID FROM Question WHERE [ID] = '8'), 0),
 
 -- Answers Question 9
-    ('Brem',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke struik, veel voorkomend in Limburgse natuurgebieden, heeft felgele bloemen en wordt vaak gebruikt in hagen en parken?')), -- True
-    ('Forsythia',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke struik, veel voorkomend in Limburgse natuurgebieden, heeft felgele bloemen en wordt vaak gebruikt in hagen en parken?')), 
-    ('Rododendron',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke struik, veel voorkomend in Limburgse natuurgebieden, heeft felgele bloemen en wordt vaak gebruikt in hagen en parken?')), 
-    ('Jasmijn',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke struik, veel voorkomend in Limburgse natuurgebieden, heeft felgele bloemen en wordt vaak gebruikt in hagen en parken?')),
+    ('Brem',				(SElECT ID FROM Question WHERE [ID] = '9'), 1), 
+    ('Forsythia',			(SElECT ID FROM Question WHERE [ID] = '9'), 0), 
+    ('Rododendron',			(SElECT ID FROM Question WHERE [ID] = '9'), 0), 
+    ('Jasmijn',				(SElECT ID FROM Question WHERE [ID] = '9'), 0),
 
 -- Answers Question 10
-    ('Zwarte els',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort, veel voorkomend in Limburgse beekdalen, staat bekend om zijn smalle bladeren en vormt vaak een belangrijke habitat voor vogels en insecten?')), -- True
-    ('Eik',					(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort, veel voorkomend in Limburgse beekdalen, staat bekend om zijn smalle bladeren en vormt vaak een belangrijke habitat voor vogels en insecten?')), 
-    ('Berk',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort, veel voorkomend in Limburgse beekdalen, staat bekend om zijn smalle bladeren en vormt vaak een belangrijke habitat voor vogels en insecten?')), 
-    ('Populier',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke boomsoort, veel voorkomend in Limburgse beekdalen, staat bekend om zijn smalle bladeren en vormt vaak een belangrijke habitat voor vogels en insecten?')),
+    ('Zwarte els',			(SElECT ID FROM Question WHERE [ID] = '10'), 1), 
+    ('Eik',					(SElECT ID FROM Question WHERE [ID] = '10'), 0), 
+    ('Berk',				(SElECT ID FROM Question WHERE [ID] = '10'), 0), 
+    ('Populier',			(SElECT ID FROM Question WHERE [ID] = '10'), 0),
 
 -- Answers Question 11
-	('Sint-Pietersberg',	(SElECT ID FROM Question WHERE [QuestionText] = 'Welke Limburgse heuvelrug is bekend om zijn glooiende landschap en rijke flora en fauna?')), -- True
-    ('Hondsrug',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke Limburgse heuvelrug is bekend om zijn glooiende landschap en rijke flora en fauna?')),
-    ('Veluwe',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke Limburgse heuvelrug is bekend om zijn glooiende landschap en rijke flora en fauna?')),
-    ('Utrechtse Heuvelrug',	(SElECT ID FROM Question WHERE [QuestionText] = 'Welke Limburgse heuvelrug is bekend om zijn glooiende landschap en rijke flora en fauna?')),
+	('Sint-Pietersberg',	(SElECT ID FROM Question WHERE [ID] = '11'), 1), 
+    ('Hondsrug',			(SElECT ID FROM Question WHERE [ID] = '11'), 0),
+    ('Veluwe',				(SElECT ID FROM Question WHERE [ID] = '11'), 0),
+    ('Utrechtse Heuvelrug',	(SElECT ID FROM Question WHERE [ID] = '11'), 0),
 
 -- Answers Question 12
-    ('De Meinweg',			(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van het bekende natuurgebied in Limburg dat bekend staat om zijn kalksteenformaties en unieke flora?')), -- True
-    ('De Hoge Veluwe',		(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van het bekende natuurgebied in Limburg dat bekend staat om zijn kalksteenformaties en unieke flora?')),
-    ('Sallandse Heuvelrug',	(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van het bekende natuurgebied in Limburg dat bekend staat om zijn kalksteenformaties en unieke flora?')),
-    ('De Biesbosch',		(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van het bekende natuurgebied in Limburg dat bekend staat om zijn kalksteenformaties en unieke flora?')),
+    ('De Meinweg',			(SElECT ID FROM Question WHERE [ID] = '12'), 1), 
+    ('De Hoge Veluwe',		(SElECT ID FROM Question WHERE [ID] = '12'), 0),
+    ('Sallandse Heuvelrug',	(SElECT ID FROM Question WHERE [ID] = '12'), 0),
+    ('De Biesbosch',		(SElECT ID FROM Question WHERE [ID] = '12'), 0),
 
 -- Answers Question 13
-    ('Maas',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke rivier stroomt door Limburg en speelt een belangrijke rol in het landschap en de geschiedenis van de regio?')), -- True
-    ('Rijn',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke rivier stroomt door Limburg en speelt een belangrijke rol in het landschap en de geschiedenis van de regio?')),
-    ('IJssel',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke rivier stroomt door Limburg en speelt een belangrijke rol in het landschap en de geschiedenis van de regio?')),
-    ('Schelde',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke rivier stroomt door Limburg en speelt een belangrijke rol in het landschap en de geschiedenis van de regio?')),
+    ('Maas',				(SElECT ID FROM Question WHERE [ID] = '13'), 1), 
+    ('Rijn',				(SElECT ID FROM Question WHERE [ID] = '13'), 0),
+    ('IJssel',				(SElECT ID FROM Question WHERE [ID] = '13'), 0),
+    ('Schelde',				(SElECT ID FROM Question WHERE [ID] = '13'), 0),
 
 -- Answers Question 14
-    ('Het Leudal',			(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van de Limburgse bossen die bekend staan om hun biodiversiteit en oude eiken?')), -- True
-    ('Het Amsterdamse Bos',	(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van de Limburgse bossen die bekend staan om hun biodiversiteit en oude eiken?')),
-    ('Het Amsterdamse Bos',	(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van de Limburgse bossen die bekend staan om hun biodiversiteit en oude eiken?')),
-    ('De Veluwezoom',		(SElECT ID FROM Question WHERE [QuestionText] = 'Wat is de naam van de Limburgse bossen die bekend staan om hun biodiversiteit en oude eiken?')),
+    ('Het Leudal',			(SElECT ID FROM Question WHERE [ID] = '14'), 1), 
+    ('Het Amsterdamse Bos',	(SElECT ID FROM Question WHERE [ID] = '14'), 0),
+    ('Het Amsterdamse Bos',	(SElECT ID FROM Question WHERE [ID] = '14'), 0),
+    ('De Veluwezoom',		(SElECT ID FROM Question WHERE [ID] = '14'), 0),
 
 -- Answers Question 15
-    ('Vaalserberg',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?')), -- True
-    ('Gulperberg',			(SElECT ID FROM Question WHERE [QuestionText] = 'Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?')),
-    ('Sint-Pietersberg',	(SElECT ID FROM Question WHERE [QuestionText] = 'Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?')),
-    ('Cauberg',				(SElECT ID FROM Question WHERE [QuestionText] = 'Welke heuvel in Limburg is het hoogste punt van Nederland en biedt een prachtig uitzicht over de omgeving?'));
+    ('Vaalserberg',			(SElECT ID FROM Question WHERE [ID] = '15'), 1), 
+    ('Gulperberg',			(SElECT ID FROM Question WHERE [ID] = '15'), 0),
+    ('Sint-Pietersberg',	(SElECT ID FROM Question WHERE [ID] = '15'), 0),
+    ('Cauberg',				(SElECT ID FROM Question WHERE [ID] = '15'), 0);
 
 INSERT INTO RouteRoutePoint (Route_ID, RoutePoint_ID)
 VALUES
