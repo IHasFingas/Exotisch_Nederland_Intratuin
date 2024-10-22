@@ -358,6 +358,30 @@ VALUES
 	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
 	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Rolvennen'));
 
+INSERT INTO UserRole ([User_ID], Role_ID)
+VALUES
+    -- Jan Janssen is a Hiker and a Volunteer
+    ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM [Role] WHERE [Name] = 'Hiker')),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM [Role] WHERE [Name] = 'Volunteer')),
+
+    -- Piet Meijer is a Validator
+    ((SELECT ID FROM [User] WHERE [Name] = 'Piet Meijer'), (SELECT ID FROM [Role] WHERE [Name] = 'Validator')),
+
+    -- Els van Dijk is a Hiker
+    ((SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'), (SELECT ID FROM [Role] WHERE [Name] = 'Hiker')),
+
+    -- Karla Hermans is a Hiker and a Validator
+    ((SELECT ID FROM [User] WHERE [Name] = 'Karla Hermans'), (SELECT ID FROM [Role] WHERE [Name] = 'Hiker')),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Karla Hermans'), (SELECT ID FROM [Role] WHERE [Name] = 'Validator')),
+
+    -- Tom Peters is a Volunteer
+    ((SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'), (SELECT ID FROM [Role] WHERE [Name] = 'Volunteer')),
+
+    -- Sanne Smit is a Hiker and a Volunteer
+    ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM [Role] WHERE [Name] = 'Hiker')),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM [Role] WHERE [Name] = 'Volunteer'));
+
+
 
 -- Show tables
 SELECT * FROM Area

@@ -269,7 +269,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
                     users.Add(new User(id, name, email, currentLocation, route, GetRolesForUser(id)));
                 } catch (Exception e) {
-                    Console.WriteLine($"Failed to create Route {data.Item1} from database");
+                    Console.WriteLine($"Failed to create User {data.Item1} from database");
                     Console.WriteLine(e.Message);
                 }
             }
@@ -835,17 +835,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         }
 
         public void AddUserRole(User user, Role role) {
-            connection.Open();
+            //connection.Open();
 
-            string query = "INSERT INTO UserRole(User_ID, Role_ID) VALUES (@User_ID, @Role_ID)";
+            //string query = "INSERT INTO UserRole(User_ID, Role_ID) VALUES (@User_ID, @Role_ID)";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@User_ID", user.GetID());
-                command.Parameters.AddWithValue("@Role_ID", role.GetID());
-                command.ExecuteNonQuery();
-            }
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("@User_ID", user.GetID());
+            //    command.Parameters.AddWithValue("@Role_ID", role.GetID());
+            //    command.ExecuteNonQuery();
+            //}
 
-            connection.Close();
+            //connection.Close();
         }
 
 
