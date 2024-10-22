@@ -569,6 +569,116 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
         /*public List<Tuple<int, int>> GetAllUserQuestions() { }*/
 
+        public Area GetAreaByID(int id)
+        {
+            GetAllAreas();
+            foreach (Area area in areas)
+            {
+                if (area.GetID() == id) 
+                { return area; }
+            }
+            return null;
+        }
+
+        public Role GetRoleByID(int id)
+        {
+            GetAllRoles();
+            foreach (Role role in roles)
+            {
+                if (role.GetID() == id)
+                { return role; }
+            }
+            return null;
+        }
+
+        public Specie GetSpecieByID(int id)
+        {
+            GetAllSpecies();
+            foreach (Specie specie in species)
+            {
+                if (specie.GetID() == id)
+                { return specie; }
+            }
+            return null;
+        }
+
+        public Route GetRouteByID(int id)
+        {
+            GetAllRoutes();
+            foreach (Route route in routes)
+            {
+                if (route.GetID() == id)
+                { return route; }
+            }
+            return null;
+        }
+
+        public POI GetPOIByID(int id)
+        {
+            GetAllPOIs();
+            foreach (POI poi in pointsOfInterest)
+            {
+                if (poi.GetID() == id)
+                { return poi ; }
+            }
+            return null;
+        }
+
+        public User GetUserByID(int id)
+        {
+            GetAllUsers();
+            foreach (User user in users)
+            {
+                if (user.GetID() == id)
+                { return user; }
+            }
+            return null;
+        }
+
+        public Game GetGameByID(int id)
+        {
+            GetAllGames();
+            foreach (Game game in games)
+            {
+                if (game.GetID() == id)
+                { return game; }
+            }
+            return null;
+        }
+
+        public Observation GetObservationByID(int id)
+        {
+            GetAllObservations();
+            foreach (Observation observation in observations)
+            {
+                if (observation.GetID() == id)
+                { return observation; }
+            }
+            return null;
+        }
+
+        public Question GetQuestionByID(int id)
+        {
+            GetAllQuestions();
+            foreach (Question question in questions)
+            {
+                if (question.GetID() == id)
+                { return question; }
+            }
+            return null;
+        }
+
+        public Answer GetAnswerByID(int id)
+        {
+            GetAllAnswers();
+            foreach (Answer answer in answers)
+            {
+                if (answer.GetID() == id)
+                { return answer; }
+            }
+            return null;
+        }
+
 
         //Adding (Setting) methods
 
