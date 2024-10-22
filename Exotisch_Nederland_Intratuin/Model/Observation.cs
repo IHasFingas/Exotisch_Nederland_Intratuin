@@ -85,8 +85,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllObservations();
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"Observation {id}: {specie.GetName()}, {location}, Area {area.GetID()}, User {user.GetID()}";
         }
 

@@ -56,8 +56,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"Role {id}: {name}, Key => {key}";
         }
 

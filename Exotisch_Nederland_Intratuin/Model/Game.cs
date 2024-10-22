@@ -75,8 +75,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"Game {id}: {name}, {description}, Route {route.GetID()}";
         }
 

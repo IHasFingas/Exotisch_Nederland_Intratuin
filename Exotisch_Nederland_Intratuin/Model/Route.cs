@@ -107,15 +107,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             string routePointIDs = string.Empty;
-            foreach (RoutePoint routePoint in routePoints)
-            {
+            foreach (RoutePoint routePoint in routePoints) {
                 routePointIDs += routePoint.GetID();
             }
             return $"Route {id}: {name}, {length}km, Area {area.GetID()}, RoutePoints = {routePointIDs}";
-            
+
         }
 
 

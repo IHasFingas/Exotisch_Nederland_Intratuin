@@ -42,7 +42,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             SqlDal.AddArea(this);
         }
-        
+
 
         //Methods
 
@@ -67,8 +67,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"Area {id}: {name}, {size}ha";
         }
 

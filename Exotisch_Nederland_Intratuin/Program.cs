@@ -20,28 +20,28 @@ namespace Exotisch_Nederland_Intratuin {
             List<Answer> answers = Answer.GetAllAnswers();
 
             Console.WriteLine("Done!\n");
-            foreach (Area area in areas) {Console.WriteLine(area); }
+            foreach (Area area in areas) { Console.WriteLine(area); }
             Console.WriteLine();
-            foreach (Role role in roles) {Console.WriteLine(role); }
+            foreach (Role role in roles) { Console.WriteLine(role); }
             Console.WriteLine();
-            foreach (Specie specie in species) {Console.WriteLine(specie); }
+            foreach (Specie specie in species) { Console.WriteLine(specie); }
             Console.WriteLine();
-            foreach (RoutePoint routePoint in routePoints) {Console.WriteLine(routePoint); }
+            foreach (RoutePoint routePoint in routePoints) { Console.WriteLine(routePoint); }
             Console.WriteLine();
-            foreach (Route route in routes) {Console.WriteLine(route); }
+            foreach (Route route in routes) { Console.WriteLine(route); }
             Console.WriteLine();
-            foreach (POI poi in POIs) {Console.WriteLine(poi); }
+            foreach (POI poi in POIs) { Console.WriteLine(poi); }
             Console.WriteLine();
-            foreach (User user in users) {Console.WriteLine(user);}
+            foreach (User user in users) { Console.WriteLine(user); }
             Console.WriteLine();
-            foreach (Game game in games) {Console.WriteLine(game);}
+            foreach (Game game in games) { Console.WriteLine(game); }
             Console.WriteLine();
-            foreach (Observation observation in observations) {Console.WriteLine(observation);}
+            foreach (Observation observation in observations) { Console.WriteLine(observation); }
             Console.WriteLine();
-            foreach (Question question in questions) {Console.WriteLine(question);}
+            foreach (Question question in questions) { Console.WriteLine(question); }
             Console.WriteLine();
-            foreach (Answer answer in answers) {Console.WriteLine(answer);}
-            
+            foreach (Answer answer in answers) { Console.WriteLine(answer); }
+
             Console.ReadKey();
         }
     }

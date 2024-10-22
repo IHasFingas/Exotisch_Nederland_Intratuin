@@ -8,6 +8,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private int id;
         private string answerText;
         private Question question;
+        private bool correctAnswer;
 
 
         //Constructors
@@ -18,10 +19,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
         /// <param name="id">ID of the answer</param>
         /// <param name="answerText">Text of the answer</param>
         /// <param name="question"><see cref="Question"/> the answer belongs to</param>
-        public Answer(int id, string answerText, Question question) {
+        /// <param name="correctAnswer">Whether the answer is correct</param>
+        public Answer(int id, string answerText, Question question, bool correctAnswer) {
             this.id = id;
             this.answerText = answerText;
             this.question = question;
+            this.correctAnswer = correctAnswer;
 
             //Tell question this answer belongs to it
             this.question.AddAnswer(this);
@@ -33,9 +36,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
         /// </summary>
         /// <param name="answerText">Text of the answer</param>
         /// <param name="question"><see cref="Question"/> the answer belongs to</param>
-        public Answer(string answerText, Question question) {
+        /// <param name="correctAnswer">Whether the answer is correct</param>
+        public Answer(string answerText, Question question, bool correctAnswer) {
             this.answerText = answerText;
             this.question = question;
+            this.correctAnswer = correctAnswer;
 
             //Tell question this answer belongs to it
             this.question.AddAnswer(this);
@@ -50,9 +55,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllAnswers();
         }
 
-        public override string ToString()
-        {
-            return $"Answer {id}: {answerText}, Question {question.GetID()}";
+        public override string ToString() {
+            return $"Answer {id}: {answerText}, Question {question.GetID()}, Correct: {correctAnswer}";
         }
 
 
@@ -61,6 +65,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetAnswerText() { return answerText; }
 
         public Question GetQuestion() { return question; }
+
+        public bool GetCorrect() { return correctAnswer; }
 
         public void SetID(int id) { this.id = id; }
     }

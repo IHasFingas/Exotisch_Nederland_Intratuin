@@ -2,11 +2,13 @@ using Exotisch_Nederland_Intratuin.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Messaging;
+using System.Windows.Input;
 
 namespace Exotisch_Nederland_Intratuin.DAL {
     internal class SQLDAL {
         private static SQLDAL instance;
-        private readonly string connectionString = "Data Source =.; Initial Catalog = Intratuin; Trusted_Connection = True";
+        private readonly string connectionString = "Data Source =.; Initial Catalog = Intratuin; Trusted_Connection = True; MultipleActiveResultSets = True";
         private readonly SqlConnection connection;
 
         private List<Area> areas = new List<Area>();
@@ -197,11 +199,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string name = (string)reader["Name"];
                         double length = (double)reader["Length"];
                         int areaID = (int)reader["Area_ID"];
+                        List<RoutePoint> routePoints = GetRoutePointsForRoute(id);
 
                         foreach (Area area in areas) {
                             if (areaID == area.GetID()) {
                                 try {
-                                    routes.Add(new Route(id, name, length, area, new List<RoutePoint>(), new List<Game>()));
+                                    routes.Add(new Route(id, name, length, area, routePoints, new List<Game>()));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create Route {id} from database");
                                     Console.WriteLine(e.Message);
@@ -214,6 +217,33 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             connection.Close();
             return routes;
+        }
+
+        private List<RoutePoint> GetRoutePointsForRoute(int routeID) {
+            using(SqlConnection newConnection = new SqlConnection(connectionString)) {
+                newConnection.Open();
+
+                string query = "SELECT RoutePoint_ID FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
+                List<RoutePoint> routePoints = new List<RoutePoint>();
+
+                using (SqlCommand command = new SqlCommand(query, connection)) {
+                    command.Parameters.AddWithValue("@Route_ID", routeID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            foreach (RoutePoint routePoint in this.routePoints) {
+                                if ((int)reader["RoutePoint_ID"] == routePoint.GetID()) {
+                                    routePoints.Add(routePoint);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                newConnection.Close();
+            }
+            
+            return routePoints;
         }
 
         /// <summary>
@@ -443,11 +473,19 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         int id = (int)reader["ID"];
                         string answerText = (string)reader["AnswerText"];
                         int questionID = (int)reader["Question_ID"];
+                        bool correctAnswer = reader.GetBoolean(3);
+                        //bool correctAnswer;
+
+                        //if (correctINT == 1) {
+                        //    correctAnswer = true;
+                        //} else {
+                        //    correctAnswer = false;
+                        //}
 
                         foreach (Question question in questions) {
                             if (questionID == question.GetID()) {
                                 try {
-                                    answers.Add(new Answer(id, answerText, question));
+                                    answers.Add(new Answer(id, answerText, question, correctAnswer));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create Answer {id} from database");
                                     Console.WriteLine(e.Message);
@@ -737,11 +775,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             answers.Add(answer);
             connection.Open();
 
-            string query = "INSERT INTO Answer(AnswerText, Question_ID) VALUES (@AnswerText, @Question_ID)";
+            string query = "INSERT INTO Answer(AnswerText, Question_ID, Correct) VALUES (@AnswerText, @Question_ID, @Correct)";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Name", answer.GetAnswerText());
-                command.Parameters.AddWithValue("@Domain", answer.GetQuestion().GetID());
+                command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
+                command.Parameters.AddWithValue("@Question_ID", answer.GetQuestion().GetID());
+                command.Parameters.AddWithValue("@Correct", answer.GetCorrect());
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";

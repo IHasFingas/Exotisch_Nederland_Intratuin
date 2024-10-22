@@ -59,7 +59,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-
         /// <summary>Adds a <see cref="POI"/> to <see cref="RoutePoint"/>'s list of POI's it is near</summary>
         /// <param name="point"><see cref="POI"/> to be added to <see langword="this"/> <see cref="RoutePoint"/></param>
         public void AddPointOfInterest(POI point) {
@@ -68,8 +67,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"RoutePoint {id}: {name}, {location}";
         }
 
