@@ -492,7 +492,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return rolesForUser;
         }
 
-        /*public List<Tuple<int, int>> GetAllUserQuestions() { }*/
+        /*public List<Question> GetQuestionsForUser(int userID) { }*/
+
 
         //Gets single object from internal list
         public Area GetAreaByID(int id) {
@@ -821,32 +822,34 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
         //Add entry to linking table for object1 and object2
         public void AddRouteRoutePoint(Route route, RoutePoint routePoint) {
-            //connection.Open();
+            connection.Open();
 
-            //string query = "INSERT INTO RouteRoutePoint(Route_ID, RoutePoint_ID) VALUES (@Route_ID, @RoutePoint_ID)";
+            string query = "INSERT INTO RouteRoutePoint(Route_ID, RoutePoint_ID) VALUES (@Route_ID, @RoutePoint_ID)";
 
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("@Route_ID", route.GetID());
-            //    command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
-            //    command.ExecuteNonQuery();
-            //}
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+                command.ExecuteNonQuery();
+            }
 
-            //connection.Close();
+            connection.Close();
         }
 
         public void AddUserRole(User user, Role role) {
-            //connection.Open();
+            connection.Open();
 
-            //string query = "INSERT INTO UserRole(User_ID, Role_ID) VALUES (@User_ID, @Role_ID)";
+            string query = "INSERT INTO UserRole(User_ID, Role_ID) VALUES (@User_ID, @Role_ID)";
 
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("@User_ID", user.GetID());
-            //    command.Parameters.AddWithValue("@Role_ID", role.GetID());
-            //    command.ExecuteNonQuery();
-            //}
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@User_ID", user.GetID());
+                command.Parameters.AddWithValue("@Role_ID", role.GetID());
+                command.ExecuteNonQuery();
+            }
 
-            //connection.Close();
+            connection.Close();
         }
+
+        /*public void AddUserQuestion(User user, Question question) { }*/
 
 
         // Editing methods

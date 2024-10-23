@@ -1,55 +1,75 @@
 ﻿using Exotisch_Nederland_Intratuin.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Exotisch_Nederland_Intratuin {
     internal class Program {
+        private static List<Area> areas;
+        private static List<Role> roles;
+        private static List<Specie> species;
+        private static List<RoutePoint> routePoints;
+        private static List<Route> routes;
+        private static List<POI> POIs;
+        private static List<User> users;
+        private static List<Game> games;
+        private static List<Observation> observations;
+        private static List<Question> questions;
+        private static List<Answer> answers;
+
         static void Main(string[] args) {
+            GetAllData();
+
+            Console.WriteLine("Press enter to write all data");
+            Console.ReadKey();
+
+            WriteAllData();
+
+            //Demonstrate GetObjectByID()
+            //Demonstrate AddObject()
+            //Demonstrate EditObject()
+            //Demonstrate DeleteObject()
+
+            Console.ReadKey();
+        }
+
+        public static void GetAllData() {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            //Filling lists with all pre-entered data from database
             Console.WriteLine("Reading all data from database...");
-            List<Area> areas = Area.GetAllAreas();
-            List<Role> roles = Role.GetALlRoles();
-            List<Specie> species = Specie.GetAllSpecies();
-            List<RoutePoint> routePoints = RoutePoint.GetAllRoutePoints();
-            List<Route> routes = Route.GetAllRoutes();
-            List<POI> POIs = POI.GetAllPOIs();
-            List<User> users = User.GetAllUsers();
-            List<Game> games = Game.GetAllGames();
-            List<Observation> observations = Observation.GetAllObservations();
-            List<Question> questions = Question.GetAllQuestions();
-            List<Answer> answers = Answer.GetAllAnswers();
+
+            //Filling lists with all pre-entered data from database
+            areas = Area.GetAllAreas();
+            roles = Role.GetALlRoles();
+            species = Specie.GetAllSpecies();
+            routePoints = RoutePoint.GetAllRoutePoints();
+            routes = Route.GetAllRoutes();
+            POIs = POI.GetAllPOIs();
+            users = User.GetAllUsers();
+            games = Game.GetAllGames();
+            observations = Observation.GetAllObservations();
+            questions = Question.GetAllQuestions();
+            answers = Answer.GetAllAnswers();
             Console.WriteLine("Done!");
 
             stopwatch.Stop();
             Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms\n");
+        }
 
-            foreach (Area area in areas) { Console.WriteLine(area); }
-            Console.WriteLine();
-            foreach (Role role in roles) { Console.WriteLine(role); }
-            Console.WriteLine();
-            foreach (Specie specie in species) { Console.WriteLine(specie); }
-            Console.WriteLine();
-            foreach (RoutePoint routePoint in routePoints) { Console.WriteLine(routePoint); }
-            Console.WriteLine();
-            foreach (Route route in routes) { Console.WriteLine(route); }
-            Console.WriteLine();
-            foreach (POI poi in POIs) { Console.WriteLine(poi); }
-            Console.WriteLine();
-            foreach (User user in users) { Console.WriteLine(user); }
-            Console.WriteLine();
-            foreach (Game game in games) { Console.WriteLine(game); }
-            Console.WriteLine();
-            foreach (Observation observation in observations) { Console.WriteLine(observation); }
-            Console.WriteLine();
-            foreach (Question question in questions) { Console.WriteLine(question); }
-            Console.WriteLine();
-            foreach (Answer answer in answers) { Console.WriteLine(answer); }
+        public static void WriteAllData() {
+            // Create a tuple of lists of different types
+            var allData = (areas, roles, species, routePoints, routes, POIs, users, games, observations, questions, answers);
 
-            Console.ReadKey();
+            // Use IEnumerable to iterate over each item
+            foreach (IEnumerable list in new IEnumerable[] { allData.areas, allData.roles, allData.species, allData.routePoints, allData.routes, allData.POIs, allData.users, allData.games, allData.observations, allData.questions, allData.answers }) {
+                foreach (var item in list) {
+                    Console.WriteLine(item);
+                }
+
+                Console.WriteLine();
+            }
         }
     }
 }

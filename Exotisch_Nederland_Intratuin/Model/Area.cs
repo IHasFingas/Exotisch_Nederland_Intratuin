@@ -38,16 +38,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllAreas();
         }
 
-        public void AddRoute(Route route) {
-            if (!routes.Contains(route)) {
-                routes.Add(route);
-            }
-        }
-
-        public void AddObservation(Observation observation) {
-            if (!observations.Contains(observation)) {
-                observations.Add(observation);
-            }
+        public static Area GetAreaByID(int id) {
+            return SqlDal.GetAreaByID(id);
         }
 
         public void EditArea(string name, double size) {
@@ -58,6 +50,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void DeleteArea() {
             SqlDal.DeleteArea(this);
+        }
+
+        public void AddRoute(Route route) {
+            if (!routes.Contains(route)) {
+                routes.Add(route);
+            }
+        }
+
+        public void AddObservation(Observation observation) {
+            if (!observations.Contains(observation)) {
+                observations.Add(observation);
+            }
         }
 
         public override string ToString() {

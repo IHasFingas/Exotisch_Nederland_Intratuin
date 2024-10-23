@@ -23,7 +23,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.users = new List<User>();
 
             this.routePoints = new List<RoutePoint>();
-            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint); }
+            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint, true); }
 
             this.games = new List<Game>();
             foreach (Game game in games) { this.games.Add(game); }
@@ -40,7 +40,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.users = new List<User>();
 
             this.routePoints = new List<RoutePoint>();
-            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint); }
+            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint, false); }
 
             this.games = new List<Game>();
             foreach (Game game in games) { this.games.Add(game); }
@@ -57,7 +57,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllRoutes();
         }
 
-        public void AddRoutePoint(RoutePoint routePoint) {
+        public void AddRoutePoint(RoutePoint routePoint, bool fromDatabase) {
             if (!routePoints.Contains(routePoint)) {
                 routePoints.Add(routePoint);
 
@@ -65,7 +65,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 routePoint.AddRoute(this);
 
                 //Add new entry to linking table
-                SqlDal.AddRouteRoutePoint(this, routePoint);
+                //Only add if route is from scratch, otherwise these entries are already in DB
+                if(!fromDatabase) {
+                    SqlDal.AddRouteRoutePoint(this, routePoint);
+                }
             }
         }
 

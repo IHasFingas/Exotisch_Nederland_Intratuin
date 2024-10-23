@@ -24,7 +24,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
 
             this.roles = new List<Role>();
-            foreach (Role role in roles) { AddRole(role); }
+            foreach (Role role in roles) { AddRole(role, true); }
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
@@ -39,7 +39,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
 
             this.roles = new List<Role>();
-            foreach (Role role in roles) { AddRole(role); }
+            foreach (Role role in roles) { AddRole(role, false); }
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
@@ -53,7 +53,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllUsers();
         }
 
-        public void AddRole(Role role) {
+        public void AddRole(Role role, bool fromDatabase) {
             if (!roles.Contains(role)) {
                 roles.Add(role);
 
@@ -61,7 +61,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 role.AddUser(this);
 
                 //Add new entry to linking table
-                SqlDal.AddUserRole(this, role);
+                //Only add if user is from scratch, otherwise these entries are already in DB
+                if (!fromDatabase) {
+                    SqlDal.AddUserRole(this, role);
+                }
             }
         }
 
