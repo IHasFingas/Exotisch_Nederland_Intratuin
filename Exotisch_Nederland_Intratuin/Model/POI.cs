@@ -44,7 +44,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetPOIByID(id);
         }
 
-        public void EditArea(string name, string location, RoutePoint routePoint) {
+        public void EditPOI(string name, string location, RoutePoint routePoint) {
             this.name = name;
             this.location = location;
             this.routePoint = routePoint;

@@ -326,10 +326,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string name = (string)reader["Name"];
                         string location = (string)reader["Location"];
                         string description = (string)reader["Description"];
-                        //Image picture = (Image)reader["Picture"];
+                        byte[] picture = null;
                         int specieID = (int)reader["Specie_ID"];
                         int areaID = (int)reader["Area_ID"];
                         int userID = (int)reader["User_ID"];
+
+                        try {
+                            picture = (byte[])reader["Picture"];
+                        } catch (Exception) { }
 
                         foreach (Specie specie in species) {
                             if (specieID == specie.GetID()) {
@@ -340,7 +344,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                                         foreach (User user in users) {
                                             if (userID == user.GetID()) {
                                                 try {
-                                                    observations.Add(new Observation(id, name, location, description, specie, area, user));
+                                                    observations.Add(new Observation(id, name, location, description, picture, specie, area, user));
                                                 } catch (Exception e) {
                                                     Console.WriteLine($"Failed to create Observation {id} from database");
                                                     Console.WriteLine(e.Message);
@@ -607,7 +611,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         }
 
 
-        //Adding (Setting) methods
+        //Adding methods
         //Add Object to the database and to corresponding area list in SQLDAL
         public void AddArea(Area area) {
             areas.Add(area);
@@ -775,14 +779,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Name", observation.GetName());
                 command.Parameters.AddWithValue("@Domain", observation.GetLocation());
                 command.Parameters.AddWithValue("@Description", observation.GetDescription());
-                command.Parameters.AddWithValue("@Picture", null);
+                command.Parameters.AddWithValue("@Picture", observation.GetPicture());
                 command.Parameters.AddWithValue("@Specie_ID", observation.GetSpecie().GetID());
                 command.Parameters.AddWithValue("@Area_ID", observation.GetArea().GetID());
                 command.Parameters.AddWithValue("@User_ID", observation.GetUser().GetID());
-
-                //if(observation.GetPicture() != null) {
-                //    command.Parameters.AddWithValue("@Picture", observation.GetPicture());
-                //}
 
                 command.ExecuteNonQuery();
 

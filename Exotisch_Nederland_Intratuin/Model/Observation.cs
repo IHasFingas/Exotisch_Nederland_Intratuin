@@ -1,30 +1,36 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class Observation {
         private static SQLDAL SqlDal = SQLDAL.Instance;
 
         private int id;
-        private string name; // verwijderen? specie heeft al een naam
+        private string name;
         private string location;
         private string description;
-        //private Image picture; To fix
+        private byte[] picture;
         private Specie specie;
         private Area area;
         private User user;
 
 
         //Constructor for creating an Observation from database
-        public Observation(int id, string name, string location, string description, /*Image picture,*/ Specie specie, Area area, User user) {
+        public Observation(int id, string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
             this.id = id;
             this.name = name;
             this.location = location;
             this.description = description;
-            //this.picture = picture;
+            this.picture = picture;
             this.specie = specie;
             this.area = area;
             this.user = user;
+
+            if(this.name == "") {
+                this.name = specie.GetName();
+            }
 
             //Tell area this observation was added to it
             area.AddObservation(this);
@@ -37,14 +43,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating an Observation from scratch (automatically adds it to the database)
-        public Observation(string name, string location, string description, /*Image picture,*/ Specie specie, Area area, User user) {
+        public Observation(string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
             this.name = name;
             this.location = location;
             this.description = description;
-            //this.picture = picture;
+            this.picture = picture;
             this.specie = specie;
             this.area = area;
             this.user = user;
+
+            if (this.name == "") {
+                this.name = specie.GetName();
+            }
 
             //Tell area this observation was added to it
             area.AddObservation(this);
@@ -68,10 +78,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetObservationByID(id);
         }
 
-        public void EditObservation(string name, string location, string description, Specie specie, Area area) {
+        public void EditObservation(string name, string location, string description, byte[] picture, Specie specie, Area area) {
             this.name = name;
             this.location = location;
             this.description = description;
+            this.picture = picture;
             this.specie = specie;
             this.area = area;
             SqlDal.EditObservation(this);
@@ -95,6 +106,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetLocation() { return location; }
 
         public string GetDescription() { return description; }
+
+        public byte[] GetPicture() { return picture; }
 
         public Specie GetSpecie() { return specie; }
 

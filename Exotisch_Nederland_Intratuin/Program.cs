@@ -59,7 +59,7 @@ namespace Exotisch_Nederland_Intratuin {
         }
 
         public static void WriteAllData() {
-            // Create a tuple of lists of different types
+            // Create a tuple of lists
             var allData = (areas, roles, species, routePoints, routes, POIs, users, games, observations, questions, answers);
 
             // Use IEnumerable to iterate over each item
