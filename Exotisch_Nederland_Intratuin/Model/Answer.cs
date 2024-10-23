@@ -40,6 +40,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllAnswers();
         }
 
+        public static Answer GetAnswerByID(int id) {
+            return SqlDal.GetAnswerByID(id);
+        }
+
         public void EditAnswer(string answerText, Question question, bool correctAnswer) {
             this.answerText = answerText;
             this.question = question;

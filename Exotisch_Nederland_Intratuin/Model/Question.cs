@@ -44,10 +44,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllQuestions();
         }
 
-        public void AddAnswer(Answer answer) {
-            if (!answers.Contains(answer)) {
-                answers.Add(answer);
-            }
+        public static Question GetQuestionByID(int id) {
+            return SqlDal.GetQuestionByID(id);
         }
 
         public void EditQuestion(string questionText, Game game) {
@@ -58,6 +56,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void DeleteQuestion() {
             SqlDal.DeleteQuestion(this);
+        }
+
+        public void AddAnswer(Answer answer) {
+            if (!answers.Contains(answer)) {
+                answers.Add(answer);
+            }
         }
 
         public override string ToString() {

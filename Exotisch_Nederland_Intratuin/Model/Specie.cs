@@ -53,10 +53,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllSpecies();
         }
 
-        public void AddObservation(Observation observation) {
-            if (!observations.Contains(observation)) {
-                observations.Add(observation);
-            }
+        public static Specie GetSpecieByID(int id) {
+            return SqlDal.GetSpecieByID(id);
         }
 
         public void EditSpecie(string name, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus) {
@@ -73,6 +71,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void DeleteSpecie() {
             SqlDal.DeleteSpecie(this);
+        }
+
+        public void AddObservation(Observation observation) {
+            if (!observations.Contains(observation)) {
+                observations.Add(observation);
+            }
         }
 
         public override string ToString() {

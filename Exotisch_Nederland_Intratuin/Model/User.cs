@@ -53,6 +53,23 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllUsers();
         }
 
+        public static User GetUserByID(int id) {
+            return SqlDal.GetUserByID(id);
+        }
+
+        public void EditUser(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+            this.name = name;
+            this.email = email;
+            this.currentLocation = currentLocation;
+            this.currentRoute = currentRoute;
+            this.roles = roles;
+            SqlDal.EditUser(this);
+        }
+
+        public void DeleteUser() {
+            SqlDal.DeleteUser(this);
+        }
+
         public void AddRole(Role role, bool fromDatabase) {
             if (!roles.Contains(role)) {
                 roles.Add(role);
@@ -72,19 +89,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
             }
-        }
-
-        public void EditUser(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
-            this.name = name;
-            this.email = email;
-            this.currentLocation = currentLocation;
-            this.currentRoute = currentRoute;
-            this.roles = roles;
-            SqlDal.EditUser(this);
-        }
-
-        public void RemoveUser() {
-            SqlDal.DeleteUser(this);
         }
 
         public override string ToString() {

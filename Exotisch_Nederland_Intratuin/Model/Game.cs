@@ -48,10 +48,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllGames();
         }
 
-        public void AddQuestion(Question question) {
-            if (!questions.Contains(question)) {
-                questions.Add(question);
-            }
+        public static Game GetGameByID(int id) {
+            return SqlDal.GetGameByID(id);
         }
 
         public void EditGame(string name, string location, string description) {
@@ -63,6 +61,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void DeleteGame() {
             SqlDal.DeleteGame(this);
+        }
+
+        public void AddQuestion(Question question) {
+            if (!questions.Contains(question)) {
+                questions.Add(question);
+            }
         }
 
         public override string ToString() {

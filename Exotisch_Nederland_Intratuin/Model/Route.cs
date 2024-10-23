@@ -57,6 +57,22 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllRoutes();
         }
 
+        public static Route GetRouteByID(int id) {
+            return SqlDal.GetRouteByID(id);
+        }
+
+        public void EditRoute(string name, double length, Area area, List<RoutePoint> routePoints) {
+            this.name = name;
+            this.length = length;
+            this.area = area;
+            this.routePoints = routePoints;
+            SqlDal.EditRoute(this);
+        }
+
+        public void DeleteRoute() {
+            SqlDal.DeleteRoute(this);
+        }
+
         public void AddRoutePoint(RoutePoint routePoint, bool fromDatabase) {
             if (!routePoints.Contains(routePoint)) {
                 routePoints.Add(routePoint);
@@ -66,7 +82,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
                 //Add new entry to linking table
                 //Only add if route is from scratch, otherwise these entries are already in DB
-                if(!fromDatabase) {
+                if (!fromDatabase) {
                     SqlDal.AddRouteRoutePoint(this, routePoint);
                 }
             }
@@ -82,18 +98,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (!users.Contains(user)) {
                 users.Add(user);
             }
-        }
-
-        public void EditRoute(string name, double length, Area area, List<RoutePoint> routePoints) {
-            this.name = name;
-            this.length = length;
-            this.area = area;
-            this.routePoints = routePoints;
-            SqlDal.EditRoute(this);
-        }
-
-        public void DeleteRoute() {
-            SqlDal.DeleteRoute(this);
         }
 
         public override string ToString() {

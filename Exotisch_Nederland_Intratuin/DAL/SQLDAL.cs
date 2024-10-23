@@ -536,6 +536,16 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return null;
         }
 
+        public RoutePoint GetRoutePointByID(int id) {
+            GetAllRoutePoints();
+
+            foreach (RoutePoint routePoint in routePoints) {
+                if (routePoint.GetID() == id) { return routePoint; }
+            }
+
+            return null;
+        }
+
         public POI GetPOIByID(int id) {
             GetAllPOIs();
 

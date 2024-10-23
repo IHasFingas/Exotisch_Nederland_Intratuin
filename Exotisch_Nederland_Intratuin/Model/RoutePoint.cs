@@ -38,16 +38,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllRoutePoints();
         }
 
-        public void AddRoute(Route route) {
-            if (!routes.Contains(route)) {
-                routes.Add(route);
-            }
-        }
-
-        public void AddPointOfInterest(POI point) {
-            if (!pointsOfInterest.Contains(point)) {
-                pointsOfInterest.Add(point);
-            }
+        public static RoutePoint GetRoutePointByID(int id) {
+            return SqlDal.GetRoutePointByID(id);
         }
 
         public void EditRoutePoint(string name, string location) {
@@ -58,6 +50,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void DeleteRoutePoint() {
             SqlDal.DeleteRoutePoint(this);
+        }
+
+        public void AddRoute(Route route) {
+            if (!routes.Contains(route)) {
+                routes.Add(route);
+            }
+        }
+
+        public void AddPointOfInterest(POI point) {
+            if (!pointsOfInterest.Contains(point)) {
+                pointsOfInterest.Add(point);
+            }
         }
 
         public override string ToString() {

@@ -64,6 +64,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllObservations();
         }
 
+        public static Observation GetObservationByID(int id) {
+            return SqlDal.GetObservationByID(id);
+        }
+
         public void EditObservation(string name, string location, string description, Specie specie, Area area) {
             this.name = name;
             this.location = location;

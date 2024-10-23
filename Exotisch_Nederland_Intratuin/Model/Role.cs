@@ -35,10 +35,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetAllRoles();
         }
 
-        public void AddUser(User user) {
-            if (!users.Contains(user)) {
-                users.Add(user);
-            }
+        public static Role GetRoleByID(int id) {
+            return SqlDal.GetRoleByID(id);
         }
 
         public void EditRole(string name, string key) {
@@ -49,6 +47,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void DeleteRole() {
             SqlDal.DeleteRole(this);
+        }
+
+        public void AddUser(User user) {
+            if (!users.Contains(user)) {
+                users.Add(user);
+            }
         }
 
         public override string ToString() {
