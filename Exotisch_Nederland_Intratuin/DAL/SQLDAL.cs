@@ -190,7 +190,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                     double length = data.Item3;
                     Area area = data.Item4;
 
-                    routes.Add(new Route(id, name, length, area, GetRoutePointsForRoute(id), new List<Game>()));
+                    routes.Add(new Route(id, name, length, area, GetAllRoutePointsForRoute(id), new List<Game>()));
                 } catch (Exception e) {
                     Console.WriteLine($"Failed to create Route {data.Item1} from database");
                     Console.WriteLine(e.Message);
@@ -267,7 +267,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                     string currentLocation = data.Item4;
                     Route route = data.Item5;
 
-                    users.Add(new User(id, name, email, currentLocation, route, GetRolesForUser(id)));
+                    users.Add(new User(id, name, email, currentLocation, route, GetAllRolesForUser(id), GetAllAnsweredQuestionsForUser(id)));
                 } catch (Exception e) {
                     Console.WriteLine($"Failed to create User {data.Item1} from database");
                     Console.WriteLine(e.Message);
@@ -436,7 +436,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return answers;
         }
 
-        private List<RoutePoint> GetRoutePointsForRoute(int routeID) {
+        //Linking tables
+        private List<RoutePoint> GetAllRoutePointsForRoute(int routeID) {
             List<RoutePoint> routePointsForRoute = new List<RoutePoint>();
 
             using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
@@ -466,7 +467,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return routePointsForRoute;
         }
 
-        private List<Role> GetRolesForUser(int userID) {
+        private List<Role> GetAllRolesForUser(int userID) {
             List<Role> rolesForUser = new List<Role>();
 
             using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
@@ -496,7 +497,35 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return rolesForUser;
         }
 
-        /*public List<Question> GetQuestionsForUser(int userID) { }*/
+        private List<Question> GetAllAnsweredQuestionsForUser(int userID) {
+            List<Question> answeredQuestions = new List<Question>();
+
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT Question_ID FROM UserQuestion WHERE User_ID = @User_ID";
+
+                using (SqlCommand command = new SqlCommand(query, connection)) {
+                    command.Parameters.AddWithValue("@User_ID", userID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int questionID = (int)reader["Question_ID"];
+
+                            foreach (Question question in this.questions) {
+                                if (questionID == question.GetID()) {
+                                    answeredQuestions.Add(question);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return answeredQuestions;
+        }
 
 
         //Gets single object from internal list
@@ -830,7 +859,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
-        //Add entry to linking table for object1 and object2
+        //Linking tables
         public void AddRouteRoutePoint(Route route, RoutePoint routePoint) {
             connection.Open();
 
@@ -859,7 +888,19 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             connection.Close();
         }
 
-        /*public void AddUserQuestion(User user, Question question) { }*/
+        public void AddUserQuestion(User user, Question question) {
+            connection.Open();
+
+            string query = "INSERT INTO UserQuestion(User_ID, Question_ID) VALUES (@User_ID, @Question_ID)";
+
+            using(SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@User_ID", user.GetID());
+                command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
 
 
         // Editing methods

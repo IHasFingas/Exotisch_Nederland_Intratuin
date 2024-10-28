@@ -1,5 +1,6 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class User {
@@ -12,16 +13,17 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private Route currentRoute;
         private List<Role> roles;
         private List<Observation> observations;
-
+        private List<Question> answeredQuestions;
 
         //Constructor for creating an User from database
-        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<Question> answeredQuestions) {
             this.id = id;
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
             this.observations = new List<Observation>();
+            this.answeredQuestions = new List<Question>();
 
             this.roles = new List<Role>();
             foreach (Role role in roles) { AddRole(role, true); }
@@ -37,6 +39,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
             this.observations = new List<Observation>();
+            this.answeredQuestions = new List<Question>();
 
             this.roles = new List<Role>();
             foreach (Role role in roles) { AddRole(role, false); }
@@ -88,6 +91,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
+            }
+        }
+
+        public void AddAnsweredQuestion(Question question) {
+            if (!answeredQuestions.Contains(question)) {
+                answeredQuestions.Add(question);
+
+                //Tell question this user has answered it
+                question.AddAnsweredBy(this);
+
+                //Add new entry to linking table
+                SqlDal.AddUserQuestion(this, question);
             }
         }
 
