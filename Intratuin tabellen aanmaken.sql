@@ -229,16 +229,16 @@ VALUES
 
 INSERT INTO POI ([Name], [Description], [Location], RoutePoint_ID)
 VALUES
-    ('Peel Observation Tower',     'A tall structure offering panoramic views of De Groote Peel, ideal for observing the natural landscape and diverse bird species.',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Peelzicht'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelzicht')),
-    ('Peelven Birdwatch',          'A serene spot near Peelven, perfect for birdwatching and appreciating the wetland habitat.',										(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Peelven'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelven')),
-    ('Kempen Forest View',         'An elevated viewpoint in Kempenbos offering views of the dense forest and its rich biodiversity.',									(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Kempenbos'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Kempenbos')),
-    ('Maas River Lookout',         'A scenic lookout providing views over the Maas River valley, with abundant opportunities for wildlife spotting.',					(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Maasvallei'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Maasvallei')),
-    ('Heide Panorama',             'A beautiful panorama spot at Heidezicht, offering expansive views over the heathlands and unique flora.',							(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Heidezicht'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Heidezicht')),
-    ('Schinveldse Forest Shelter', 'A quiet shelter in Schinveldse Bos, ideal for resting and observing the surrounding forest ecosystem.',								(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Schinveldse Bos'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Schinveldse Bos')),
-    ('Leubeek Waterfall',          'A small yet charming waterfall along Leubeek, creating a peaceful atmosphere within the forest.',									(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Leubeek'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Leubeek')),
-    ('Exaten Castle Ruins',        'Ruins of Exaten Castle, steeped in history and offering a glimpse into the region�s medieval past.',								(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Exaten'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
-    ('Elfenmeer Lakeside',         'A tranquil lakeside area at Elfenmeer, popular for relaxation and enjoying the water views.',										(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Elfenmeer'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Elfenmeer')),
-    ('Rolvennen Scenic Point',     'A scenic viewpoint at Rolvennen, providing a picturesque view of the wetlands and surrounding nature.',								(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Rolvennen'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Rolvennen'));
+    ('Peel Observation Tower',		'A tall structure offering panoramic views of De Groote Peel, ideal for observing the natural landscape and diverse bird species.',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Peelzicht'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelzicht')),
+    ('Peelven Birdwatch',			'A serene spot near Peelven, perfect for birdwatching and appreciating the wetland habitat.',										(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Peelven'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelven')),
+    ('Kempen Forest View',			'An elevated viewpoint in Kempenbos offering views of the dense forest and its rich biodiversity.',									(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Kempenbos'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Kempenbos')),
+    ('Maas River Lookout',			'A scenic lookout providing views over the Maas River valley, with abundant opportunities for wildlife spotting.',					(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Maasvallei'),					(SELECT ID FROM RoutePoint WHERE [Name] = 'Maasvallei')),
+	('Uitkijkpunt Brunssummerheide','Scenic viewpoint over the heather fields and forests of Brunsummerheide.',															(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide'),  (SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
+    ('Bron van de Roode beek',      'The tranquil source of the Roode Beek, nestled in lush surroundings.',																(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek')),
+    ('Leubeek Waterfall',			'A small yet charming waterfall along Leubeek, creating a peaceful atmosphere within the forest.',									(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Leubeek'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Leubeek')),
+    ('Exaten Castle Ruins',			'Ruins of Exaten Castle, steeped in history and offering a glimpse into the region�s medieval past.',								(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Exaten'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
+    ('Elfenmeer Lakeside',			'A tranquil lakeside area at Elfenmeer, popular for relaxation and enjoying the water views.',										(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Elfenmeer'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Elfenmeer')),
+    ('Rolvennen Scenic Point',		'A scenic viewpoint at Rolvennen, providing a picturesque view of the wetlands and surrounding nature.',							(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Rolvennen'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Rolvennen'));
 
 
 INSERT INTO [User] ([Name], Email, CurrentLocation, Route_ID)
@@ -419,28 +419,11 @@ VALUES
     ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM [Role] WHERE [Name] = 'Volunteer'));
 
 
-INSERT INTO UserQuestion (User_ID, Question_ID)
+INSERT INTO UserQuestion ([User_ID], Question_ID)
 VALUES
     -- Linking Jan Janssen to two random questions
     ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM Question WHERE [ID] = 1)),
     ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM Question WHERE [ID] = 4)),
-INSERT INTO RoutePointRoutePoint (RoutePoint1_ID, RoutePoint2_ID, Distance)
-VALUES
-	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 2), 0.14),
-	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 6), 0.83),
-	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 7), 0.65),
-	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 10), 1.23),
-	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 4), 1.51),
-	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 5), 1.42),
-	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 8), 1.24),
-	((SELECT ID FROM RoutePoint WHERE ID = 3), (SELECT ID FROM RoutePoint WHERE ID = 4), 0.47),
-	((SELECT ID FROM RoutePoint WHERE ID = 3), (SELECT ID FROM RoutePoint WHERE ID = 8), 0.46),
-	((SELECT ID FROM RoutePoint WHERE ID = 4), (SELECT ID FROM RoutePoint WHERE ID = 5), 2.15),
-	((SELECT ID FROM RoutePoint WHERE ID = 5), (SELECT ID FROM RoutePoint WHERE ID = 10), 0.6),
-	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 7), 0.53),
-	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 8), 0.98),
-	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.55),
-	((SELECT ID FROM RoutePoint WHERE ID = 7), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.26);
 
     -- Linking Piet Meijer to one question
     ((SELECT ID FROM [User] WHERE [Name] = 'Piet Meijer'), (SELECT ID FROM Question WHERE [ID] = 2)),
@@ -458,6 +441,25 @@ VALUES
     -- Linking Sanne Smit to two random questions
     ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM Question WHERE [ID] = 8)),
     ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM Question WHERE [ID] = 9));
+
+
+INSERT INTO RoutePointRoutePoint (RoutePoint1_ID, RoutePoint2_ID, Distance)
+VALUES
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 2), 0.14),
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 6), 0.83),
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 7), 0.65),
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 10), 1.23),
+	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 4), 1.51),
+	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 5), 1.42),
+	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 8), 1.24),
+	((SELECT ID FROM RoutePoint WHERE ID = 3), (SELECT ID FROM RoutePoint WHERE ID = 4), 0.47),
+	((SELECT ID FROM RoutePoint WHERE ID = 3), (SELECT ID FROM RoutePoint WHERE ID = 8), 0.46),
+	((SELECT ID FROM RoutePoint WHERE ID = 4), (SELECT ID FROM RoutePoint WHERE ID = 5), 2.15),
+	((SELECT ID FROM RoutePoint WHERE ID = 5), (SELECT ID FROM RoutePoint WHERE ID = 10), 0.6),
+	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 7), 0.53),
+	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 8), 0.98),
+	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.55),
+	((SELECT ID FROM RoutePoint WHERE ID = 7), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.26);
 
 
 -- Show tables

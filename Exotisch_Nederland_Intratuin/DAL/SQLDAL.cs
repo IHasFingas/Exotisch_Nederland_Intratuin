@@ -500,9 +500,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
                 secondConnection.Open();
-        private void FillNeighboursForAllRoutePoints() {
-            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
-                secondConnection.Open();
 
                 string query = "SELECT Question_ID FROM UserQuestion WHERE User_ID = @User_ID";
 
@@ -528,6 +525,9 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return answeredQuestions;
         }
 
+        private void FillNeighboursForAllRoutePoints() {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
 
                 string query = "SELECT * FROM RoutePointRoutePoint";
 
@@ -551,8 +551,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                                 }
                             }
 
-                            routePoint1.AddNeighbour(routePoint2, distance);
-                            routePoint2.AddNeighbour(routePoint1, distance);
+                            routePoint1.AddNeighbour(routePoint2, distance, true);
+                            routePoint2.AddNeighbour(routePoint1, distance, true);
                         }
                     }
                 }
@@ -927,9 +927,24 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             string query = "INSERT INTO UserQuestion(User_ID, Question_ID) VALUES (@User_ID, @Question_ID)";
 
-            using(SqlCommand command = new SqlCommand(query, connection)) {
+            using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@User_ID", user.GetID());
                 command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        public void AddRoutePointRoutePoint(RoutePoint routePoint1, RoutePoint routePoint2, double distance) {
+            connection.Open();
+
+            string query = "INSERT INTO RoutePointRoutePoint(RoutePoint1_ID, RoutePoint2_ID, Distance) VALUES (@RoutePoint1_ID, @RoutePoint2_ID, @Distance)";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
+                command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
+                command.Parameters.AddWithValue("@Distance", distance);
                 command.ExecuteNonQuery();
             }
 
@@ -1168,6 +1183,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
+            query = "DELETE FROM UserRole WHERE Role_ID = @Role_ID";
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("Role_ID", role.GetID());
+                command.ExecuteNonQuery();
+            }
+
             connection.Close();
         }
 
@@ -1189,6 +1210,18 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             string query = "DELETE FROM RoutePoint WHERE RoutePoint_ID = @RoutePoint_ID";
 
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+                command.ExecuteNonQuery();
+            }
+
+            query = "DELETE FROM RouteRoutePoint WHERE RoutePoint_ID = @RoutePoint_ID";
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+                command.ExecuteNonQuery();
+            }
+
+            query = "DELETE FROM RoutePointRoutePoint WHERE RoutePoint1_ID = @RoutePoint_ID OR RoutePoint2_ID = @RoutePoint_ID";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
                 command.ExecuteNonQuery();
@@ -1245,6 +1278,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
+            query = "DELETE FROM UserQuestion WHERE User_ID = @User_ID";
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("User_ID", user.GetID());
+                command.ExecuteNonQuery();
+            }
+
             connection.Close();
         }
 
@@ -1281,6 +1320,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                command.ExecuteNonQuery();
+            }
+
+            query = "DELETE FROM UserQuestion WHERE Question_ID = @Question_ID";
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("Question_ID", question.GetID());
                 command.ExecuteNonQuery();
             }
 

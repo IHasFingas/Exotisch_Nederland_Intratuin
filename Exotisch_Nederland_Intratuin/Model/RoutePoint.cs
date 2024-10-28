@@ -15,22 +15,24 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
 
         //Constructor for creating a RoutePoint from database
-        public RoutePoint(int id, string name, string location, Dictionary<RoutePoint, double> neighbours) {
+        public RoutePoint(int id, string name, string location) {
             this.id = id;
             this.name = name;
             this.location = location;
             this.routes = new List<Route>();
             this.pointsOfInterest = new List<POI>();
-            this.neighbours = neighbours;
+            this.neighbours = new Dictionary<RoutePoint, double>();
         }
 
         //Constructor for creating a RoutePoint from scratch (automatically adds it to the database)
-        public RoutePoint(string name, string location) {
+        public RoutePoint(string name, string location, Dictionary<RoutePoint, double> neighbours) {
             this.name = name;
             this.location = location;
             this.routes = new List<Route>();
             this.pointsOfInterest = new List<POI>();
+
             this.neighbours = new Dictionary<RoutePoint, double>();
+            foreach (RoutePoint routePoint in neighbours.Keys) { AddNeighbour(routePoint, neighbours[routePoint], false); }
 
             SqlDal.AddRoutePoint(this);
         }
@@ -68,14 +70,27 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public void AddNeighbour(RoutePoint routePoint, double distance) {
+        public void AddNeighbour(RoutePoint routePoint, double distance, bool fromDatabase) {
             if (!neighbours.ContainsKey(routePoint)) {
                 neighbours.Add(routePoint, distance);
+
+                //Tell routepoint they are neighbours
+                routePoint.AddNeighbour(this, distance, fromDatabase);
+
+                //Add new entry to linking table
+                //Only add if RoutePoint is from scratch, otherwise these entries are already in DB
+                if (!fromDatabase) {
+                    SqlDal.AddRoutePointRoutePoint(this, routePoint, distance);
+                }
             }
         }
 
         public override string ToString() {
-            return $"RoutePoint {id}: {name}, {location}";
+            string neighbourIDs = string.Empty;
+            foreach (RoutePoint neighbour in neighbours.Keys) {
+                neighbourIDs += " " + neighbour.GetID();
+            }
+            return $"RoutePoint {id}: {name}, {location}, neighbours ={neighbourIDs}";
         }
 
 
