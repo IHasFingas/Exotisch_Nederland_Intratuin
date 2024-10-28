@@ -137,30 +137,19 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             string query = "SELECT * FROM RoutePoint";
 
-            List<Tuple<int, string, string>> baseData = new List<Tuple<int, string, string>>();
-
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
                         int id = (int)reader["ID"];
                         string name = (string)reader["Name"];
                         string location = (string)reader["Location"];
+
+                        routePoints.Add(new RoutePoint(id, name, location, new Dictionary<RoutePoint, double>()));
                     }
                 }
             }
 
-            foreach (Tuple<int, string, string> data in baseData) {
-                try {
-                    int id = data.Item1;
-                    string name = data.Item2;
-                    string location = data.Item3;
-
-                    routePoints.Add(new RoutePoint(id, name, location, GetAllNeighboursForRoutePoint(id)));
-                } catch (Exception e) {
-                    Console.WriteLine($"Failed to create RoutePoint {data.Item1} from database");
-                    Console.WriteLine(e.Message);
-                }
-            }
+            FillNeighboursForAllRoutePoints();
 
             connection.Close();
             return routePoints;
@@ -444,6 +433,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return answers;
         }
 
+
+        //Linking tables
         private List<RoutePoint> GetRoutePointsForRoute(int routeID) {
             List<RoutePoint> routePointsForRoute = new List<RoutePoint>();
 
@@ -506,38 +497,40 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
         /*public List<Question> GetQuestionsForUser(int userID) { }*/
 
-        private Dictionary<RoutePoint, float> GetAllNeighboursForRoutePoint(int routePointID) {
-            Dictionary<RoutePoint, float> neighbours = new Dictionary<RoutePoint, float>();
-
+        private void FillNeighboursForAllRoutePoints() {
             using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
                 secondConnection.Open();
 
-                string query = "SELECT * FROM RoutePointRoutePoint WHERE RoutePoint1_ID = @RoutePoint_ID OR RoutePoint2_ID = @RoutePoint_ID";
+                string query = "SELECT * FROM RoutePointRoutePoint";
 
                 using (SqlCommand command = new SqlCommand(query, connection)) {
-                    command.Parameters.AddWithValue("@RoutePoint_ID", routePointID);
-
                     using (SqlDataReader reader = command.ExecuteReader()) {
                         while (reader.Read()) {
-                            float distance = (float)reader["Distance"];
-                            int neighbourID;
+                            int routePoint1ID = (int)reader["RoutePoint1_ID"];
+                            int routePoint2ID = (int)reader["RoutePoint2_ID"];
+                            double distance = (double)reader["Distance"];
 
-                            neighbourID = (int)reader["RoutePoint1_ID"];
-                            neighbourID = (int)reader["RoutePoint2_ID"];
+                            RoutePoint routePoint1 = null;
+                            RoutePoint routePoint2 = null;
 
-                            foreach (RoutePoint candidateNeighbour in this.routePoints) {
-                                if (neighbourID == candidateNeighbour.GetID()) {
-                                    neighbours.Add(candidateNeighbour, distance);
+                            foreach (RoutePoint candidateRoutePoint in this.routePoints) {
+                                if (routePoint1ID == candidateRoutePoint.GetID()) {
+                                    routePoint1 = candidateRoutePoint;
+                                }
+
+                                if (routePoint2ID == candidateRoutePoint.GetID()) {
+                                    routePoint2 = candidateRoutePoint;
                                 }
                             }
+
+                            routePoint1.AddNeighbour(routePoint2, distance);
+                            routePoint2.AddNeighbour(routePoint1, distance);
                         }
                     }
                 }
 
                 secondConnection.Close();
             }
-
-            return neighbours;
         }
 
 

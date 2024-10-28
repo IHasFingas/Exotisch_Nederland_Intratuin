@@ -1,4 +1,5 @@
 using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 
 namespace Exotisch_Nederland_Intratuin.Model {
@@ -10,11 +11,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string location;
         private List<Route> routes;
         private List<POI> pointsOfInterest;
-        private Dictionary<RoutePoint, float> neighbours;
+        private Dictionary<RoutePoint, double> neighbours;
 
 
         //Constructor for creating a RoutePoint from database
-        public RoutePoint(int id, string name, string location, Dictionary<RoutePoint, float> neighbours) {
+        public RoutePoint(int id, string name, string location, Dictionary<RoutePoint, double> neighbours) {
             this.id = id;
             this.name = name;
             this.location = location;
@@ -29,7 +30,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.location = location;
             this.routes = new List<Route>();
             this.pointsOfInterest = new List<POI>();
-            this.neighbours = new Dictionary<RoutePoint, float>();
+            this.neighbours = new Dictionary<RoutePoint, double>();
 
             SqlDal.AddRoutePoint(this);
         }
@@ -67,7 +68,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public void AddNeighbour(RoutePoint routePoint, float distance) {
+        public void AddNeighbour(RoutePoint routePoint, double distance) {
             if (!neighbours.ContainsKey(routePoint)) {
                 neighbours.Add(routePoint, distance);
             }

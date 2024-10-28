@@ -435,8 +435,6 @@ VALUES
 	((SELECT ID FROM RoutePoint WHERE ID = 7), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.26);
 
 
-
-
 -- Show tables
 SELECT * FROM Area
 SELECT * FROM [Role]
