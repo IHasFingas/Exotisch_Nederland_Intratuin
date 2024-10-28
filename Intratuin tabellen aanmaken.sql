@@ -193,16 +193,16 @@ VALUES
 	('Uitkijkpunt Het Beuven',				'51.3420, 5.8302'), -- De Groote Peel
 	('Kempenbos',							'50.9745, 5.6931'),	-- Nationaal Park Hoge Kempen
 	('Maasvallei',							'50.9787, 5.7456'),	-- Nationaal Park Hoge Kempen
-	('Heidezicht',							'50.9203, 5.9634'),	-- Brunssummerheide
-	('Schinveldse Bos',						'50.9371, 5.9802'),	-- Brunssummerheide
-	('Blotevoetenpad',						'50.9335, 5.9788'), -- Brunssummerheide
-	('De Roode Beek',						'50.9357, 5.9811'), -- Brunssummerheide
-	('Uitkijkpunt Op de Vrouweheide',		'50.9402, 5.9773'), -- Brunssummerheide
-	('De Schrieversheide',					'50.9293, 5.9764'), -- Brunssummerheide
-	('Ven op de Heidestrand',				'50.9325, 5.9739'), -- Brunssummerheide
-	('Brunssummerheide Speelgebied',		'50.9370, 5.9824'), -- Brunssummerheide
-	('Bezoekerscentrum Brunssummerheide',	'50.9363, 5.9797'), -- Brunssummerheide
-	('Heidegebied bij de Wildebessentuin',	'50.9391, 5.9758'), -- Brunssummerheide
+	('Uitkijkpunt Brunssummerheide',		'50.9294, 5.9978'),	-- Brunssummerheide
+	('Bron van de Roode beek',				'50.9283, 5.9969'),	-- Brunssummerheide
+	('Restaurant Schrieversheide',			'50.9231, 5.9809'), -- Brunssummerheide
+	('Hondenuitlaatplek',					'50.9189, 5.9814'), -- Brunssummerheide
+	('Monument Nicky Verstappen',			'50.9198, 6.0120'), -- Brunssummerheide
+	('Parkeerplaats Koffiepoel',			'50.9339, 5.9883'), -- Brunssummerheide
+	('Manege Brunssummerheide',				'50.9351, 5.9956'), -- Brunssummerheide
+	('Hoogste punt Brunssummerheide',		'50.9271, 5.9793'), -- Brunssummerheide
+	('ICC/Gen. Eisenhower Hotel',			'50.9372, 5.9941'), -- Brunssummerheide
+	('Parkeren Brunssummerheide-Oost',		'50.9251, 6.0140'), -- Brunssummerheide
 	('Leubeek',								'51.2534, 5.9712'),	-- Het Leudal
 	('Exaten',								'51.2608, 5.9825'),	-- Het Leudal
 	('Leumolen',							'51.2561, 5.9372'), -- Het Leudal
@@ -232,8 +232,8 @@ VALUES
 	('Peelven Birdwatch',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Peelven'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelven')),
 	('Kempen Forest View',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Kempenbos'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Kempenbos')),
 	('Maas River Lookout',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Maasvallei'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Maasvallei')),
-	('Heide Panorama',				(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Heidezicht'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Heidezicht')),
-	('Schinveldse Forest Shelter',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Schinveldse Bos'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Schinveldse Bos')),
+	('Uitkijkpunt Brunssummerheide',				(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
+	('Bron van de Roode beekr',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek')),
 	('Leubeek Waterfall',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Leubeek'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Leubeek')),
 	('Exaten Castle Ruins',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Exaten'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
 	('Elfenmeer Lakeside',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Elfenmeer'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Elfenmeer')),
@@ -386,8 +386,8 @@ VALUES
 	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Peelven')),
 	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Kempenbos')),
 	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Maasvallei')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Heidezicht')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Schinveldse Bos')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek')),
 	((SELECT ID FROM [Route] WHERE [Name] = 'Leudal Loop'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Leubeek')),
 	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Exaten')),
 	((SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Rolvennen'));
@@ -414,6 +414,26 @@ VALUES
     -- Sanne Smit is a Hiker and a Volunteer
     ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM [Role] WHERE [Name] = 'Hiker')),
     ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM [Role] WHERE [Name] = 'Volunteer'));
+
+
+INSERT INTO RoutePointRoutePoint (RoutePoint1_ID, RoutePoint2_ID, Distance)
+VALUES
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 2), 0.14),
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 6), 0.83),
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 7), 0.65),
+	((SELECT ID FROM RoutePoint WHERE ID = 1), (SELECT ID FROM RoutePoint WHERE ID = 10), 1.23),
+	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 4), 1.51),
+	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 5), 1.42),
+	((SELECT ID FROM RoutePoint WHERE ID = 2), (SELECT ID FROM RoutePoint WHERE ID = 8), 1.24),
+	((SELECT ID FROM RoutePoint WHERE ID = 3), (SELECT ID FROM RoutePoint WHERE ID = 4), 0.47),
+	((SELECT ID FROM RoutePoint WHERE ID = 3), (SELECT ID FROM RoutePoint WHERE ID = 8), 0.46),
+	((SELECT ID FROM RoutePoint WHERE ID = 4), (SELECT ID FROM RoutePoint WHERE ID = 5), 2.15),
+	((SELECT ID FROM RoutePoint WHERE ID = 5), (SELECT ID FROM RoutePoint WHERE ID = 10), 0.6),
+	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 7), 0.53),
+	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 8), 0.98),
+	((SELECT ID FROM RoutePoint WHERE ID = 6), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.55),
+	((SELECT ID FROM RoutePoint WHERE ID = 7), (SELECT ID FROM RoutePoint WHERE ID = 9), 0.26);
+
 
 
 
