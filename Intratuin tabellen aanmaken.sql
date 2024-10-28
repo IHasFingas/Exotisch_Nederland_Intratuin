@@ -1,6 +1,7 @@
 USE [Intratuin]
 
 --Delete tables
+DROP TABLE IF EXISTS RoutePointRoutePoint;
 DROP TABLE IF EXISTS UserQuestion;
 DROP TABLE IF EXISTS RouteRoutePoint;
 DROP TABLE IF EXISTS UserRole;
@@ -126,6 +127,15 @@ CREATE TABLE UserQuestion
     FOREIGN KEY ([User_ID]) REFERENCES [User](ID),
     FOREIGN KEY ([Question_ID]) REFERENCES Question(ID));
 
+CREATE TABLE RoutePointRoutePoint
+	(RoutePoint1_ID int NOT NULL,
+	RoutePoint2_ID int NOT NULL,
+	Distance float NOT NULL,
+	PRIMARY KEY (RoutePoint1_ID, RoutePoint2_ID),
+	FOREIGN KEY (RoutePoint1_ID) REFERENCES RoutePoint(ID),
+	FOREIGN KEY (RoutePoint2_ID) REFERENCES RoutePoint(ID));
+
+
 
 --Enter data
 INSERT INTO Area ([Name], Size)
@@ -171,16 +181,40 @@ VALUES
 
 INSERT INTO RoutePoint ([Name], [Location])
 VALUES
-	('Peelzicht',		'51.3412, 5.8743'),	-- De Groote Peel
-	('Peelven',			'51.3456, 5.8801'),	-- De Groote Peel
-	('Kempenbos',		'50.9745, 5.6931'),	-- Nationaal Park Hoge Kempen
-	('Maasvallei',		'50.9787, 5.7456'),	-- Nationaal Park Hoge Kempen
-	('Heidezicht',		'50.9203, 5.9634'),	-- Brunsummerheide
-	('Schinveldse Bos', '50.9371, 5.9802'),	-- Brunsummerheide
-	('Leubeek',			'51.2534, 5.9712'),	-- Het Leudal
-	('Exaten',			'51.2608, 5.9825'),	-- Het Leudal
-	('Elfenmeer',		'51.1476, 6.0562'),	-- De Meinweg
-	('Rolvennen',		'51.1613, 6.0724');	-- De Meinweg
+	('Peelzicht',							'51.3412, 5.8743'),	-- De Groote Peel
+	('Peelven',								'51.3456, 5.8801'),	-- De Groote Peel
+	('Uitkijktoren ''t Elfde',				'51.3443, 5.8292'), -- De Groote Peel
+	('De Pelen Bezoekerscentrum',			'51.3447, 5.8305'), -- De Groote Peel
+	('Knuppelbrugpad',						'51.3461, 5.8342'), -- De Groote Peel
+	('Kwijtweg Zandvlakte',					'51.3478, 5.8289'), -- De Groote Peel
+	('Molentje Peelven',					'51.3490, 5.8320'), -- De Groote Peel
+	('Heidestruik Vlakte',					'51.3485, 5.8373'), -- De Groote Peel
+	('Het Peelkanaal',						'51.3459, 5.8356'), -- De Groote Peel
+	('Uitkijkpunt Het Beuven',				'51.3420, 5.8302'), -- De Groote Peel
+	('Kempenbos',							'50.9745, 5.6931'),	-- Nationaal Park Hoge Kempen
+	('Maasvallei',							'50.9787, 5.7456'),	-- Nationaal Park Hoge Kempen
+	('Heidezicht',							'50.9203, 5.9634'),	-- Brunssummerheide
+	('Schinveldse Bos',						'50.9371, 5.9802'),	-- Brunssummerheide
+	('Blotevoetenpad',						'50.9335, 5.9788'), -- Brunssummerheide
+	('De Roode Beek',						'50.9357, 5.9811'), -- Brunssummerheide
+	('Uitkijkpunt Op de Vrouweheide',		'50.9402, 5.9773'), -- Brunssummerheide
+	('De Schrieversheide',					'50.9293, 5.9764'), -- Brunssummerheide
+	('Ven op de Heidestrand',				'50.9325, 5.9739'), -- Brunssummerheide
+	('Brunssummerheide Speelgebied',		'50.9370, 5.9824'), -- Brunssummerheide
+	('Bezoekerscentrum Brunssummerheide',	'50.9363, 5.9797'), -- Brunssummerheide
+	('Heidegebied bij de Wildebessentuin',	'50.9391, 5.9758'), -- Brunssummerheide
+	('Leubeek',								'51.2534, 5.9712'),	-- Het Leudal
+	('Exaten',								'51.2608, 5.9825'),	-- Het Leudal
+	('Leumolen',							'51.2561, 5.9372'), -- Het Leudal
+	('Leudal Bezoekerscentrum',				'51.2591, 5.9386'), -- Het Leudal
+	('St. Ursula Kapel',					'51.2547, 5.9318'), -- Het Leudal
+	('Watermolenweg',						'51.2560, 5.9331'), -- Het Leudal
+	('Leudalbos Wandelgebied',				'51.2584, 5.9345'), -- Het Leudal
+	('Kasteel Groot Buggenum',				'51.2507, 5.9341'), -- Het Leudal
+	('Roggelse Beek',						'51.2572, 5.9394'), -- Het Leudal
+	('Veldkruis bij Sint Servaaskapel',		'51.2532, 5.9358'), -- Het Leudal
+	('Elfenmeer',							'51.1476, 6.0562'),	-- De Meinweg
+	('Rolvennen',							'51.1613, 6.0724');	-- De Meinweg
 
 
 INSERT INTO [Route] ([Name], [Length], Area_ID)
@@ -233,7 +267,7 @@ VALUES
 INSERT INTO Question (QuestionText, Game_ID)
 VALUES 
 -- Questions Game 1
-    ('Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en graag noten eet?',								1),
+    ('Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en eet graag noten?',								1),
     ('Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?',							1),
     ('Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?',							1),
     ('Wat voor soort dier is een vossen, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?',												1),
@@ -399,3 +433,4 @@ SELECT * FROM Answer
 SELECT * FROM UserRole
 SELECT * FROM RouteRoutePoint
 SELECT * FROM UserQuestion
+SELECT * FROM RoutePointRoutePoint
