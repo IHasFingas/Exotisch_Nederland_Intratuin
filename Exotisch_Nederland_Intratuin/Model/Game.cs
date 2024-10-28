@@ -7,7 +7,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         private int id;
         private string name;
-        private string location; // verwijderen?
+        private string location;
         private string description;
         private Route route;
         private List<Question> questions;

@@ -9,6 +9,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string questionText;
         private Game game;
         private List<Answer> answers;
+        private List<User> answeredBy;
 
 
         //Constructor for creating a Question from database
@@ -19,6 +20,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             this.answers = new List<Answer>();
             foreach (Answer answer in answers) { AddAnswer(answer); }
+
+            this.answeredBy = new List<User>();
 
             //Tell game this question belongs to it
             this.game.AddQuestion(this);
@@ -31,6 +34,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             this.answers = new List<Answer>();
             foreach (Answer answer in answers) { AddAnswer(answer); }
+
+            this.answeredBy = new List<User>();
 
             //Tell game this question belongs to it
             this.game.AddQuestion(this);
@@ -48,9 +53,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetQuestionByID(id);
         }
 
-        public void EditQuestion(string questionText, Game game) {
+        public void EditQuestion(string questionText, Game game, List<User> answeredBy) {
             this.questionText = questionText;
             this.game = game;
+            this.answeredBy = answeredBy;
             SqlDal.EditQuestion(this);
         }
 
@@ -61,6 +67,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public void AddAnswer(Answer answer) {
             if (!answers.Contains(answer)) {
                 answers.Add(answer);
+            }
+        }
+
+        public void AddAnsweredBy(User user) {
+            if (!answeredBy.Contains(user)) {
+                answeredBy.Add(user);
             }
         }
 
@@ -76,6 +88,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetQuestionText() { return questionText; }
 
         public Game GetGame() { return game; }
+
+        public List<User> GetAnsweredBy() { return answeredBy; }
 
         public void SetID(int id) { this.id = id; }
     }

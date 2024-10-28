@@ -7,14 +7,16 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         private int id;
         private string name;
+        private string description;
         private string location;
         private RoutePoint routePoint;
 
 
         //Constructor for creating a POI from database
-        public POI(int id, string name, string location, RoutePoint routePoint) {
+        public POI(int id, string name, string description, string location, RoutePoint routePoint) {
             this.id = id;
             this.name = name;
+            this.description = description;
             this.location = location;
             this.routePoint = routePoint;
 
@@ -23,8 +25,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating a POI from scratch (automatically adds it to the database)
-        public POI(string name, string location, RoutePoint routePoint) {
+        public POI(string name, string description, string location, RoutePoint routePoint) {
             this.name = name;
+            this.description = description;
             this.location = location;
             this.routePoint = routePoint;
 
@@ -44,8 +47,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetPOIByID(id);
         }
 
-        public void EditPOI(string name, string location, RoutePoint routePoint) {
+        public void EditPOI(string name, string description, string location, RoutePoint routePoint) {
             this.name = name;
+            this.description = description;
             this.location = location;
             this.routePoint = routePoint;
             SqlDal.EditPOI(this);
