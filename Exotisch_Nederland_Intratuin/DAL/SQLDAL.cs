@@ -212,13 +212,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                     while (reader.Read()) {
                         int id = (int)reader["ID"];
                         string name = (string)reader["Name"];
+                        string description = (string)reader["Description"];
                         string location = (string)reader["Location"];
                         int routePointID = (int)reader["RoutePoint_ID"];
 
                         foreach (RoutePoint routePoint in routePoints) {
                             if (routePointID == routePoint.GetID()) {
                                 try {
-                                    pointsOfInterest.Add(new POI(id, name, location, routePoint));
+                                    pointsOfInterest.Add(new POI(id, name, description, location, routePoint));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create POI {id} from database");
                                     Console.WriteLine(e.Message);
