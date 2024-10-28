@@ -129,6 +129,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public List<Role> GetRoles() { return roles; }
 
+        public List<Question> GetAnsweredQuestions() { return answeredQuestions; }
+
         public void SetID(int id) { this.id = id; }
     }
 }

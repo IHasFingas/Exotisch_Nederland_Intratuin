@@ -68,6 +68,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public string GetKey() { return key; }
 
+        public List<User> GetUsers() { return users; }
+
         public void SetID(int id) { this.id = id; }
     }
 }

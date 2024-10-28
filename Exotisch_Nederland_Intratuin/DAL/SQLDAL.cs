@@ -2,7 +2,6 @@ using Exotisch_Nederland_Intratuin.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
 
 namespace Exotisch_Nederland_Intratuin.DAL {
     internal class SQLDAL {
@@ -144,7 +143,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string name = (string)reader["Name"];
                         string location = (string)reader["Location"];
 
-                        routePoints.Add(new RoutePoint(id, name, location, new Dictionary<RoutePoint, double>()));
+                        routePoints.Add(new RoutePoint(id, name, location));
                     }
                 }
             }
@@ -981,6 +980,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
+            query = "UPDATE UserRole SET User_ID = @User_ID WHERE Role_ID = @Role_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("Role_ID", role.GetID());
+
+                foreach (User user in role.GetUsers()) {
+                    command.Parameters.AddWithValue("@User_ID", user.GetID());
+                    command.ExecuteNonQuery();
+                }
+            }
+
             connection.Close();
         }
 
@@ -1015,6 +1025,39 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Location", routePoint.GetLocation());
                 command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
                 command.ExecuteNonQuery();
+            }
+
+            query = "UPDATE RouteRoutePoint SET Route_ID = @Route_ID WHERE RoutePoint_ID = @RoutePoint_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+
+                foreach (Route route in routePoint.GetRoutes()) {
+                    command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            query = "UPDATE RoutePointRoutePoint SET RoutePoint2_ID = @RoutePoint2_ID WHERE RoutePoint1_ID = @RoutePoint1_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint.GetID());
+
+                foreach (RoutePoint routePoint2 in routePoint.GetNeighbours().Keys) {
+                    command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            query = "UPDATE RoutePointRoutePoint SET RoutePoint1_ID = @RoutePoint1_ID WHERE RoutePoint2_ID = @RoutePoint2_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint.GetID());
+
+                foreach (RoutePoint routePoint1 in routePoint.GetNeighbours().Keys) {
+                    command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
+                    command.ExecuteNonQuery();
+                }
             }
 
             connection.Close();
@@ -1088,6 +1131,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 }
             }
 
+            query = "UPDATE UserQuestion SET Question_ID = @Question_ID WHERE User_ID = @User_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("User_ID", user.GetID());
+
+                foreach (Question question in user.GetAnsweredQuestions()) {
+                    command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                    command.ExecuteNonQuery();
+                }
+            }
+
             connection.Close();
         }
 
@@ -1136,6 +1190,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Game_ID", question.GetGame().GetID());
                 command.Parameters.AddWithValue("@Question_ID", question.GetID());
                 command.ExecuteNonQuery();
+            }
+
+            query = "UPDATE UserQuestion SET User_ID = @User_ID WHERE Question_ID = @Question_ID";
+
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("Question_ID", question.GetID());
+
+                foreach (User user in question.GetAnsweredBy()) {
+                    command.Parameters.AddWithValue("@User_ID", user.GetID());
+                    command.ExecuteNonQuery();
+                }
             }
 
             connection.Close();
