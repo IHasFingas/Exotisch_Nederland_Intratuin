@@ -181,6 +181,16 @@ VALUES
 
 INSERT INTO RoutePoint ([Name], [Location])
 VALUES
+	('Uitkijkpunt Brunssummerheide',		'50.9294, 5.9978'),	-- Brunssummerheide
+	('Bron van de Roode beek',				'50.9283, 5.9969'),	-- Brunssummerheide
+	('Restaurant Schrieversheide',			'50.9231, 5.9809'), -- Brunssummerheide
+	('Hondenuitlaatplek',					'50.9189, 5.9814'), -- Brunssummerheide
+	('Monument Nicky Verstappen',			'50.9198, 6.0120'), -- Brunssummerheide
+	('Parkeerplaats Koffiepoel',			'50.9339, 5.9883'), -- Brunssummerheide
+	('Manege Brunssummerheide',				'50.9351, 5.9956'), -- Brunssummerheide
+	('Hoogste punt Brunssummerheide',		'50.9271, 5.9793'), -- Brunssummerheide
+	('ICC/Gen. Eisenhower Hotel',			'50.9372, 5.9941'), -- Brunssummerheide
+	('Parkeren Brunssummerheide-Oost',		'50.9251, 6.0140'), -- Brunssummerheide
 	('Peelzicht',							'51.3412, 5.8743'),	-- De Groote Peel
 	('Peelven',								'51.3456, 5.8801'),	-- De Groote Peel
 	('Uitkijktoren ''t Elfde',				'51.3443, 5.8292'), -- De Groote Peel
@@ -193,16 +203,6 @@ VALUES
 	('Uitkijkpunt Het Beuven',				'51.3420, 5.8302'), -- De Groote Peel
 	('Kempenbos',							'50.9745, 5.6931'),	-- Nationaal Park Hoge Kempen
 	('Maasvallei',							'50.9787, 5.7456'),	-- Nationaal Park Hoge Kempen
-	('Uitkijkpunt Brunssummerheide',		'50.9294, 5.9978'),	-- Brunssummerheide
-	('Bron van de Roode beek',				'50.9283, 5.9969'),	-- Brunssummerheide
-	('Restaurant Schrieversheide',			'50.9231, 5.9809'), -- Brunssummerheide
-	('Hondenuitlaatplek',					'50.9189, 5.9814'), -- Brunssummerheide
-	('Monument Nicky Verstappen',			'50.9198, 6.0120'), -- Brunssummerheide
-	('Parkeerplaats Koffiepoel',			'50.9339, 5.9883'), -- Brunssummerheide
-	('Manege Brunssummerheide',				'50.9351, 5.9956'), -- Brunssummerheide
-	('Hoogste punt Brunssummerheide',		'50.9271, 5.9793'), -- Brunssummerheide
-	('ICC/Gen. Eisenhower Hotel',			'50.9372, 5.9941'), -- Brunssummerheide
-	('Parkeren Brunssummerheide-Oost',		'50.9251, 6.0140'), -- Brunssummerheide
 	('Leubeek',								'51.2534, 5.9712'),	-- Het Leudal
 	('Exaten',								'51.2608, 5.9825'),	-- Het Leudal
 	('Leumolen',							'51.2561, 5.9372'), -- Het Leudal
