@@ -137,20 +137,28 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             string query = "SELECT * FROM RoutePoint";
 
+            List<Tuple<int, string, string>> baseData = new List<Tuple<int, string, string>>();
+
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
                         int id = (int)reader["ID"];
                         string name = (string)reader["Name"];
                         string location = (string)reader["Location"];
-
-                        try {
-                            routePoints.Add(new RoutePoint(id, name, location));
-                        } catch (Exception e) {
-                            Console.WriteLine($"Failed to create RoutePoint {id} from database");
-                            Console.WriteLine(e.Message);
-                        }
                     }
+                }
+            }
+
+            foreach (Tuple<int, string, string> data in baseData) {
+                try {
+                    int id = data.Item1;
+                    string name = data.Item2;
+                    string location = data.Item3;
+
+                    routePoints.Add(new RoutePoint(id, name, location, GetAllNeighboursForRoutePoint(id)));
+                } catch (Exception e) {
+                    Console.WriteLine($"Failed to create RoutePoint {data.Item1} from database");
+                    Console.WriteLine(e.Message);
                 }
             }
 
@@ -451,9 +459,9 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         while (reader.Read()) {
                             int routePointID = (int)reader["RoutePoint_ID"];
 
-                            foreach (RoutePoint routePoint in this.routePoints) {
-                                if (routePointID == routePoint.GetID()) {
-                                    routePointsForRoute.Add(routePoint);
+                            foreach (RoutePoint candidateRoutePoint in this.routePoints) {
+                                if (routePointID == candidateRoutePoint.GetID()) {
+                                    routePointsForRoute.Add(candidateRoutePoint);
                                 }
                             }
                         }
@@ -481,9 +489,9 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         while (reader.Read()) {
                             int roleID = (int)reader["Role_ID"];
 
-                            foreach (Role role in this.roles) {
-                                if (roleID == role.GetID()) {
-                                    rolesForUser.Add(role);
+                            foreach (Role candidateRole in this.roles) {
+                                if (roleID == candidateRole.GetID()) {
+                                    rolesForUser.Add(candidateRole);
                                 }
                             }
                         }
@@ -497,6 +505,40 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         }
 
         /*public List<Question> GetQuestionsForUser(int userID) { }*/
+
+        private Dictionary<RoutePoint, float> GetAllNeighboursForRoutePoint(int routePointID) {
+            Dictionary<RoutePoint, float> neighbours = new Dictionary<RoutePoint, float>();
+
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT * FROM RoutePointRoutePoint WHERE RoutePoint1_ID = @RoutePoint_ID OR RoutePoint2_ID = @RoutePoint_ID";
+
+                using (SqlCommand command = new SqlCommand(query, connection)) {
+                    command.Parameters.AddWithValue("@RoutePoint_ID", routePointID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            float distance = (float)reader["Distance"];
+                            int neighbourID;
+
+                            neighbourID = (int)reader["RoutePoint1_ID"];
+                            neighbourID = (int)reader["RoutePoint2_ID"];
+
+                            foreach (RoutePoint candidateNeighbour in this.routePoints) {
+                                if (neighbourID == candidateNeighbour.GetID()) {
+                                    neighbours.Add(candidateNeighbour, distance);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return neighbours;
+        }
 
 
         //Gets single object from internal list
