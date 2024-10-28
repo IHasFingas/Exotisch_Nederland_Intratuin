@@ -9,6 +9,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string questionText;
         private Game game;
         private List<Answer> answers;
+        private List<User> answeredBy;
 
 
         //Constructor for creating a Question from database
@@ -19,6 +20,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             this.answers = new List<Answer>();
             foreach (Answer answer in answers) { AddAnswer(answer); }
+
+            this.answeredBy = new List<User>();
 
             //Tell game this question belongs to it
             this.game.AddQuestion(this);
@@ -31,6 +34,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             this.answers = new List<Answer>();
             foreach (Answer answer in answers) { AddAnswer(answer); }
+
+            this.answeredBy = new List<User>();
 
             //Tell game this question belongs to it
             this.game.AddQuestion(this);
@@ -64,6 +69,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public void AddAnsweredBy(User user) {
+            if (!answeredBy.Contains(user)) {
+                answeredBy.Add(user);
+            }
+        }
+
         public override string ToString() {
             return $"Question {id}: {questionText}, Game {game.GetID()}";
         }
@@ -76,6 +87,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetQuestionText() { return questionText; }
 
         public Game GetGame() { return game; }
+
+        public List<User> GetAnsweredBy() { return answeredBy; }
 
         public void SetID(int id) { this.id = id; }
     }
