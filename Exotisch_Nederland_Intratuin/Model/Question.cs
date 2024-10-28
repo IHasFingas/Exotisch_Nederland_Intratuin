@@ -53,9 +53,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetQuestionByID(id);
         }
 
-        public void EditQuestion(string questionText, Game game) {
+        public void EditQuestion(string questionText, Game game, List<User> answeredBy) {
             this.questionText = questionText;
             this.game = game;
+            this.answeredBy = answeredBy;
             SqlDal.EditQuestion(this);
         }
 

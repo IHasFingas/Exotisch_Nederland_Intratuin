@@ -39,9 +39,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetRoleByID(id);
         }
 
-        public void EditRole(string name, string key) {
+        public void EditRole(string name, string key, List<User> users) {
             this.name = name;
             this.key = key;
+            this.users = users;
             SqlDal.EditRole(this);
         }
 

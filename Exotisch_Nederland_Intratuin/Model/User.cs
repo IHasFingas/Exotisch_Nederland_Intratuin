@@ -1,6 +1,5 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class User {
@@ -60,12 +59,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetUserByID(id);
         }
 
-        public void EditUser(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+        public void EditUser(string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<Question> answeredQuestions) {
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
             this.roles = roles;
+            this.answeredQuestions = answeredQuestions;
             SqlDal.EditUser(this);
         }
 

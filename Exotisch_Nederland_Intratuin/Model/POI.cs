@@ -27,7 +27,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         //Constructor for creating a POI from scratch (automatically adds it to the database)
         public POI(string name, string description, string location, RoutePoint routePoint) {
             this.name = name;
-            this.description= description;
+            this.description = description;
             this.location = location;
             this.routePoint = routePoint;
 

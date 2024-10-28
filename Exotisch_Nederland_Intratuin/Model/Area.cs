@@ -68,6 +68,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return $"Area {id}: {name}, {size}ha";
         }
 
+
         //Getters and Setters
 
         public int GetID() { return id; }

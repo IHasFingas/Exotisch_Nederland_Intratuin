@@ -60,6 +60,7 @@ CREATE TABLE [Route]
 CREATE TABLE POI
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
+	[Description] VARCHAR(MAX) NOT NULL,
     [Location] VARCHAR(50) NOT NULL,
     RoutePoint_ID int NOT NULL,
     FOREIGN KEY (RoutePoint_ID) REFERENCES RoutePoint(ID));
@@ -76,7 +77,7 @@ CREATE TABLE Game
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
     [Location] VARCHAR(50) NOT NULL,
-    [Description] VARCHAR(255) NOT NULL,
+    [Description] VARCHAR(MAX) NOT NULL,
     Route_ID int NOT NULL,
     FOREIGN KEY (Route_ID) REFERENCES Route(ID));
 
@@ -84,7 +85,7 @@ CREATE TABLE Observation
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
     [Location] VARCHAR(50) NOT NULL,
-    [Description] VARCHAR(255) NOT NULL,
+    [Description] VARCHAR(MAX) NOT NULL,
     Picture VARBINARY(MAX),
     Specie_ID int NOT NULL,
     Area_ID int NOT NULL,
@@ -95,7 +96,7 @@ CREATE TABLE Observation
 
 CREATE TABLE Question
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    QuestionText VARCHAR(255) NOT NULL,
+    QuestionText VARCHAR(MAX) NOT NULL,
     Game_ID int NOT NULL,
     FOREIGN KEY (Game_ID) REFERENCES Game(ID));
 
@@ -136,15 +137,12 @@ CREATE TABLE RoutePointRoutePoint
 	FOREIGN KEY (RoutePoint2_ID) REFERENCES RoutePoint(ID));
 
 
-
 --Enter data
 INSERT INTO Area ([Name], Size)
 VALUES
 	('Brunsummerheide',				600),
 	('De Groote Peel',				1340),
-	('Nationaal Park Hoge Kempen',	5700),
-	('Het Leudal',					900),
-	('De Meinweg',					1800);
+	('Nationaal Park Hoge Kempen',	5700);
 
 
 INSERT INTO [Role] ([Name], [Key])
@@ -207,35 +205,31 @@ VALUES
 	('Voormalige grindgroeve',				'51.0030, 5.6158'); -- Nationaal Park Hoge Kempen
 
 
-
 INSERT INTO [Route] ([Name], [Length], Area_ID)
 VALUES
 	('Peel Trail',		2.3,	(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel')),				-- Between 'Peelzicht' and 'Peelven' in De Groote Peel
 	('Kempen Path',		5.6,	(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen')),	-- Between 'Kempenbos' and 'Maasvallei' in Nationaal Park Hoge Kempen
-	('Heide Walk',		3.1,	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide')),			-- Between 'Heidezicht' and 'Schinveldse Bos' in Brunsummerheide
-	('Leudal Loop',		4.8,	(SELECT ID FROM Area WHERE [Name] = 'Het Leudal')),					-- Between 'Leubeek' and 'Exaten' in Het Leudal
-	('Meinweg Ridge',	2.7,	(SELECT ID FROM Area WHERE [Name] = 'De Meinweg'));					-- Between 'Elfenmeer' and 'Rolvennen' in De Meinweg
+	('Heide Walk',		3.1,	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'));			-- Between 'Heidezicht' and 'Schinveldse Bos' in Brunsummerheide
 
 
-INSERT INTO POI ([Name], [Location], RoutePoint_ID)
+INSERT INTO POI ([Name], [Description], [Location], RoutePoint_ID)
 VALUES
-	('Uitkijktoren',				(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Uitkijktoren'),						(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijktoren')),
-	('Kabouterpad De Pelen',		(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Kabouterpad De Pelen'),				(SELECT ID FROM RoutePoint WHERE [Name] = 'Kabouterpad De Pelen')),
-	('Natuurpunt lake outlook',		(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Natuurpunt lake outlook'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Natuurpunt lake outlook')),
-	('Voormalige grindgroeve',		(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Voormalige grindgroeve'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Voormalige grindgroeve')),
-	('Uitkijkpunt Brunssummerheide',(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
-	('Bron van de Roode beek',		(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'));
-	
+    ('Uitkijktoren',					'A tall tower offering expansive views over the surrounding nature reserve.',					(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Uitkijktoren'),					(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijktoren')),
+    ('Kabouterpad De Pelen',			'A whimsical nature trail designed for children, featuring fun, interactive gnome figures.',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Kabouterpad De Pelen'),			(SELECT ID FROM RoutePoint WHERE [Name] = 'Kabouterpad De Pelen')),
+    ('Natuurpunt lake outlook',			'A peaceful lookout point over a lake, ideal for birdwatching and quiet reflection.',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Natuurpunt lake outlook'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Natuurpunt lake outlook')),
+    ('Voormalige grindgroeve',			'The site of a former gravel quarry, now a serene nature spot with unique terrain.',			(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Voormalige grindgroeve'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Voormalige grindgroeve')),
+    ('Uitkijkpunt Brunssummerheide',	'Scenic viewpoint over the heather fields and forests of Brunsummerheide.',						(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide'),	(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
+    ('Bron van de Roode beek',			'The tranquil source of the Roode Beek, nestled in lush surroundings.',							(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'));
 
 
 INSERT INTO [User] ([Name], Email, CurrentLocation, Route_ID)
 VALUES 
     ('Jan Janssen',		'jan.janssen@example.com',		'50.8513, 5.6909',	(SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path')),
-	('Piet Meijer',		'piet.meijer@example.com',		'',					(SELECT ID FROM [Route] WHERE [Name] = 'Leudal Loop')),
+	('Piet Meijer',		'piet.meijer@example.com',		'',					(SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail')),
     ('Els van Dijk',	'els.vandijk@example.com',		'50.8787, 5.9805',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk')),  
     ('Karla Hermans',	'karla.hermans@example.com',	'50.9849, 5.9704',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk')),
-    ('Tom Peters',		'tom.peters@example.com',		'51.1582, 5.8361',	(SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge')),  
-    ('Sanne Smit',		'sanne.smit@example.com',		'51.1460, 5.8129',	(SELECT ID FROM [Route] WHERE [Name] = 'Meinweg Ridge'));
+    ('Tom Peters',		'tom.peters@example.com',		'51.1582, 5.8361',	(SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail')),  
+    ('Sanne Smit',		'sanne.smit@example.com',		'51.1460, 5.8129',	(SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'));
 
 
 INSERT INTO Game ([Name], [Location], [Description], Route_ID)
@@ -249,7 +243,7 @@ INSERT INTO Observation ([Name], [Location], [Description], Picture, Specie_ID, 
 VALUES 
 	('Paardenbloem',		'50.8503, 5.6900',	'Deze bloem heeft diep ingesneden, groene bladeren die dicht bij de grond groeien. Het heeft heldergele bloemen op lange, stevige stelen.',										0001, (SELECT ID FROM Specie WHERE [Name] = 'Paardenbloem'),	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'),				(SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk')),
 	('Haas',				'',					'Deze haas heeft een lichtbruine vacht met een witachtige onderkant. Zijn lange oren staan rechtop en zijn ogen zijn groot en zwart, waardoor hij altijd alert is op gevaar.',	0002, (SELECT ID FROM Specie WHERE [Name] = 'Haas'),			(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen'),	(SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen')),
-	('Berenklauw',			'51.0543, 5.1815',	'Deze plant heeft grote, handvormige bladeren en lange, holle stelen met witte bloemen die in een schermvormige bloeiwijze groeien.',											0003, (SELECT ID FROM Specie WHERE [Name] = 'Berenklauw'),		(SELECT ID FROM Area WHERE [Name] = 'De Meinweg'),					(SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'));
+	('Berenklauw',			'51.0543, 5.1815',	'Deze plant heeft grote, handvormige bladeren en lange, holle stelen met witte bloemen die in een schermvormige bloeiwijze groeien.',											0003, (SELECT ID FROM Specie WHERE [Name] = 'Berenklauw'),		(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel'),				(SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'));
 
 
 INSERT INTO Question (QuestionText, Game_ID)
@@ -368,6 +362,7 @@ VALUES
     ('Sint-Pietersberg',	(SElECT ID FROM Question WHERE [ID] = '15'), 0),
     ('Cauberg',				(SElECT ID FROM Question WHERE [ID] = '15'), 0);
 
+
 INSERT INTO RouteRoutePoint (Route_ID, RoutePoint_ID)
 VALUES
 	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
@@ -465,11 +460,6 @@ VALUES
 	((SELECT ID FROM RoutePoint WHERE ID = 21), (SELECT ID FROM RoutePoint WHERE ID = 24), 2.64),
 	((SELECT ID FROM RoutePoint WHERE ID = 22), (SELECT ID FROM RoutePoint WHERE ID = 23), 2.33),
 	((SELECT ID FROM RoutePoint WHERE ID = 22), (SELECT ID FROM RoutePoint WHERE ID = 24), 2.59);
-
-
-
-
-
 
 
 -- Show tables

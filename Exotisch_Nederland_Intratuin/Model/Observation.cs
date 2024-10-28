@@ -1,7 +1,5 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class Observation {
@@ -28,7 +26,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.area = area;
             this.user = user;
 
-            if(this.name == "") {
+            if (this.name == "") {
                 this.name = specie.GetName();
             }
 
