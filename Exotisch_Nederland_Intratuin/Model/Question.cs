@@ -39,7 +39,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             //Tell game this question belongs to it
             this.game.AddQuestion(this);
-            SqlDal.AddQuestion(this);
+
+            this.id = SqlDal.AddQuestion(this);
         }
 
 
@@ -90,7 +91,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Game GetGame() { return game; }
 
         public List<User> GetAnsweredBy() { return answeredBy; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

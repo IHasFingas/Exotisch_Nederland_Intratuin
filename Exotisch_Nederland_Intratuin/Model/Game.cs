@@ -38,7 +38,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             //Tell route this game is on it
             this.route.AddGame(this);
-            SqlDal.AddGame(this);
+
+            this.id = SqlDal.AddGame(this);
         }
 
 
@@ -85,7 +86,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetDescription() { return description; }
 
         public Route GetRoute() { return route; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

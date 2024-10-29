@@ -30,7 +30,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             //Tell question this answer belongs to it
             this.question.AddAnswer(this);
-            SqlDal.AddAnswer(this);
+
+            this.id = SqlDal.AddAnswer(this);
         }
 
 
@@ -69,7 +70,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Question GetQuestion() { return question; }
 
         public bool GetCorrectAnswer() { return correctAnswer; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

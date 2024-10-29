@@ -33,7 +33,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.neighbours = new Dictionary<RoutePoint, double>();
             foreach (RoutePoint routePoint in neighbours.Keys) { AddNeighbour(routePoint, neighbours[routePoint], false); }
 
-            SqlDal.AddRoutePoint(this);
+            this.id = SqlDal.AddRoutePoint(this);
         }
 
 
@@ -105,7 +105,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public List<Route> GetRoutes() { return routes; }
 
         public Dictionary<RoutePoint, double> GetNeighbours() { return neighbours; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

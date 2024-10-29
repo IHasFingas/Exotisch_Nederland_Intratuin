@@ -47,7 +47,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             //Tell area this route was added to it
             this.area.AddRoute(this);
-            SqlDal.AddRoute(this);
+
+            this.id = SqlDal.AddRoute(this);
         }
 
 
@@ -121,7 +122,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Area GetArea() { return area; }
 
         public List<RoutePoint> GetRoutePoints() { return routePoints; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }
