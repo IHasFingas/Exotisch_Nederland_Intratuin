@@ -32,6 +32,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.questionText = questionText;
             this.game = game;
 
+            this.id = SqlDal.AddQuestion(this);
+
             this.answers = new List<Answer>();
             foreach (Answer answer in answers) { AddAnswer(answer); }
 
@@ -39,7 +41,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             //Tell game this question belongs to it
             this.game.AddQuestion(this);
-            SqlDal.AddQuestion(this);
         }
 
 

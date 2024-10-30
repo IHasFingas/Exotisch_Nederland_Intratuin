@@ -31,6 +31,9 @@ namespace Exotisch_Nederland_Intratuin {
             //Demonstrate EditObject()
             //Demonstrate DeleteObject()
 
+            Route route = new Route("Testroute", areas[0], routePoints[3], routePoints[8], new List<Game>());
+            Console.WriteLine(route);
+
             Console.ReadKey();
         }
 

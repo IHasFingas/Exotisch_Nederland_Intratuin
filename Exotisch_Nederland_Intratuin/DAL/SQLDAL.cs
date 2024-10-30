@@ -956,12 +956,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditArea(Area area) {
             connection.Open();
 
-            string query = "UPDATE Area SET Name = @Name, Size = @Size WHERE Area_ID = @Area_ID";
+            string query = "UPDATE Area SET Name = @Name, Size = @Size WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", area.GetName());
                 command.Parameters.AddWithValue("@Size", area.GetSize());
-                command.Parameters.AddWithValue("@Area_ID", area.GetID());
+                command.Parameters.AddWithValue("@ID", area.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -971,25 +971,25 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditRole(Role role) {
             connection.Open();
 
-            string query = "UPDATE Role SET Name = @Name, Key = @Key WHERE Role_ID = @Role_ID";
+            string query = "UPDATE Role SET Name = @Name, Key = @Key WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", role.GetName());
                 command.Parameters.AddWithValue("@Size", role.GetKey());
-                command.Parameters.AddWithValue("@Role_ID", role.GetID());
+                command.Parameters.AddWithValue("@ID", role.GetID());
                 command.ExecuteNonQuery();
             }
 
-            query = "UPDATE UserRole SET User_ID = @User_ID WHERE Role_ID = @Role_ID";
+            //query = "UPDATE UserRole SET User_ID = @User_ID WHERE Role_ID = @Role_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("Role_ID", role.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("Role_ID", role.GetID());
 
-                foreach (User user in role.GetUsers()) {
-                    command.Parameters.AddWithValue("@User_ID", user.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (User user in role.GetUsers()) {
+            //        command.Parameters.AddWithValue("@User_ID", user.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
             connection.Close();
         }
@@ -997,7 +997,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditSpecie(Specie specie) {
             connection.Open();
 
-            string query = "UPDATE Specie SET Name = @Name, Domain = @Domain, Regnum = @Regnum, Phylum = @Phylum, Classus = @Classus, Ordo = @Ordo, Familia = @Familia, Genus = @Genus WHERE Specie_ID = @Specie_ID";
+            string query = "UPDATE Specie SET Name = @Name, Domain = @Domain, Regnum = @Regnum, Phylum = @Phylum, Classus = @Classus, Ordo = @Ordo, Familia = @Familia, Genus = @Genus WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", specie.GetName());
@@ -1008,7 +1008,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Ordo", specie.GetOrdo());
                 command.Parameters.AddWithValue("@Familia", specie.GetFamilia());
                 command.Parameters.AddWithValue("@Genus", specie.GetGenus());
-                command.Parameters.AddWithValue("@Specie_ID", specie.GetID());
+                command.Parameters.AddWithValue("@ID", specie.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1018,47 +1018,47 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditRoutePoint(RoutePoint routePoint) {
             connection.Open();
 
-            string query = "UPDATE RoutePoint SET Name = @Name, Location = @Location WHERE RoutePoint_ID = @RoutePoint_ID";
+            string query = "UPDATE RoutePoint SET Name = @Name, Location = @Location WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", routePoint.GetName());
                 command.Parameters.AddWithValue("@Location", routePoint.GetLocation());
-                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+                command.Parameters.AddWithValue("@ID", routePoint.GetID());
                 command.ExecuteNonQuery();
             }
 
-            query = "UPDATE RouteRoutePoint SET Route_ID = @Route_ID WHERE RoutePoint_ID = @RoutePoint_ID";
+            //query = "UPDATE RouteRoutePoint SET Route_ID = @Route_ID WHERE RoutePoint_ID = @RoutePoint_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
 
-                foreach (Route route in routePoint.GetRoutes()) {
-                    command.Parameters.AddWithValue("@Route_ID", route.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (Route route in routePoint.GetRoutes()) {
+            //        command.Parameters.AddWithValue("@Route_ID", route.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
-            query = "UPDATE RoutePointRoutePoint SET RoutePoint2_ID = @RoutePoint2_ID WHERE RoutePoint1_ID = @RoutePoint1_ID";
+            //query = "UPDATE RoutePointRoutePoint SET RoutePoint2_ID = @RoutePoint2_ID WHERE RoutePoint1_ID = @RoutePoint1_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint.GetID());
 
-                foreach (RoutePoint routePoint2 in routePoint.GetNeighbours().Keys) {
-                    command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (RoutePoint routePoint2 in routePoint.GetNeighbours().Keys) {
+            //        command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
-            query = "UPDATE RoutePointRoutePoint SET RoutePoint1_ID = @RoutePoint1_ID WHERE RoutePoint2_ID = @RoutePoint2_ID";
+            //query = "UPDATE RoutePointRoutePoint SET RoutePoint1_ID = @RoutePoint1_ID WHERE RoutePoint2_ID = @RoutePoint2_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint.GetID());
 
-                foreach (RoutePoint routePoint1 in routePoint.GetNeighbours().Keys) {
-                    command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (RoutePoint routePoint1 in routePoint.GetNeighbours().Keys) {
+            //        command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
             connection.Close();
         }
@@ -1066,26 +1066,26 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditRoute(Route route) {
             connection.Open();
 
-            string query = "UPDATE Route SET Name = @Name, Length = @Length, Area_ID = @Area_ID WHERE Route_ID = @Route_ID";
+            string query = "UPDATE Route SET Name = @Name, Length = @Length, Area_ID = @Area_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", route.GetName());
                 command.Parameters.AddWithValue("@Length", route.GetLength());
                 command.Parameters.AddWithValue("@Area_ID", route.GetArea().GetID());
-                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                command.Parameters.AddWithValue("@ID", route.GetID());
                 command.ExecuteNonQuery();
             }
 
-            query = "UPDATE RouteRoutePoint SET RoutePoint_ID = @RoutePoint_ID WHERE Route_ID = @Route_ID";
+            //query = "UPDATE RouteRoutePoint SET RoutePoint_ID = @RoutePoint_ID WHERE Route_ID = @Route_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("@Route_ID", route.GetID());
 
-                foreach (RoutePoint routePoint in route.GetRoutePoints()) {
-                    command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (RoutePoint routePoint in route.GetRoutePoints()) {
+            //        command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
             connection.Close();
         }
@@ -1093,13 +1093,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditPOI(POI poi) {
             connection.Open();
 
-            string query = "UPDATE POI SET Name = @Name, Location = @Location, RoutePoint_ID = @RoutePoint_ID WHERE POI_ID = @POI_ID";
+            string query = "UPDATE POI SET Name = @Name, Location = @Location, RoutePoint_ID = @RoutePoint_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", poi.GetName());
                 command.Parameters.AddWithValue("@Location", poi.GetLocation());
                 command.Parameters.AddWithValue("@RoutePoint_ID", poi.GetRoutePoint().GetID());
-                command.Parameters.AddWithValue("@POI_ID", poi.GetID());
+                command.Parameters.AddWithValue("@ID", poi.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1109,38 +1109,38 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditUser(User user) {
             connection.Open();
 
-            string query = "UPDATE User SET Name = @Name, Email = @Email, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE User_ID = @User_ID";
+            string query = "UPDATE User SET Name = @Name, Email = @Email, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", user.GetName());
                 command.Parameters.AddWithValue("@Email", user.GetEmail());
                 command.Parameters.AddWithValue("@CurrentLocation", user.GetCurrentLocation());
                 command.Parameters.AddWithValue("@Route_ID", user.GetRoute().GetID());
-                command.Parameters.AddWithValue("@User_ID", user.GetID());
+                command.Parameters.AddWithValue("@ID", user.GetID());
                 command.ExecuteNonQuery();
             }
 
-            query = "UPDATE UserRole SET Role_ID = @Role_ID WHERE User_ID = @User_ID";
+            //query = "UPDATE UserRole SET Role_ID = @Role_ID WHERE User_ID = @User_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("User_ID", user.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("User_ID", user.GetID());
 
-                foreach (Role role in user.GetRoles()) {
-                    command.Parameters.AddWithValue("@Role_ID", role.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (Role role in user.GetRoles()) {
+            //        command.Parameters.AddWithValue("@Role_ID", role.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
-            query = "UPDATE UserQuestion SET Question_ID = @Question_ID WHERE User_ID = @User_ID";
+            //query = "UPDATE UserQuestion SET Question_ID = @Question_ID WHERE User_ID = @User_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("User_ID", user.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("User_ID", user.GetID());
 
-                foreach (Question question in user.GetAnsweredQuestions()) {
-                    command.Parameters.AddWithValue("@Question_ID", question.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (Question question in user.GetAnsweredQuestions()) {
+            //        command.Parameters.AddWithValue("@Question_ID", question.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
             connection.Close();
         }
@@ -1148,14 +1148,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditGame(Game game) {
             connection.Open();
 
-            string query = "UPDATE Game SET Name = @Name, Location = @Location, Description = @Description, Route_ID = @Route_ID WHERE Game_ID = @Game_ID";
+            string query = "UPDATE Game SET Name = @Name, Location = @Location, Description = @Description, Route_ID = @Route_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", game.GetName());
                 command.Parameters.AddWithValue("@Location", game.GetLocation());
                 command.Parameters.AddWithValue("@Description", game.GetDescription());
                 command.Parameters.AddWithValue("@Route_ID", game.GetRoute().GetID());
-                command.Parameters.AddWithValue("@Game_ID", game.GetID());
+                command.Parameters.AddWithValue("@ID", game.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1165,7 +1165,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditObservation(Observation observation) {
             connection.Open();
 
-            string query = "UPDATE Observation SET Name = @Name, Location = @Location, Description = @Description, Specie_ID = @Specie_ID, Area_ID = Area_ID WHERE Observation_ID = @Observation_ID";
+            string query = "UPDATE Observation SET Name = @Name, Location = @Location, Description = @Description, Specie_ID = @Specie_ID, Area_ID = Area_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", observation.GetName());
@@ -1173,7 +1173,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Description", observation.GetDescription());
                 command.Parameters.AddWithValue("@Specie_ID", observation.GetSpecie().GetID());
                 command.Parameters.AddWithValue("@Area_ID", observation.GetArea().GetID());
-                command.Parameters.AddWithValue("@Observation_ID", observation.GetID());
+                command.Parameters.AddWithValue("@ID", observation.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1183,25 +1183,25 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditQuestion(Question question) {
             connection.Open();
 
-            string query = "UPDATE Question SET QuestionText = @QuestionText, Game_ID = @Game_ID WHERE Question_ID = @Question_ID";
+            string query = "UPDATE Question SET QuestionText = @QuestionText, Game_ID = @Game_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@QuestionText", question.GetQuestionText());
                 command.Parameters.AddWithValue("@Game_ID", question.GetGame().GetID());
-                command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                command.Parameters.AddWithValue("@ID", question.GetID());
                 command.ExecuteNonQuery();
             }
 
-            query = "UPDATE UserQuestion SET User_ID = @User_ID WHERE Question_ID = @Question_ID";
+            //query = "UPDATE UserQuestion SET User_ID = @User_ID WHERE Question_ID = @Question_ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("Question_ID", question.GetID());
+            //using (SqlCommand command = new SqlCommand(query, connection)) {
+            //    command.Parameters.AddWithValue("Question_ID", question.GetID());
 
-                foreach (User user in question.GetAnsweredBy()) {
-                    command.Parameters.AddWithValue("@User_ID", user.GetID());
-                    command.ExecuteNonQuery();
-                }
-            }
+            //    foreach (User user in question.GetAnsweredBy()) {
+            //        command.Parameters.AddWithValue("@User_ID", user.GetID());
+            //        command.ExecuteNonQuery();
+            //    }
+            //}
 
             connection.Close();
         }
@@ -1209,7 +1209,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditAnswer(Answer answer) {
             connection.Open();
 
-            string query = "UPDATE Question SET AnswerText = @AnswerText, Question_ID = @Question_ID, CorrectAnswer = @CorrectAnswer WHERE Question_ID = @Question_ID";
+            string query = "UPDATE Question SET AnswerText = @AnswerText, Question_ID = @Question_ID, CorrectAnswer = @CorrectAnswer WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
@@ -1228,10 +1228,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteArea(Area area) {
             connection.Open();
 
-            string query = "DELETE FROM Area WHERE Area_ID = @Area_ID";
+            string query = "DELETE FROM Area WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Area_ID", area.GetID());
+                command.Parameters.AddWithValue("@ID", area.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1241,10 +1241,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteRole(Role role) {
             connection.Open();
 
-            string query = "DELETE FROM Role WHERE Role_ID = @Role_ID";
+            string query = "DELETE FROM Role WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Role_ID", role.GetID());
+                command.Parameters.AddWithValue("@ID", role.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1260,10 +1260,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteSpecie(Specie specie) {
             connection.Open();
 
-            string query = "DELETE FROM Specie WHERE Specie_ID = @Specie_ID";
+            string query = "DELETE FROM Specie WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Specie_ID", specie.GetID());
+                command.Parameters.AddWithValue("@ID", specie.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1273,10 +1273,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteRoutePoint(RoutePoint routePoint) {
             connection.Open();
 
-            string query = "DELETE FROM RoutePoint WHERE RoutePoint_ID = @RoutePoint_ID";
+            string query = "DELETE FROM RoutePoint WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+                command.Parameters.AddWithValue("@ID", routePoint.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1298,10 +1298,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteRoute(Route route) {
             connection.Open();
 
-            string query = "DELETE FROM Route WHERE Route_ID = @Route_ID";
+            string query = "DELETE FROM Route WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                command.Parameters.AddWithValue("@ID", route.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1317,10 +1317,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeletePOI(POI poi) {
             connection.Open();
 
-            string query = "DELETE FROM POI WHERE POI_ID = @POI_ID";
+            string query = "DELETE FROM POI WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@POI_ID", poi.GetID());
+                command.Parameters.AddWithValue("@ID", poi.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1330,10 +1330,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteUser(User user) {
             connection.Open();
 
-            string query = "DELETE FROM User WHERE User_ID = @User_ID";
+            string query = "DELETE FROM User WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@User_ID", user.GetID());
+                command.Parameters.AddWithValue("@ID", user.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1355,10 +1355,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteGame(Game game) {
             connection.Open();
 
-            string query = "DELETE FROM Game WHERE Game_ID = @Game_ID";
+            string query = "DELETE FROM Game WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Game_ID", game.GetID());
+                command.Parameters.AddWithValue("@ID", game.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1368,10 +1368,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteObservation(Observation observation) {
             connection.Open();
 
-            string query = "DELETE FROM Observation WHERE Observation_ID = @Observation_ID";
+            string query = "DELETE FROM Observation WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Observation_ID", observation.GetID());
+                command.Parameters.AddWithValue("@ID", observation.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1381,10 +1381,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteQuestion(Question question) {
             connection.Open();
 
-            string query = "DELETE FROM Question WHERE Question_ID = @Question_ID";
+            string query = "DELETE FROM Question WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                command.Parameters.AddWithValue("@ID", question.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1400,10 +1400,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteAnswer(Answer answer) {
             connection.Open();
 
-            string query = "DELETE FROM Answer WHERE Answer_ID = @Answer_ID";
+            string query = "DELETE FROM Answer WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Answer_ID", answer.GetID());
+                command.Parameters.AddWithValue("@ID", answer.GetID());
                 command.ExecuteNonQuery();
             }
 
