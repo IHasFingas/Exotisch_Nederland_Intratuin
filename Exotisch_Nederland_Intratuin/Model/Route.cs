@@ -39,18 +39,19 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.name = name;
             this.area = area;
 
-            SqlDal.AddRoute(this);
+            this.id = SqlDal.AddRoute(this);
 
             this.routePoints = new List<RoutePoint>();
             FindRoute(startPoint, endPoint);
+
+            //Update route now that length is known
+            SqlDal.EditRoute(this);
 
             this.games = new List<Game>();
             foreach (Game game in games) { this.games.Add(game); }
 
             //Tell area this route was added to it
             this.area.AddRoute(this);
-
-            this.id = SqlDal.AddRoute(this);
         }
 
 

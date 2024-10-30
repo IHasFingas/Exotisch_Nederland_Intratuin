@@ -679,7 +679,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddArea(Area area) {
             areas.Add(area);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Area(Name, Size) VALUES (@Name, @Size)";
             int id;
@@ -700,7 +699,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddRole(Role role) {
             roles.Add(role);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Role(Name, Key) VALUES (@Name, @Key)";
             int id;
@@ -721,7 +719,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddSpecie(Specie specie) {
             species.Add(specie);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Specie(Name, Domain, Regnum, Phylum, Classus, Ordo, Familia, Genus) VALUES (@Name, @Domain, @Regnum, @Phylum, @Classus, @Ordo, @Familia, @Genus)";
             int id;
@@ -748,7 +745,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddRoutePoint(RoutePoint routePoint) {
             routePoints.Add(routePoint);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO RoutePoint(Name, Location) VALUES (@Name, @Location)";
             int id;
@@ -769,7 +765,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddRoute(Route route) {
             routes.Add(route);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Route(Name, Length, Area_ID) VALUES (@Name, @Length, @Area_ID)";
             int id;
@@ -791,7 +786,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddPOI(POI poi) {
             pointsOfInterest.Add(poi);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO POI(Name, Location, RoutePoint_ID) VALUES (@Name, @Location, @RoutePoint_ID)";
             int id;
@@ -813,7 +807,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddUser(User user) {
             users.Add(user);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO User(Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
             int id;
@@ -836,7 +829,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddGame(Game game) {
             games.Add(game);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Game(Name, Location, Description, Route_ID) VALUES (@Name, @Location, @Description, @Route_ID)";
             int id;
@@ -859,7 +851,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddObservation(Observation observation) {
             observations.Add(observation);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Observation(Name, Location, Description, Picture, Specie_ID, Area_ID, User_ID) VALUES (@Name, @Location, @Description, @Picture, @Specie_ID, @Area_ID, @User_ID)";
             int id;
@@ -886,7 +877,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddQuestion(Question question) {
             questions.Add(question);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Question(QuestionText, Game_ID) VALUES (@QuestionText, @Game_ID)";
             int id;
@@ -907,7 +897,6 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public int AddAnswer(Answer answer) {
             answers.Add(answer);
             connection.Open();
-            int id;
 
             string query = "INSERT INTO Answer(AnswerText, Question_ID, CorrectAnswer) VALUES (@AnswerText, @Question_ID, @CorrectAnswer)";
             int id;
