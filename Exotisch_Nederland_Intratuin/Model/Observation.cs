@@ -54,7 +54,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 this.name = specie.GetName();
             }
 
-            this.id = SqlDal.AddObservation(this);
+            SqlDal.AddObservation(this);
 
             //Tell area this observation was added to it
             area.AddObservation(this);

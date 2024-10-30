@@ -35,7 +35,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.description = description;
             this.route = route;
 
-            this.id = SqlDal.AddGame(this);
+            SqlDal.AddGame(this);
 
             foreach (Question question in questions) { AddQuestion(question); }
 

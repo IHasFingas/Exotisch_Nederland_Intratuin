@@ -28,7 +28,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.question = question;
             this.correctAnswer = correctAnswer;
 
-            this.id = SqlDal.AddAnswer(this);
+            SqlDal.AddAnswer(this);
 
             //Tell question this answer belongs to it
             this.question.AddAnswer(this);

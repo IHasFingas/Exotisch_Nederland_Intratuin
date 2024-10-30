@@ -31,7 +31,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.location = location;
             this.routePoint = routePoint;
 
-            this.id = SqlDal.AddPOI(this);
+            SqlDal.AddPOI(this);
 
             //Tell routepoint this POI is near them
             this.routePoint.AddPointOfInterest(this);
