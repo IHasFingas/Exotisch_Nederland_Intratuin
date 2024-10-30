@@ -105,19 +105,18 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         private void FindRoute(RoutePoint startNode, RoutePoint endNode) {
-            Dictionary<RoutePoint, Tuple<double, int>> data = new Dictionary<RoutePoint, Tuple<double, int>> {
-                { startNode, new Tuple<double, int>(0, -1) }
-            };
+            //Create necessary dictionaries
+            Dictionary<RoutePoint, (double distance, int previousNodeID)> data = new Dictionary<RoutePoint, (double distance, int previousNodeID)> { { startNode, (0, -1) } };
+            Dictionary<RoutePoint, double> unvisited = new Dictionary<RoutePoint, double>() { { startNode, 0 } };
 
-            Dictionary<RoutePoint, double> unvisited = new Dictionary<RoutePoint, double>() {
-                { startNode, 0 }
-            };
-
+            //Calculate fastest path to all other nodes using Dijkstra's
             data = Step(data, startNode, unvisited);
 
-
+            //Check if end node is in the same area as start node
             try {
                 if (!data.ContainsKey(endNode)) {
+                    //If no:
+                    //Throw an exception (do not fill routepoints list)
                     throw new InvalidOperationException($"Failed to create Route {id}: Start node and end node are not in the same area!");
                 }
             } catch (Exception e) {
@@ -125,75 +124,98 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 return;
             }
 
-            List<RoutePoint> routePoints = StepBack(data, new List<RoutePoint>(), startNode, endNode).AsEnumerable().Reverse().ToList();
+            //Fill routepoints list and reverse it, so it goes start to end
+            List<RoutePoint> routePoints = StepBack(data, new List<RoutePoint>(), startNode, endNode).AsEnumerable()
+                                                                                                     .Reverse()
+                                                                                                     .ToList();
 
+            //Add each routepoint using method, so they get added to linking table as well
             foreach (RoutePoint routePoint in routePoints) {
                 AddRoutePoint(routePoint, false);
             }
 
-            length = data[endNode].Item1;
+            //Set length to distance to end node
+            length = data[endNode].distance;
         }
 
-        private Dictionary<RoutePoint, Tuple<double, int>> Step(Dictionary<RoutePoint, Tuple<double, int>> data, RoutePoint currentNode, Dictionary<RoutePoint, double> unvisited) {
+        private Dictionary<RoutePoint, (double distance, int previousNodeID)> Step(Dictionary<RoutePoint, (double distance, int previousNodeID)> data, RoutePoint currentNode, Dictionary<RoutePoint, double> unvisited) {
+            
+            //Check if current node hasn't already been visited
             if (!unvisited.TryGetValue(currentNode, out double d)) {
                 Console.WriteLine("Accidentally visited an already visited node, returning...");
                 return data;
             }
 
+            //Mark current node as visited
             unvisited.Remove(currentNode);
 
-            Dictionary<RoutePoint, double> allNeighbours = currentNode.GetNeighbours(); //Get all its neighbours
+            //Get all its neighbours
+            Dictionary<RoutePoint, double> allNeighbours = currentNode.GetNeighbours();
 
-            foreach (KeyValuePair<RoutePoint, double> neighbourData in allNeighbours) { //For each neighbour:
+            //For each neighbour:
+            foreach (KeyValuePair<RoutePoint, double> neighbourData in allNeighbours) {
+                //Calculate distance to it
+                double distanceToNeighbour = data[currentNode].distance + neighbourData.Value;
 
-                if (!data.ContainsKey(neighbourData.Key)) { //Does neighbour exist in data?
+                //Does neighbour exist in dataset?
+                if (!data.ContainsKey(neighbourData.Key)) {
+                    //If no:
+                    //Add it to dataset
+                    data.Add(neighbourData.Key, (distanceToNeighbour, currentNode.GetID()));
 
-                    data.Add(neighbourData.Key, new Tuple<double, int>(data[currentNode].Item1 + neighbourData.Value, currentNode.GetID())); //If no, add it
-                    unvisited.Add(neighbourData.Key, data[currentNode].Item1 + neighbourData.Value); //Add neighbour to unvisited nodes
+                    //Add it to unvisited nodes
+                    unvisited.Add(neighbourData.Key, distanceToNeighbour);
 
-                } else if (data[currentNode].Item1 + neighbourData.Value < data[neighbourData.Key].Item1) { //If yes, is the route via this huidigeKnoop shorter than current route to neighbour?
-
-                    data.TryGetValue(neighbourData.Key, out Tuple<double, int> oldData); //If yes, get old data
-                    data[neighbourData.Key] = new Tuple<double, int>(data[currentNode].Item1 + neighbourData.Value, currentNode.GetID()); //Insert new Tuple as new value
-
+                //If yes, is the route via current node shorter than currently shortest path to it?
+                } else if (distanceToNeighbour < data[neighbourData.Key].distance) { 
+                    //If yes:
+                    //Overwrite value with new Tuple, setting distance to go via current node and setting its previous node ID to current node ID
+                    data[neighbourData.Key] = (distanceToNeighbour, currentNode.GetID());
                 }
             }
 
+            //Check if all nodes have been visited
             if (unvisited.Count == 0) {
                 return data;
             }
 
+            //Determine closest unvisited node
             RoutePoint nextNode = unvisited.First().Key;
-            double distance = Double.MaxValue;
+            double distanceToNextNode = Double.MaxValue;
 
             foreach (KeyValuePair<RoutePoint, double> unvisitedNode in unvisited) {
-                if (unvisitedNode.Value < distance) {
+                if (unvisitedNode.Value < distanceToNextNode) {
                     nextNode = unvisitedNode.Key;
-                    distance = unvisitedNode.Value;
+                    distanceToNextNode = unvisitedNode.Value;
                 }
             }
 
+            //Recur on next node
             return Step(data, nextNode, unvisited);
         }
 
-        private List<RoutePoint> StepBack(Dictionary<RoutePoint, Tuple<double, int>> data, List<RoutePoint> routePoints, RoutePoint startNode, RoutePoint currentNode) {
+        private List<RoutePoint> StepBack(Dictionary<RoutePoint, (double distance, int previousNodeID)> data, List<RoutePoint> routePoints, RoutePoint startNode, RoutePoint currentNode) {
+            //Add current node to list of routepoints
             routePoints.Add(currentNode);
 
+            //Check if current node is start node
             if (currentNode == startNode) {
                 return routePoints;
             }
 
+            //Initialize previous node to evaluate, and get current node's data
             RoutePoint previousNode = null;
+            data.TryGetValue(currentNode, out (double distance, int previousNodeID) nodeData);
 
-            data.TryGetValue(currentNode, out Tuple<double, int> nodeData);
-
-            foreach (KeyValuePair<RoutePoint, Tuple<double, int>> candidate in data) {
-                if (candidate.Key.GetID() == nodeData.Item2) {
+            //Determine previous node
+            foreach (KeyValuePair<RoutePoint, (double distance, int previousNodeID)> candidate in data) {
+                if (candidate.Key.GetID() == nodeData.previousNodeID) {
                     previousNode = candidate.Key;
                     break;
                 }
             }
 
+            //Recur on previous node
             return StepBack(data, routePoints, startNode, previousNode); ;
         }
 
