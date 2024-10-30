@@ -43,7 +43,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.name = name;
             this.observations = new List<Observation>();
 
-            SqlDal.AddSpecie(this);
+            this.id = SqlDal.AddSpecie(this);
         }
 
 

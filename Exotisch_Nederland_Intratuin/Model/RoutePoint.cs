@@ -30,10 +30,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.routes = new List<Route>();
             this.pointsOfInterest = new List<POI>();
 
+            this.id = SqlDal.AddRoutePoint(this);
+
             this.neighbours = new Dictionary<RoutePoint, double>();
             foreach (RoutePoint routePoint in neighbours.Keys) { AddNeighbour(routePoint, neighbours[routePoint], false); }
-
-            SqlDal.AddRoutePoint(this);
         }
 
 

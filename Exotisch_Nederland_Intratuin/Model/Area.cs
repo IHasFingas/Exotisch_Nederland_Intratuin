@@ -28,7 +28,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.routes = new List<Route>();
             this.observations = new List<Observation>();
 
-            SqlDal.AddArea(this);
+            this.id = SqlDal.AddArea(this);
         }
 
 
