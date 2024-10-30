@@ -43,7 +43,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.name = name;
             this.observations = new List<Observation>();
 
-            SqlDal.AddSpecie(this);
+            this.id = SqlDal.AddSpecie(this);
         }
 
 
@@ -103,7 +103,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetGenus() { return genus; }
 
         public string GetName() { return name; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

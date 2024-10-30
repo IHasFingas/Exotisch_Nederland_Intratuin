@@ -25,7 +25,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.key = key;
             this.users = new List<User>();
 
-            SqlDal.AddRole(this);
+            this.id = SqlDal.AddRole(this);
         }
 
 
@@ -70,7 +70,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetKey() { return key; }
 
         public List<User> GetUsers() { return users; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

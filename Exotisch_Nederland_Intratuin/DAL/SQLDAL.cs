@@ -2,6 +2,7 @@ using Exotisch_Nederland_Intratuin.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Exotisch_Nederland_Intratuin.DAL {
     internal class SQLDAL {
@@ -675,9 +676,10 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
         //Adding methods
         //Add Object to the database and to corresponding area list in SQLDAL
-        public void AddArea(Area area) {
+        public int AddArea(Area area) {
             areas.Add(area);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Area(Name, Size) VALUES (@Name, @Size)";
 
@@ -687,15 +689,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                area.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddRole(Role role) {
+        public int AddRole(Role role) {
             roles.Add(role);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Role(Name, Key) VALUES (@Name, @Key)";
 
@@ -705,15 +709,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                role.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddSpecie(Specie specie) {
+        public int AddSpecie(Specie specie) {
             species.Add(specie);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Specie(Name, Domain, Regnum, Phylum, Classus, Ordo, Familia, Genus) VALUES (@Name, @Domain, @Regnum, @Phylum, @Classus, @Ordo, @Familia, @Genus)";
 
@@ -729,15 +735,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                specie.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddRoutePoint(RoutePoint routePoint) {
+        public int AddRoutePoint(RoutePoint routePoint) {
             routePoints.Add(routePoint);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO RoutePoint(Name, Location) VALUES (@Name, @Location)";
 
@@ -747,15 +755,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                routePoint.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddRoute(Route route) {
+        public int AddRoute(Route route) {
             routes.Add(route);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Route(Name, Length, Area_ID) VALUES (@Name, @Length, @Area_ID)";
 
@@ -766,15 +776,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                route.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddPOI(POI poi) {
+        public int AddPOI(POI poi) {
             pointsOfInterest.Add(poi);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO POI(Name, Location, RoutePoint_ID) VALUES (@Name, @Location, @RoutePoint_ID)";
 
@@ -785,15 +797,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                poi.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddUser(User user) {
+        public int AddUser(User user) {
             users.Add(user);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO User(Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
 
@@ -805,15 +819,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                user.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddGame(Game game) {
+        public int AddGame(Game game) {
             games.Add(game);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Game(Name, Location, Description, Route_ID) VALUES (@Name, @Location, @Description, @Route_ID)";
 
@@ -825,15 +841,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                game.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddObservation(Observation observation) {
+        public int AddObservation(Observation observation) {
             observations.Add(observation);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Observation(Name, Location, Description, Picture, Specie_ID, Area_ID, User_ID) VALUES (@Name, @Location, @Description, @Picture, @Specie_ID, @Area_ID, @User_ID)";
 
@@ -849,15 +867,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                observation.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddQuestion(Question question) {
+        public int AddQuestion(Question question) {
             questions.Add(question);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Question(QuestionText, Game_ID) VALUES (@QuestionText, @Game_ID)";
 
@@ -867,15 +887,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                question.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
-        public void AddAnswer(Answer answer) {
+        public int AddAnswer(Answer answer) {
             answers.Add(answer);
             connection.Open();
+            int id;
 
             string query = "INSERT INTO Answer(AnswerText, Question_ID, CorrectAnswer) VALUES (@AnswerText, @Question_ID, @CorrectAnswer)";
 
@@ -886,10 +908,11 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
-                answer.SetID((int)command.ExecuteScalar());
+                id = (int)command.ExecuteScalar();
             }
 
             connection.Close();
+            return id;
         }
 
         //Linking tables

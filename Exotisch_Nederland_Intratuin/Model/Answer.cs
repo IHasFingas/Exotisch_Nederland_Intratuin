@@ -70,7 +70,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Question GetQuestion() { return question; }
 
         public bool GetCorrectAnswer() { return correctAnswer; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

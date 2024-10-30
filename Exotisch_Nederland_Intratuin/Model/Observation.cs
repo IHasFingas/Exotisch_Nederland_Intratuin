@@ -113,7 +113,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Area GetArea() { return area; }
 
         public User GetUser() { return user; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

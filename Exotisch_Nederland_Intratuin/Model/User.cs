@@ -47,6 +47,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
+
+            this.id = SqlDal.AddUser(this);
         }
 
 
@@ -131,7 +133,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public List<Role> GetRoles() { return roles; }
 
         public List<Question> GetAnsweredQuestions() { return answeredQuestions; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

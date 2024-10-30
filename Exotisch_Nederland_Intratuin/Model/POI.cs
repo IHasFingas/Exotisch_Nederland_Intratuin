@@ -74,7 +74,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetLocation() { return location; }
 
         public RoutePoint GetRoutePoint() { return routePoint; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }
