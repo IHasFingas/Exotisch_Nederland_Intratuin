@@ -682,6 +682,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Area(Name, Size) VALUES (@Name, @Size)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", area.GetName());
@@ -702,6 +703,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Role(Name, Key) VALUES (@Name, @Key)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", role.GetName());
@@ -722,6 +724,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Specie(Name, Domain, Regnum, Phylum, Classus, Ordo, Familia, Genus) VALUES (@Name, @Domain, @Regnum, @Phylum, @Classus, @Ordo, @Familia, @Genus)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", specie.GetName());
@@ -748,6 +751,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO RoutePoint(Name, Location) VALUES (@Name, @Location)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", routePoint.GetName());
@@ -768,6 +772,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Route(Name, Length, Area_ID) VALUES (@Name, @Length, @Area_ID)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", route.GetName());
@@ -789,6 +794,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO POI(Name, Location, RoutePoint_ID) VALUES (@Name, @Location, @RoutePoint_ID)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", poi.GetName());
@@ -810,6 +816,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO User(Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", user.GetName());
@@ -832,6 +839,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Game(Name, Location, Description, Route_ID) VALUES (@Name, @Location, @Description, @Route_ID)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", game.GetName());
@@ -854,6 +862,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Observation(Name, Location, Description, Picture, Specie_ID, Area_ID, User_ID) VALUES (@Name, @Location, @Description, @Picture, @Specie_ID, @Area_ID, @User_ID)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", observation.GetName());
@@ -880,6 +889,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Question(QuestionText, Game_ID) VALUES (@QuestionText, @Game_ID)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@QuestionText", question.GetQuestionText());
@@ -900,6 +910,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             int id;
 
             string query = "INSERT INTO Answer(AnswerText, Question_ID, CorrectAnswer) VALUES (@AnswerText, @Question_ID, @CorrectAnswer)";
+            int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
