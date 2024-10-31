@@ -40,6 +40,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
             this.answeredQuestions = new List<Question>();
 
+            SqlDal.AddUser(this);
+
             this.roles = new List<Role>();
             foreach (Role role in roles) { AddRole(role, false); }
 
