@@ -30,31 +30,38 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.routes = new List<Route>();
             this.pointsOfInterest = new List<POI>();
 
-            this.id = SqlDal.AddRoutePoint(this);
+            this.id = SqlDal.AddRoutePoint(this); //Get an ID for RoutePoint so we can enter RoutePoints in RoutePointRoutePoint linking table
 
             this.neighbours = new Dictionary<RoutePoint, double>();
-            foreach (RoutePoint routePoint in neighbours.Keys) { AddNeighbour(routePoint, neighbours[routePoint], false); }
+            foreach (KeyValuePair<RoutePoint, double> neighbour in neighbours) { AddNeighbour(neighbour.Key, neighbour.Value, true); }
         }
 
 
         //Methods
 
-        public static List<RoutePoint> GetAllRoutePoints() {
+        public static List<RoutePoint> GetAll() {
             return SqlDal.GetAllRoutePoints();
         }
 
-        public static RoutePoint GetRoutePointByID(int id) {
+        public static RoutePoint GetByID(int id) {
             return SqlDal.GetRoutePointByID(id);
         }
 
-        public void EditRoutePoint(string name, string location, Dictionary<RoutePoint, double> neighbours) {
+        public void Edit(string name, string location, Dictionary<RoutePoint, double> newNeighbours) {
             this.name = name;
             this.location = location;
-            this.neighbours = neighbours;
+
+            foreach (RoutePoint currentNeighbour in neighbours.Keys) {
+                if (!newNeighbours.ContainsKey(currentNeighbour)) {
+                    currentNeighbour.RemoveNeighbour(this);
+                }
+            }
+            this.neighbours = newNeighbours;
+
             SqlDal.EditRoutePoint(this);
         }
 
-        public void DeleteRoutePoint() {
+        public void Delete() {
             SqlDal.DeleteRoutePoint(this);
         }
 
@@ -64,24 +71,42 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public void RemoveRoute(Route route) {
+            if (routes.Contains(route)) {
+                routes.Remove(route);
+            }
+        }
+
         public void AddPointOfInterest(POI point) {
             if (!pointsOfInterest.Contains(point)) {
                 pointsOfInterest.Add(point);
             }
         }
 
-        public void AddNeighbour(RoutePoint routePoint, double distance, bool fromDatabase) {
-            if (!neighbours.ContainsKey(routePoint)) {
-                neighbours.Add(routePoint, distance);
+        public void RemovePointOfInterest(POI point) {
+            if (pointsOfInterest.Contains(point)) {
+                pointsOfInterest.Remove(point);
+            }
+        }
 
-                //Tell routepoint they are neighbours
-                routePoint.AddNeighbour(this, distance, fromDatabase);
+        public void AddNeighbour(RoutePoint neighbour, double distance, bool addToDB) {
+            if (!neighbours.ContainsKey(neighbour)) {
+                neighbours.Add(neighbour, distance);
 
                 //Add new entry to linking table
                 //Only add if RoutePoint is from scratch, otherwise these entries are already in DB
-                if (!fromDatabase) {
-                    SqlDal.AddRoutePointRoutePoint(this, routePoint, distance);
+                if (addToDB) {
+                    SqlDal.AddRoutePointRoutePoint(this, neighbour, distance);
                 }
+
+                //Tell routepoint they are neighbours
+                neighbour.AddNeighbour(this, distance, addToDB);
+            }
+        }
+
+        public void RemoveNeighbour(RoutePoint neighbour) {
+            if (neighbours.ContainsKey(neighbour)) {
+                neighbours.Remove(neighbour);
             }
         }
 

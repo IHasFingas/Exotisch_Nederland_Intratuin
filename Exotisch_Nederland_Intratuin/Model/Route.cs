@@ -17,38 +17,35 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
 
         //Constructor for creating a Route from database
-        public Route(int id, string name, double length, Area area, List<RoutePoint> routePoints, List<Game> games) {
+        public Route(int id, string name, double length, Area area, List<RoutePoint> routePoints) {
             this.id = id;
             this.name = name;
             this.length = length;
             this.area = area;
             this.users = new List<User>();
+            this.games = new List<Game>();
 
             this.routePoints = new List<RoutePoint>();
-            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint, true); }
-
-            this.games = new List<Game>();
-            foreach (Game game in games) { this.games.Add(game); }
+            foreach (RoutePoint routePoint in routePoints) { AddRoutePoint(routePoint, false); }
 
             //Tell area this route was added to it
             this.area.AddRoute(this);
         }
 
         //Constructor for creating a Route from scratch (automatically adds it to the database)
-        public Route(string name, Area area, RoutePoint startPoint, RoutePoint endPoint, List<Game> games) {
+        public Route(string name, Area area, RoutePoint startPoint, RoutePoint endPoint) {
             this.name = name;
             this.area = area;
+            this.games = new List<Game>();
 
-            this.id = SqlDal.AddRoute(this);
+            this.id = SqlDal.AddRoute(this); //Get an ID for Route so we can enter RoutePoints in RouteRoutePoint linking table
 
+            //Filling routepoints list
             this.routePoints = new List<RoutePoint>();
-            FindRoute(startPoint, endPoint);
+            this.length = FindRoute(startPoint, endPoint);
 
             //Update route now that length is known
             SqlDal.EditRoute(this);
-
-            this.games = new List<Game>();
-            foreach (Game game in games) { this.games.Add(game); }
 
             //Tell area this route was added to it
             this.area.AddRoute(this);
@@ -57,27 +54,33 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Route> GetAllRoutes() {
+        public static List<Route> GetAll() {
             return SqlDal.GetAllRoutes();
         }
 
-        public static Route GetRouteByID(int id) {
+        public static Route GetByID(int id) {
             return SqlDal.GetRouteByID(id);
         }
 
-        public void EditRoute(string name, double length, Area area, List<RoutePoint> routePoints) {
+        public void Edit(string name, Area area, RoutePoint startPoint, RoutePoint endPoint) {
             this.name = name;
-            this.length = length;
-            this.area = area;
-            this.routePoints = routePoints;
+
+            if(this.area != area) {
+                this.area.RemoveRoute(this);
+                this.area = area;
+                this.area.AddRoute(this);
+            }
+
+            this.length = FindRoute(startPoint, endPoint);
+
             SqlDal.EditRoute(this);
         }
 
-        public void DeleteRoute() {
+        public void Delete() {
             SqlDal.DeleteRoute(this);
         }
 
-        public void AddRoutePoint(RoutePoint routePoint, bool fromDatabase) {
+        public void AddRoutePoint(RoutePoint routePoint, bool addToDB) {
             if (!routePoints.Contains(routePoint)) {
                 routePoints.Add(routePoint);
 
@@ -86,9 +89,16 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
                 //Add new entry to linking table
                 //Only add if route is from scratch, otherwise these entries are already in DB
-                if (!fromDatabase) {
+                if (addToDB) {
                     SqlDal.AddRouteRoutePoint(this, routePoint);
                 }
+            }
+        }
+
+        public void RemoveRoutePoint(RoutePoint routePoint) {
+            if (routePoints.Contains(routePoint)) {
+                routePoints.Remove(routePoint);
+                routePoint.RemoveRoute(this);
             }
         }
 
@@ -98,13 +108,34 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public void RemoveGame(Game game) {
+            if (games.Contains(game)) {
+                games.Remove(game);
+            }
+        }
+
         public void AddUser(User user) {
             if (!users.Contains(user)) {
                 users.Add(user);
             }
         }
 
-        private void FindRoute(RoutePoint startNode, RoutePoint endNode) {
+        public void RemoveUser(User user) {
+            if (users.Contains(user)) {
+                users.Remove(user);
+            }
+        }
+
+
+        //Pathfinding within area
+        private double FindRoute(RoutePoint startNode, RoutePoint endNode) {
+            //Clear list
+            for (int i = this.routePoints.Count - 1; i >= 0; i--) {
+                RoutePoint routePoint = this.routePoints[i];
+                RemoveRoutePoint(routePoint);
+                routePoint.RemoveRoute(this);
+            }
+
             //Create necessary dictionaries
             Dictionary<RoutePoint, (double distance, int previousNodeID)> data = new Dictionary<RoutePoint, (double distance, int previousNodeID)> { { startNode, (0, -1) } };
             Dictionary<RoutePoint, double> unvisited = new Dictionary<RoutePoint, double>() { { startNode, 0 } };
@@ -121,7 +152,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 }
             } catch (Exception e) {
                 Console.WriteLine(e.Message);
-                return;
+                return 0;
             }
 
             //Fill routepoints list and reverse it, so it goes start to end
@@ -129,13 +160,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
                                                                                                      .Reverse()
                                                                                                      .ToList();
 
+            SqlDal.DeleteRouteRoutePoint(this);
+
             //Add each routepoint using method, so they get added to linking table as well
             foreach (RoutePoint routePoint in routePoints) {
-                AddRoutePoint(routePoint, false);
+                AddRoutePoint(routePoint, true);
             }
 
             //Set length to distance to end node
-            length = data[endNode].distance;
+            return data[endNode].distance;
         }
 
         private Dictionary<RoutePoint, (double distance, int previousNodeID)> Step(Dictionary<RoutePoint, (double distance, int previousNodeID)> data, RoutePoint currentNode, Dictionary<RoutePoint, double> unvisited) {

@@ -14,7 +14,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
 
         //Constructor for creating a Game from database
-        public Game(int id, string name, string location, string description, Route route, List<Question> questions) {
+        public Game(int id, string name, string location, string description, Route route) {
             this.id = id;
             this.name = name;
             this.location = location;
@@ -22,22 +22,21 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.route = route;
 
             this.questions = new List<Question>();
-            foreach (Question question in questions) { AddQuestion(question); }
 
             //Tell route this game is on it
             this.route.AddGame(this);
         }
 
         //Constructor for creating a Game from scratch (automatically adds it to the database)
-        public Game(string name, string location, string description, Route route, List<Question> questions) {
+        public Game(string name, string location, string description, Route route) {
             this.name = name;
             this.location = location;
             this.description = description;
             this.route = route;
 
-            SqlDal.AddGame(this);
+            this.id = SqlDal.AddGame(this);
 
-            foreach (Question question in questions) { AddQuestion(question); }
+            this.questions = new List<Question>();
 
             //Tell route this game is on it
             this.route.AddGame(this);
@@ -46,28 +45,41 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Game> GetAllGames() {
+        public static List<Game> GetAll() {
             return SqlDal.GetAllGames();
         }
 
-        public static Game GetGameByID(int id) {
+        public static Game GetByID(int id) {
             return SqlDal.GetGameByID(id);
         }
 
-        public void EditGame(string name, string location, string description) {
+        public void Edit(string name, string location, string description, Route route) {
             this.name = name;
             this.location = location;
             this.description = description;
+
+            if (this.route != route) {
+                this.route.RemoveGame(this);
+                this.route = route;
+                this.route.AddGame(this);
+            }
+
             SqlDal.EditGame(this);
         }
 
-        public void DeleteGame() {
+        public void Delete() {
             SqlDal.DeleteGame(this);
         }
 
         public void AddQuestion(Question question) {
             if (!questions.Contains(question)) {
                 questions.Add(question);
+            }
+        }
+
+        public void RemoveQuestion(Question question) {
+            if (questions.Contains(question)) {
+                questions.Remove(question);
             }
         }
 

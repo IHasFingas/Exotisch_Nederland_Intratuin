@@ -15,7 +15,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private List<Question> answeredQuestions;
 
         //Constructor for creating an User from database
-        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<Question> answeredQuestions) {
+        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
             this.id = id;
             this.name = name;
             this.email = email;
@@ -24,8 +24,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
             this.answeredQuestions = new List<Question>();
 
+            //Filling roles list
             this.roles = new List<Role>();
-            foreach (Role role in roles) { AddRole(role, true); }
+            foreach (Role role in roles) { AddRole(role, false); }
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
@@ -40,43 +41,54 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.observations = new List<Observation>();
             this.answeredQuestions = new List<Question>();
 
-            SqlDal.AddUser(this);
+            this.id = SqlDal.AddUser(this); //Get an ID for User so we can enter roles in UserRole linking table
 
+            //Filling roles list
             this.roles = new List<Role>();
-            foreach (Role role in roles) { AddRole(role, false); }
+            foreach (Role role in roles) { AddRole(role, true); }
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
-
-            this.id = SqlDal.AddUser(this);
         }
 
 
         //Methods
 
-        public static List<User> GetAllUsers() {
+        public static List<User> GetAll() {
             return SqlDal.GetAllUsers();
         }
 
-        public static User GetUserByID(int id) {
+        public static User GetByID(int id) {
             return SqlDal.GetUserByID(id);
         }
 
-        public void EditUser(string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<Question> answeredQuestions) {
+        public void Edit(string name, string email, string currentLocation, Route currentRoute, List<Role> newRoles) {
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
-            this.currentRoute = currentRoute;
-            this.roles = roles;
-            this.answeredQuestions = answeredQuestions;
+
+            if (this.currentRoute != currentRoute) {
+                this.currentRoute.RemoveUser(this);
+                this.currentRoute = currentRoute;
+                this.currentRoute.AddUser(this);
+            }
+
+            foreach (Role currentRole in roles) {
+                if (!newRoles.Contains(currentRole)) {
+                    currentRole.RemoveUser(this);
+                }
+            }
+
             SqlDal.EditUser(this);
+
+            this.roles = newRoles;
         }
 
-        public void DeleteUser() {
+        public void Delete() {
             SqlDal.DeleteUser(this);
         }
 
-        public void AddRole(Role role, bool fromDatabase) {
+        public void AddRole(Role role, bool addToDB) {
             if (!roles.Contains(role)) {
                 roles.Add(role);
 
@@ -85,9 +97,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
                 //Add new entry to linking table
                 //Only add if user is from scratch, otherwise these entries are already in DB
-                if (!fromDatabase) {
+                if (addToDB) {
                     SqlDal.AddUserRole(this, role);
                 }
+            }
+        }
+
+        public void RemoveRole(Role role) {
+            if (roles.Contains(role)) {
+                roles.Remove(role);
             }
         }
 

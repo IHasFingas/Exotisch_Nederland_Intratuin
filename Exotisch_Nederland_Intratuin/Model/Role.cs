@@ -31,28 +31,34 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Role> GetALlRoles() {
+        public static List<Role> GetAll() {
             return SqlDal.GetAllRoles();
         }
 
-        public static Role GetRoleByID(int id) {
+        public static Role GetByID(int id) {
             return SqlDal.GetRoleByID(id);
         }
 
-        public void EditRole(string name, string key, List<User> users) {
+        public void Edit(string name, string key) {
             this.name = name;
             this.key = key;
-            this.users = users;
+
             SqlDal.EditRole(this);
         }
 
-        public void DeleteRole() {
+        public void Delete() {
             SqlDal.DeleteRole(this);
         }
 
         public void AddUser(User user) {
             if (!users.Contains(user)) {
                 users.Add(user);
+            }
+        }
+
+        public void RemoveUser(User user) {
+            if (users.Contains(user)) {
+                users.Remove(user);
             }
         }
 

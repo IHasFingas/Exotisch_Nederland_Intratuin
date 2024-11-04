@@ -2,7 +2,6 @@ using Exotisch_Nederland_Intratuin.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Exotisch_Nederland_Intratuin.DAL {
     internal class SQLDAL {
@@ -42,8 +41,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         }
 
 
-        //Getting methods
-        //Gets all objects currently in database and returns as List. Also updates corresponding object list
+        // Get all objects currently in database and returns as List. Also updates corresponding object list
         public List<Area> GetAllAreas() {
             areas.Clear();
             connection.Open();
@@ -118,7 +116,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string genus = (string)reader["Genus"];
 
                         try {
-                            species.Add(new Specie(id, domain, regnum, phylum, classus, ordo, familia, genus, name));
+                            species.Add(new Specie(id, name, domain, regnum, phylum, classus, ordo, familia, genus));
                         } catch (Exception e) {
                             Console.WriteLine($"Failed to create Specie {id} from database");
                             Console.WriteLine(e.Message);
@@ -149,7 +147,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 }
             }
 
-            FillNeighboursForAllRoutePoints();
+            GetAllNeighboursForRoutePoints();
 
             connection.Close();
             return routePoints;
@@ -187,7 +185,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                     double length = data.Item3;
                     Area area = data.Item4;
 
-                    routes.Add(new Route(id, name, length, area, GetAllRoutePointsForRoute(id), new List<Game>()));
+                    routes.Add(new Route(id, name, length, area, GetAllRoutePointsForRoute(id)));
                 } catch (Exception e) {
                     Console.WriteLine($"Failed to create Route {data.Item1} from database");
                     Console.WriteLine(e.Message);
@@ -265,7 +263,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                     string currentLocation = data.Item4;
                     Route route = data.Item5;
 
-                    users.Add(new User(id, name, email, currentLocation, route, GetAllRolesForUser(id), GetAllAnsweredQuestionsForUser(id)));
+                    users.Add(new User(id, name, email, currentLocation, route, GetAllRolesForUser(id)));
                 } catch (Exception e) {
                     Console.WriteLine($"Failed to create User {data.Item1} from database");
                     Console.WriteLine(e.Message);
@@ -294,7 +292,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         foreach (Route route in routes) {
                             if (routeID == route.GetID()) {
                                 try {
-                                    games.Add(new Game(id, name, location, description, route, new List<Question>()));
+                                    games.Add(new Game(id, name, location, description, route));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create Game {id} from database");
                                     Console.WriteLine(e.Message);
@@ -383,7 +381,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         foreach (Game game in games) {
                             if (gameID == game.GetID()) {
                                 try {
-                                    questions.Add(new Question(id, questionText, game, new List<Answer>()));
+                                    questions.Add(new Question(id, questionText, game));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create Question {id} from database");
                                     Console.WriteLine(e.Message);
@@ -412,12 +410,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         int id = (int)reader["ID"];
                         string answerText = (string)reader["AnswerText"];
                         int questionID = (int)reader["Question_ID"];
-                        bool correctAnswer = reader.GetBoolean(3);
+                        bool isCorrect = reader.GetBoolean(3);
 
                         foreach (Question question in questions) {
                             if (questionID == question.GetID()) {
                                 try {
-                                    answers.Add(new Answer(id, answerText, question, correctAnswer));
+                                    answers.Add(new Answer(id, answerText, question, isCorrect));
                                 } catch (Exception e) {
                                     Console.WriteLine($"Failed to create Answer {id} from database");
                                     Console.WriteLine(e.Message);
@@ -434,135 +432,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return answers;
         }
 
-        //Linking tables
-        private List<RoutePoint> GetAllRoutePointsForRoute(int routeID) {
-            List<RoutePoint> routePointsForRoute = new List<RoutePoint>();
 
-            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
-                secondConnection.Open();
-
-                string query = "SELECT RoutePoint_ID FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
-
-                using (SqlCommand command = new SqlCommand(query, connection)) {
-                    command.Parameters.AddWithValue("@Route_ID", routeID);
-
-                    using (SqlDataReader reader = command.ExecuteReader()) {
-                        while (reader.Read()) {
-                            int routePointID = (int)reader["RoutePoint_ID"];
-
-                            foreach (RoutePoint candidateRoutePoint in this.routePoints) {
-                                if (routePointID == candidateRoutePoint.GetID()) {
-                                    routePointsForRoute.Add(candidateRoutePoint);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                secondConnection.Close();
-            }
-
-            return routePointsForRoute;
-        }
-
-        private List<Role> GetAllRolesForUser(int userID) {
-            List<Role> rolesForUser = new List<Role>();
-
-            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
-                secondConnection.Open();
-
-                string query = "SELECT Role_ID FROM UserRole WHERE User_ID = @User_ID";
-
-                using (SqlCommand command = new SqlCommand(query, connection)) {
-                    command.Parameters.AddWithValue("@User_ID", userID);
-
-                    using (SqlDataReader reader = command.ExecuteReader()) {
-                        while (reader.Read()) {
-                            int roleID = (int)reader["Role_ID"];
-
-                            foreach (Role candidateRole in this.roles) {
-                                if (roleID == candidateRole.GetID()) {
-                                    rolesForUser.Add(candidateRole);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                secondConnection.Close();
-            }
-
-            return rolesForUser;
-        }
-
-        private List<Question> GetAllAnsweredQuestionsForUser(int userID) {
-            List<Question> answeredQuestions = new List<Question>();
-
-            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
-                secondConnection.Open();
-
-                string query = "SELECT Question_ID FROM UserQuestion WHERE User_ID = @User_ID";
-
-                using (SqlCommand command = new SqlCommand(query, connection)) {
-                    command.Parameters.AddWithValue("@User_ID", userID);
-
-                    using (SqlDataReader reader = command.ExecuteReader()) {
-                        while (reader.Read()) {
-                            int questionID = (int)reader["Question_ID"];
-
-                            foreach (Question question in this.questions) {
-                                if (questionID == question.GetID()) {
-                                    answeredQuestions.Add(question);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                secondConnection.Close();
-            }
-
-            return answeredQuestions;
-        }
-
-        private void FillNeighboursForAllRoutePoints() {
-            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
-                secondConnection.Open();
-
-                string query = "SELECT * FROM RoutePointRoutePoint";
-
-                using (SqlCommand command = new SqlCommand(query, connection)) {
-                    using (SqlDataReader reader = command.ExecuteReader()) {
-                        while (reader.Read()) {
-                            int routePoint1ID = (int)reader["RoutePoint1_ID"];
-                            int routePoint2ID = (int)reader["RoutePoint2_ID"];
-                            double distance = (double)reader["Distance"];
-
-                            RoutePoint routePoint1 = null;
-                            RoutePoint routePoint2 = null;
-
-                            foreach (RoutePoint candidateRoutePoint in this.routePoints) {
-                                if (routePoint1ID == candidateRoutePoint.GetID()) {
-                                    routePoint1 = candidateRoutePoint;
-                                }
-
-                                if (routePoint2ID == candidateRoutePoint.GetID()) {
-                                    routePoint2 = candidateRoutePoint;
-                                }
-                            }
-
-                            routePoint1.AddNeighbour(routePoint2, distance, true);
-                            routePoint2.AddNeighbour(routePoint1, distance, true);
-                        }
-                    }
-                }
-
-                secondConnection.Close();
-            }
-        }
-
-
-        //Gets single object from internal list
+        // Get single object from internal list
         public Area GetAreaByID(int id) {
             GetAllAreas();
 
@@ -593,21 +464,21 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return null;
         }
 
-        public Route GetRouteByID(int id) {
-            GetAllRoutes();
-
-            foreach (Route route in routes) {
-                if (route.GetID() == id) { return route; }
-            }
-
-            return null;
-        }
-
         public RoutePoint GetRoutePointByID(int id) {
             GetAllRoutePoints();
 
             foreach (RoutePoint routePoint in routePoints) {
                 if (routePoint.GetID() == id) { return routePoint; }
+            }
+
+            return null;
+        }
+
+        public Route GetRouteByID(int id) {
+            GetAllRoutes();
+
+            foreach (Route route in routes) {
+                if (route.GetID() == id) { return route; }
             }
 
             return null;
@@ -674,8 +545,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         }
 
 
-        //Adding methods
-        //Add Object to the database and to corresponding area list in SQLDAL
+        // Add object to the database and to corresponding object list in SQLDAL
         public int AddArea(Area area) {
             areas.Add(area);
             connection.Open();
@@ -700,12 +570,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             roles.Add(role);
             connection.Open();
 
-            string query = "INSERT INTO Role(Name, Key) VALUES (@Name, @Key)";
+            string query = "INSERT INTO Role(Name, [Key]) VALUES (@Name, @Key)";
             int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", role.GetName());
-                command.Parameters.AddWithValue("@Email", role.GetKey());
+                command.Parameters.AddWithValue("@Key", role.GetKey());
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
@@ -787,11 +657,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             pointsOfInterest.Add(poi);
             connection.Open();
 
-            string query = "INSERT INTO POI(Name, Location, RoutePoint_ID) VALUES (@Name, @Location, @RoutePoint_ID)";
+            string query = "INSERT INTO POI(Name, Description, Location, RoutePoint_ID) VALUES (@Name, @Description, @Location, @RoutePoint_ID)";
             int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", poi.GetName());
+                command.Parameters.AddWithValue("@Description", poi.GetDescription());
                 command.Parameters.AddWithValue("@Location", poi.GetLocation());
                 command.Parameters.AddWithValue("@RoutePoint_ID", poi.GetRoutePoint().GetID());
                 command.ExecuteNonQuery();
@@ -808,7 +679,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             users.Add(user);
             connection.Open();
 
-            string query = "INSERT INTO User(Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
+            string query = "INSERT INTO [User](Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
             int id;
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
@@ -857,7 +728,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", observation.GetName());
-                command.Parameters.AddWithValue("@Domain", observation.GetLocation());
+                command.Parameters.AddWithValue("@Location", observation.GetLocation());
                 command.Parameters.AddWithValue("@Description", observation.GetDescription());
                 command.Parameters.AddWithValue("@Picture", observation.GetPicture());
                 command.Parameters.AddWithValue("@Specie_ID", observation.GetSpecie().GetID());
@@ -904,7 +775,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
                 command.Parameters.AddWithValue("@Question_ID", answer.GetQuestion().GetID());
-                command.Parameters.AddWithValue("@CorrectAnswer", answer.GetCorrectAnswer());
+                command.Parameters.AddWithValue("@CorrectAnswer", answer.GetCorrectness());
                 command.ExecuteNonQuery();
 
                 command.CommandText = "SELECT CAST(@@Identity as INT);";
@@ -915,67 +786,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return id;
         }
 
-        //Linking tables
-        public void AddRouteRoutePoint(Route route, RoutePoint routePoint) {
-            connection.Open();
 
-            string query = "INSERT INTO RouteRoutePoint(Route_ID, RoutePoint_ID) VALUES (@Route_ID, @RoutePoint_ID)";
-
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Route_ID", route.GetID());
-                command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-
-        public void AddUserRole(User user, Role role) {
-            connection.Open();
-
-            string query = "INSERT INTO UserRole(User_ID, Role_ID) VALUES (@User_ID, @Role_ID)";
-
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@User_ID", user.GetID());
-                command.Parameters.AddWithValue("@Role_ID", role.GetID());
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-
-        public void AddUserQuestion(User user, Question question) {
-            connection.Open();
-
-            string query = "INSERT INTO UserQuestion(User_ID, Question_ID) VALUES (@User_ID, @Question_ID)";
-
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@User_ID", user.GetID());
-                command.Parameters.AddWithValue("@Question_ID", question.GetID());
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-
-        public void AddRoutePointRoutePoint(RoutePoint routePoint1, RoutePoint routePoint2, double distance) {
-            connection.Open();
-
-            string query = "INSERT INTO RoutePointRoutePoint(RoutePoint1_ID, RoutePoint2_ID, Distance) VALUES (@RoutePoint1_ID, @RoutePoint2_ID, @Distance)";
-
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
-                command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
-                command.Parameters.AddWithValue("@Distance", distance);
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-
-
-        // Editing methods
-        // Edits certain fields in given object
+        // Edit certain fields in given object
         public void EditArea(Area area) {
             connection.Open();
 
@@ -994,25 +806,14 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditRole(Role role) {
             connection.Open();
 
-            string query = "UPDATE Role SET Name = @Name, Key = @Key WHERE ID = @ID";
+            string query = "UPDATE Role SET Name = @Name, [Key] = @Key WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", role.GetName());
-                command.Parameters.AddWithValue("@Size", role.GetKey());
+                command.Parameters.AddWithValue("@Key", role.GetKey());
                 command.Parameters.AddWithValue("@ID", role.GetID());
                 command.ExecuteNonQuery();
             }
-
-            //query = "UPDATE UserRole SET User_ID = @User_ID WHERE Role_ID = @Role_ID";
-
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("Role_ID", role.GetID());
-
-            //    foreach (User user in role.GetUsers()) {
-            //        command.Parameters.AddWithValue("@User_ID", user.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
 
             connection.Close();
         }
@@ -1050,47 +851,19 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
-            //query = "UPDATE RouteRoutePoint SET Route_ID = @Route_ID WHERE RoutePoint_ID = @RoutePoint_ID";
-
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
-
-            //    foreach (Route route in routePoint.GetRoutes()) {
-            //        command.Parameters.AddWithValue("@Route_ID", route.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
-
-            //query = "UPDATE RoutePointRoutePoint SET RoutePoint2_ID = @RoutePoint2_ID WHERE RoutePoint1_ID = @RoutePoint1_ID";
-
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint.GetID());
-
-            //    foreach (RoutePoint routePoint2 in routePoint.GetNeighbours().Keys) {
-            //        command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
-
-            //query = "UPDATE RoutePointRoutePoint SET RoutePoint1_ID = @RoutePoint1_ID WHERE RoutePoint2_ID = @RoutePoint2_ID";
-
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint.GetID());
-
-            //    foreach (RoutePoint routePoint1 in routePoint.GetNeighbours().Keys) {
-            //        command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
-
             connection.Close();
+
+            DeleteRoutePointRoutePoint(routePoint);
+
+            foreach (KeyValuePair<RoutePoint, double> neighbourData in routePoint.GetNeighbours()) {
+                AddRoutePointRoutePoint(routePoint, neighbourData.Key, neighbourData.Value);
+            }
         }
 
         public void EditRoute(Route route) {
             connection.Open();
 
             string query = "UPDATE Route SET Name = @Name, Length = @Length, Area_ID = @Area_ID WHERE ID = @ID";
-
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", route.GetName());
                 command.Parameters.AddWithValue("@Length", route.GetLength());
@@ -1099,16 +872,11 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
-            //query = "UPDATE RouteRoutePoint SET RoutePoint_ID = @RoutePoint_ID WHERE Route_ID = @Route_ID";
+            DeleteRouteRoutePoint(route);
 
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("@Route_ID", route.GetID());
-
-            //    foreach (RoutePoint routePoint in route.GetRoutePoints()) {
-            //        command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
+            foreach (RoutePoint routePoint in route.GetRoutePoints()) {
+                AddRouteRoutePoint(route, routePoint);
+            }
 
             connection.Close();
         }
@@ -1132,8 +900,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditUser(User user) {
             connection.Open();
 
-            string query = "UPDATE User SET Name = @Name, Email = @Email, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE ID = @ID";
-
+            string query = "UPDATE [User] SET Name = @Name, Email = @Email, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE ID = @ID";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", user.GetName());
                 command.Parameters.AddWithValue("@Email", user.GetEmail());
@@ -1143,27 +910,11 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
-            //query = "UPDATE UserRole SET Role_ID = @Role_ID WHERE User_ID = @User_ID";
+            DeleteUserRole(user);
 
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("User_ID", user.GetID());
-
-            //    foreach (Role role in user.GetRoles()) {
-            //        command.Parameters.AddWithValue("@Role_ID", role.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
-
-            //query = "UPDATE UserQuestion SET Question_ID = @Question_ID WHERE User_ID = @User_ID";
-
-            //using (SqlCommand command = new SqlCommand(query, connection)) {
-            //    command.Parameters.AddWithValue("User_ID", user.GetID());
-
-            //    foreach (Question question in user.GetAnsweredQuestions()) {
-            //        command.Parameters.AddWithValue("@Question_ID", question.GetID());
-            //        command.ExecuteNonQuery();
-            //    }
-            //}
+            foreach (Role role in user.GetRoles()) {
+                AddUserRole(user, role);
+            }
 
             connection.Close();
         }
@@ -1188,7 +939,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditObservation(Observation observation) {
             connection.Open();
 
-            string query = "UPDATE Observation SET Name = @Name, Location = @Location, Description = @Description, Specie_ID = @Specie_ID, Area_ID = Area_ID WHERE ID = @ID";
+            string query = "UPDATE Observation SET Name = @Name, Location = @Location, Description = @Description, Specie_ID = @Specie_ID, Area_ID = @Area_ID WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", observation.GetName());
@@ -1232,13 +983,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditAnswer(Answer answer) {
             connection.Open();
 
-            string query = "UPDATE Question SET AnswerText = @AnswerText, Question_ID = @Question_ID, CorrectAnswer = @CorrectAnswer WHERE ID = @ID";
+            string query = "UPDATE Answer SET AnswerText = @AnswerText, Question_ID = @Question_ID, CorrectAnswer = @CorrectAnswer WHERE ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@AnswerText", answer.GetAnswerText());
                 command.Parameters.AddWithValue("@Question_ID", answer.GetQuestion().GetID());
-                command.Parameters.AddWithValue("@CorrectAnswer", answer.GetCorrectAnswer());
-                command.Parameters.AddWithValue("@Answer_ID", answer.GetID());
+                command.Parameters.AddWithValue("@CorrectAnswer", answer.GetCorrectness());
+                command.Parameters.AddWithValue("@ID", answer.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1246,8 +997,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         }
 
 
-        // Removing methods
-        // Remove certain objects from database
+        // Remove specific object from database
         public void DeleteArea(Area area) {
             connection.Open();
 
@@ -1296,14 +1046,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteRoutePoint(RoutePoint routePoint) {
             connection.Open();
 
-            string query = "DELETE FROM RoutePoint WHERE ID = @ID";
-
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@ID", routePoint.GetID());
-                command.ExecuteNonQuery();
-            }
-
-            query = "DELETE FROM RouteRoutePoint WHERE RoutePoint_ID = @RoutePoint_ID";
+            string query = "DELETE FROM RouteRoutePoint WHERE RoutePoint_ID = @RoutePoint_ID";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
                 command.ExecuteNonQuery();
@@ -1315,22 +1058,29 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.ExecuteNonQuery();
             }
 
+            query = "DELETE FROM RoutePoint WHERE ID = @ID";
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@ID", routePoint.GetID());
+                command.ExecuteNonQuery();
+            }
+
             connection.Close();
         }
 
         public void DeleteRoute(Route route) {
             connection.Open();
 
-            string query = "DELETE FROM Route WHERE ID = @ID";
+            string query = "DELETE FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
 
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@ID", route.GetID());
+                command.Parameters.AddWithValue("@Route_ID", route.GetID());
                 command.ExecuteNonQuery();
             }
 
-            query = "DELETE FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
+            query = "DELETE FROM Route WHERE ID = @ID";
+
             using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                command.Parameters.AddWithValue("@ID", route.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1353,14 +1103,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteUser(User user) {
             connection.Open();
 
-            string query = "DELETE FROM User WHERE ID = @ID";
-
-            using (SqlCommand command = new SqlCommand(query, connection)) {
-                command.Parameters.AddWithValue("@ID", user.GetID());
-                command.ExecuteNonQuery();
-            }
-
-            query = "DELETE FROM UserRole WHERE User_ID = @User_ID";
+            string query = "DELETE FROM UserRole WHERE User_ID = @User_ID";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("User_ID", user.GetID());
                 command.ExecuteNonQuery();
@@ -1369,6 +1112,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             query = "DELETE FROM UserQuestion WHERE User_ID = @User_ID";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("User_ID", user.GetID());
+                command.ExecuteNonQuery();
+            }
+
+            query = "DELETE FROM [User] WHERE ID = @ID";
+            using (SqlCommand command = new SqlCommand(query, connection)) {
+                command.Parameters.AddWithValue("@ID", user.GetID());
                 command.ExecuteNonQuery();
             }
 
@@ -1431,6 +1180,262 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
 
             connection.Close();
+        }
+
+
+        // Linking tables
+        private List<Role> GetAllRolesForUser(int userID) {
+            List<Role> roles = new List<Role>();
+
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT Role_ID FROM UserRole WHERE User_ID = @User_ID";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@User_ID", userID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int roleID = (int)reader["Role_ID"];
+
+                            foreach (Role candidateRole in this.roles) {
+                                if (roleID == candidateRole.GetID()) {
+                                    roles.Add(candidateRole);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return roles;
+        }
+
+        private List<Question> GetAllAnsweredQuestionsForUser(int userID) {
+            List<Question> answeredQuestions = new List<Question>();
+
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT Question_ID FROM UserQuestion WHERE User_ID = @User_ID";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@User_ID", userID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int questionID = (int)reader["Question_ID"];
+
+                            foreach (Question question in this.questions) {
+                                if (questionID == question.GetID()) {
+                                    answeredQuestions.Add(question);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return answeredQuestions;
+        }
+
+        private void GetAllNeighboursForRoutePoints() {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT * FROM RoutePointRoutePoint";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int routePoint1ID = (int)reader["RoutePoint1_ID"];
+                            int routePoint2ID = (int)reader["RoutePoint2_ID"];
+                            double distance = (double)reader["Distance"];
+
+                            RoutePoint routePoint1 = null;
+                            RoutePoint routePoint2 = null;
+
+                            foreach (RoutePoint candidateRoutePoint in this.routePoints) {
+                                if (routePoint1ID == candidateRoutePoint.GetID()) {
+                                    routePoint1 = candidateRoutePoint;
+                                }
+
+                                if (routePoint2ID == candidateRoutePoint.GetID()) {
+                                    routePoint2 = candidateRoutePoint;
+                                }
+                            }
+
+                            routePoint1.AddNeighbour(routePoint2, distance, false);
+                            routePoint2.AddNeighbour(routePoint1, distance, false);
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        private List<RoutePoint> GetAllRoutePointsForRoute(int routeID) {
+            List<RoutePoint> routePoints = new List<RoutePoint>();
+
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "SELECT RoutePoint_ID FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@Route_ID", routeID);
+
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            int routePointID = (int)reader["RoutePoint_ID"];
+
+                            foreach (RoutePoint candidateRoutePoint in this.routePoints) {
+                                if (routePointID == candidateRoutePoint.GetID()) {
+                                    routePoints.Add(candidateRoutePoint);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                secondConnection.Close();
+            }
+
+            return routePoints;
+        }
+
+
+
+        public void AddUserRole(User user, Role role) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "INSERT INTO UserRole(User_ID, Role_ID) VALUES (@User_ID, @Role_ID)";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@User_ID", user.GetID());
+                    command.Parameters.AddWithValue("@Role_ID", role.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        public void AddUserQuestion(User user, Question question) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "INSERT INTO UserQuestion(User_ID, Question_ID) VALUES (@User_ID, @Question_ID)";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@User_ID", user.GetID());
+                    command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        public void AddRoutePointRoutePoint(RoutePoint routePoint1, RoutePoint routePoint2, double distance) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "INSERT INTO RoutePointRoutePoint(RoutePoint1_ID, RoutePoint2_ID, Distance) VALUES (@RoutePoint1_ID, @RoutePoint2_ID, @Distance)";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint1.GetID());
+                    command.Parameters.AddWithValue("@RoutePoint2_ID", routePoint2.GetID());
+                    command.Parameters.AddWithValue("@Distance", distance);
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        public void AddRouteRoutePoint(Route route, RoutePoint routePoint) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "INSERT INTO RouteRoutePoint(Route_ID, RoutePoint_ID) VALUES (@Route_ID, @RoutePoint_ID)";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                    command.Parameters.AddWithValue("@RoutePoint_ID", routePoint.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+
+
+        public void DeleteUserRole(User user) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "DELETE FROM UserRole WHERE User_ID = @User_ID";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@User_ID", user.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        public void DeleteUserQuestion(User user) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "DELETE FROM UserQuestion WHERE User_ID = @User_ID";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@User_ID", user.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        public void DeleteRoutePointRoutePoint(RoutePoint routePoint) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "DELETE FROM RoutePointRoutePoint WHERE RoutePoint1_ID = @RoutePoint1_ID";
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@RoutePoint1_ID", routePoint.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
+        }
+
+        public void DeleteRouteRoutePoint(Route route) {
+            using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
+                secondConnection.Open();
+
+                string query = "DELETE FROM RouteRoutePoint WHERE Route_ID = @Route_ID";
+
+                using (SqlCommand command = new SqlCommand(query, secondConnection)) {
+                    command.Parameters.AddWithValue("@Route_ID", route.GetID());
+                    command.ExecuteNonQuery();
+                }
+
+                secondConnection.Close();
+            }
         }
     }
 }

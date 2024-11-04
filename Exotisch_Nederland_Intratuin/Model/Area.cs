@@ -34,21 +34,22 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Area> GetAllAreas() {
+        public static List<Area> GetAll() {
             return SqlDal.GetAllAreas();
         }
 
-        public static Area GetAreaByID(int id) {
+        public static Area GetByID(int id) {
             return SqlDal.GetAreaByID(id);
         }
 
-        public void EditArea(string name, double size) {
+        public void Edit(string name, double size) {
             this.name = name;
             this.size = size;
+
             SqlDal.EditArea(this);
         }
 
-        public void DeleteArea() {
+        public void Delete() {
             SqlDal.DeleteArea(this);
         }
 
@@ -58,9 +59,21 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public void RemoveRoute(Route route) {
+            if (routes.Contains(route)) {
+                routes.Remove(route);
+            }
+        }
+
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
+            }
+        }
+
+        public void RemoveObservation(Observation observation) {
+            if (observations.Contains(observation)) {
+                observations.Remove(observation);
             }
         }
 

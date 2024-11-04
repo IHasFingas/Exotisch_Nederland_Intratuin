@@ -54,7 +54,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 this.name = specie.GetName();
             }
 
-            SqlDal.AddObservation(this);
+            this.id = SqlDal.AddObservation(this);
 
             //Tell area this observation was added to it
             area.AddObservation(this);
@@ -69,25 +69,41 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Observation> GetAllObservations() {
+        public static List<Observation> GetAll() {
             return SqlDal.GetAllObservations();
         }
 
-        public static Observation GetObservationByID(int id) {
+        public static Observation GetByID(int id) {
             return SqlDal.GetObservationByID(id);
         }
 
-        public void EditObservation(string name, string location, string description, byte[] picture, Specie specie, Area area) {
+        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area) {
             this.name = name;
+
+            if (this.name == "") {
+                this.name = specie.GetName();
+            }
+
             this.location = location;
             this.description = description;
             this.picture = picture;
-            this.specie = specie;
-            this.area = area;
+
+            if (this.specie != specie) {
+                this.specie.RemoveObservation(this);
+                this.specie = specie;
+                this.specie.AddObservation(this);
+            }
+
+            if (this.area != area) {
+                this.area.RemoveObservation(this);
+                this.area = area;
+                this.area.AddObservation(this);
+            }
+
             SqlDal.EditObservation(this);
         }
 
-        public void DeleteObservation() {
+        public void Delete() {
             SqlDal.DeleteObservation(this);
         }
 

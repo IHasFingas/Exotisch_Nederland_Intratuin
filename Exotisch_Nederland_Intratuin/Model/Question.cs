@@ -13,13 +13,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
 
         //Constructor for creating a Question from database
-        public Question(int id, string questionText, Game game, List<Answer> answers) {
+        public Question(int id, string questionText, Game game) {
             this.id = id;
             this.questionText = questionText;
             this.game = game;
 
             this.answers = new List<Answer>();
-            foreach (Answer answer in answers) { AddAnswer(answer); }
 
             this.answeredBy = new List<User>();
 
@@ -28,14 +27,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating a Question from scratch (automatically adds it to the database)
-        public Question(string questionText, Game game, List<Answer> answers) {
+        public Question(string questionText, Game game) {
             this.questionText = questionText;
             this.game = game;
 
-            SqlDal.AddQuestion(this);
+            this.id = SqlDal.AddQuestion(this);
 
             this.answers = new List<Answer>();
-            foreach (Answer answer in answers) { AddAnswer(answer); }
 
             this.answeredBy = new List<User>();
 
@@ -46,28 +44,39 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Question> GetAllQuestions() {
+        public static List<Question> GetAll() {
             return SqlDal.GetAllQuestions();
         }
 
-        public static Question GetQuestionByID(int id) {
+        public static Question GetByID(int id) {
             return SqlDal.GetQuestionByID(id);
         }
 
-        public void EditQuestion(string questionText, Game game, List<User> answeredBy) {
+        public void Edit(string questionText, Game game) {
             this.questionText = questionText;
-            this.game = game;
-            this.answeredBy = answeredBy;
+
+            if (this.game != game) {
+                this.game.RemoveQuestion(this);
+                this.game = game;
+                this.game.AddQuestion(this);
+            }
+
             SqlDal.EditQuestion(this);
         }
 
-        public void DeleteQuestion() {
+        public void Delete() {
             SqlDal.DeleteQuestion(this);
         }
 
         public void AddAnswer(Answer answer) {
             if (!answers.Contains(answer)) {
                 answers.Add(answer);
+            }
+        }
+
+        public void RemoveAnswer(Answer answer) {
+            if (answers.Contains(answer)) {
+                answers.Remove(answer);
             }
         }
 

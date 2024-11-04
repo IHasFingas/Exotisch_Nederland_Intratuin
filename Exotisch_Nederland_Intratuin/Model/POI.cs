@@ -31,7 +31,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.location = location;
             this.routePoint = routePoint;
 
-            SqlDal.AddPOI(this);
+            this.id = SqlDal.AddPOI(this);
 
             //Tell routepoint this POI is near them
             this.routePoint.AddPointOfInterest(this);
@@ -40,23 +40,29 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<POI> GetAllPOIs() {
+        public static List<POI> GetAll() {
             return SqlDal.GetAllPOIs();
         }
 
-        public static POI GetPOIByID(int id) {
+        public static POI GetByID(int id) {
             return SqlDal.GetPOIByID(id);
         }
 
-        public void EditPOI(string name, string description, string location, RoutePoint routePoint) {
+        public void Edit(string name, string description, string location, RoutePoint routePoint) {
             this.name = name;
             this.description = description;
             this.location = location;
-            this.routePoint = routePoint;
+
+            if (this.routePoint != routePoint) {
+                this.routePoint.RemovePointOfInterest(this);
+                this.routePoint = routePoint;
+                this.routePoint.AddPointOfInterest(this);
+            }
+
             SqlDal.EditPOI(this);
         }
 
-        public void DeletePOI() {
+        public void Delete() {
             SqlDal.DeletePOI(this);
         }
 
@@ -70,6 +76,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public int GetID() { return id; }
 
         public string GetName() { return name; }
+
+        public string GetDescription() { return description; }
 
         public string GetLocation() { return location; }
 

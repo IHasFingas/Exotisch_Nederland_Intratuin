@@ -6,6 +6,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private static SQLDAL SqlDal = SQLDAL.Instance;
 
         private int id;
+        private string name;
         private string domain;
         private string regnum;
         private string phylum;
@@ -13,12 +14,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string ordo;
         private string familia;
         private string genus;
-        private string name;
         private List<Observation> observations;
 
 
         //Constructor for creating a Specie from database
-        public Specie(int id, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus, string name) {
+        public Specie(int id, string name, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus) {
             this.id = id;
             this.domain = domain;
             this.regnum = regnum;
@@ -32,7 +32,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating a Specie from scratch (automatically adds it to the database)
-        public Specie(string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus, string name) {
+        public Specie(string name, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus) {
             this.domain = domain;
             this.regnum = regnum;
             this.phylum = phylum;
@@ -49,15 +49,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         //Methods
 
-        public static List<Specie> GetAllSpecies() {
+        public static List<Specie> GetAll() {
             return SqlDal.GetAllSpecies();
         }
 
-        public static Specie GetSpecieByID(int id) {
+        public static Specie GetByID(int id) {
             return SqlDal.GetSpecieByID(id);
         }
 
-        public void EditSpecie(string name, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus) {
+        public void Edit(string name, string domain, string regnum, string phylum, string classus, string ordo, string familia, string genus) {
             this.name = name;
             this.domain = domain;
             this.regnum = regnum;
@@ -66,16 +66,23 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.ordo = ordo;
             this.familia = familia;
             this.genus = genus;
+
             SqlDal.EditSpecie(this);
         }
 
-        public void DeleteSpecie() {
+        public void Delete() {
             SqlDal.DeleteSpecie(this);
         }
 
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
+            }
+        }
+
+        public void RemoveObservation(Observation observation) {
+            if (observations.Contains(observation)) {
+                observations.Remove(observation);
             }
         }
 
