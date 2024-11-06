@@ -13,10 +13,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private Specie specie;
         private Area area;
         private User user;
+        private bool isValidated;
 
 
         //Constructor for creating an Observation from database
-        public Observation(int id, string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
+        public Observation(int id, string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isValidated) {
             this.id = id;
             this.name = name;
             this.location = location;
@@ -25,6 +26,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.specie = specie;
             this.area = area;
             this.user = user;
+            this.isValidated = isValidated;
 
             if (this.name == "") {
                 this.name = specie.GetName();
@@ -49,6 +51,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.specie = specie;
             this.area = area;
             this.user = user;
+            this.isValidated = false;
 
             if (this.name == "") {
                 this.name = specie.GetName();
@@ -77,7 +80,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetObservationByID(id);
         }
 
-        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area) {
+        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
             this.name = name;
 
             if (this.name == "") {
@@ -99,6 +102,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 this.area = area;
                 this.area.AddObservation(this);
             }
+
+            this.user = user;
 
             SqlDal.EditObservation(this);
         }
@@ -129,5 +134,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Area GetArea() { return area; }
 
         public User GetUser() { return user; }
+
+        public bool GetValidated() { return isValidated; }
     }
 }

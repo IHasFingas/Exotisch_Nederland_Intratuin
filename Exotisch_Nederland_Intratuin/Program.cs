@@ -98,7 +98,7 @@ namespace Exotisch_Nederland_Intratuin {
             poi.Edit("Updated test name", "Updated test description", "Updated test location", routePoints[1]);
             user.Edit("Updated test name", "Updated test email", "Updated test location", routes[1], new List<Role>() { roles[1] });
             game.Edit("Updated test name", "Updated test location", "Updated test description", routes[1]);
-            observation.Edit("Updated test name", "Updated test location", "Updated test description", new byte[] { 0x04, 0x05, 0x06 }, species[1], areas[1]);
+            observation.Edit("Updated test name", "Updated test location", "Updated test description", new byte[] { 0x04, 0x05, 0x06 }, species[1], areas[1], users[1]);
             question.Edit("Updated test text", games[1]);
             answer.Edit("Updated test text", questions[1], false);
 
