@@ -138,6 +138,40 @@ CREATE TABLE RoutePointRoutePoint
 
 
 --Enter data
+--Placeholder data
+SET IDENTITY_INSERT Area ON;
+INSERT INTO Area(ID, [Name], Size) VALUES (-1, 'Placeholder', 0)
+SET IDENTITY_INSERT Area OFF;
+
+SET IDENTITY_INSERT [Role] ON;
+INSERT INTO [Role](ID, [Name], [Key]) VALUES (-1, 'Placeholder', '')
+SET IDENTITY_INSERT [Role] OFF;	
+
+SET IDENTITY_INSERT Specie ON;
+INSERT INTO Specie(ID, [Name], Domain, Regnum, Phylum, Classus, Ordo, Familia, Genus) VALUES (-1, 'Placeholder', '', '', '', '', '', '', '');
+SET IDENTITY_INSERT Specie OFF;
+
+SET IDENTITY_INSERT RoutePoint ON;
+INSERT INTO RoutePoint(ID, [Name], [Location]) VALUES (-1, 'Placeholder', '')
+SET IDENTITY_INSERT RoutePoint OFF;
+
+SET IDENTITY_INSERT [Route] ON;
+INSERT INTO [Route](ID, [Name], [Length], Area_ID) VALUES (-1, 'Placeholder', 0, -1)
+SET IDENTITY_INSERT [Route] OFF;
+
+SET IDENTITY_INSERT [User] ON;
+INSERT INTO [User](ID, [Name], Email, CurrentLocation, Route_ID) VALUES (-1, 'Placeholder', '', '', -1)
+SET IDENTITY_INSERT [User] OFF;
+
+SET IDENTITY_INSERT Game ON;
+INSERT INTO Game(ID, [Name], [Location], [Description], Route_ID) VALUES (-1, 'Placeholder', '', '', -1)
+SET IDENTITY_INSERT Game OFF;
+
+SET IDENTITY_INSERT Question ON;
+INSERT INTO Question(ID, QuestionText, Game_ID) VALUES (-1, 'Placeholder', -1)
+SET IDENTITY_INSERT Question OFF;
+
+--Other data
 INSERT INTO Area ([Name], Size)
 VALUES
 	('Brunsummerheide',				600),
