@@ -23,14 +23,12 @@ namespace Exotisch_Nederland_Intratuin {
 
             WriteAllData();
 
-            TestAll();
-
             Console.WriteLine("Press enter to close");
             Console.ReadKey();
         }
 
         public static void GetAllData() {
-            Console.WriteLine("Press enter to write all data");
+            Console.WriteLine("Press enter to get all data");
             Console.ReadKey();
 
             Stopwatch stopwatch = new Stopwatch();
@@ -57,6 +55,9 @@ namespace Exotisch_Nederland_Intratuin {
         }
 
         public static void WriteAllData() {
+            Console.WriteLine("Press enter to write all data");
+            Console.ReadKey();
+
             // Create a tuple of lists
             var allData = (areas, roles, species, routePoints, routes, POIs, users, games, observations, questions, answers);
 

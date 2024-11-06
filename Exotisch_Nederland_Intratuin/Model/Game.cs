@@ -99,5 +99,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetDescription() { return description; }
 
         public Route GetRoute() { return route; }
+
+        public List<Question> GetQuestions() { return questions; }
     }
 }

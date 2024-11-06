@@ -95,6 +95,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public int GetID() { return id; }
 
+        public string GetName() { return name; }
+
         public string GetDomain() { return domain; }
 
         public string GetRegnum() { return regnum; }
@@ -108,7 +110,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetFamilia() { return familia; }
 
         public string GetGenus() { return genus; }
-
-        public string GetName() { return name; }
     }
 }

@@ -99,6 +99,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public Game GetGame() { return game; }
 
-        public List<User> GetAnsweredBy() { return answeredBy; }
+        public List<Answer> GetAnswers() {  return answers; }
     }
 }

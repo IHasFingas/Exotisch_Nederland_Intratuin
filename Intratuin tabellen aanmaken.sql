@@ -125,9 +125,11 @@ CREATE TABLE RouteRoutePoint
 CREATE TABLE UserQuestion
     ([User_ID] int NOT NULL,
     Question_ID int NOT NULL,
+	Answer_ID int NOT NULL,
     PRIMARY KEY ([User_ID], Question_ID),
     FOREIGN KEY ([User_ID]) REFERENCES [User](ID),
-    FOREIGN KEY ([Question_ID]) REFERENCES Question(ID));
+    FOREIGN KEY ([Question_ID]) REFERENCES Question(ID),
+	FOREIGN KEY ([Answer_ID]) REFERENCES Answer(ID));
 
 CREATE TABLE RoutePointRoutePoint
 	(RoutePoint1_ID int NOT NULL,
@@ -286,7 +288,7 @@ VALUES
     ('Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en eet graag noten?',								1),
     ('Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?',							1),
     ('Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?',							1),
-    ('Wat voor soort dier is een vossen, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?',												1),
+    ('Wat voor soort dier is een vos, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?',													1),
     ('Welke amfibie, die vaak in Limburgse poelen en vijvers leeft, staat bekend om zijn grote, platte lichaam en groene kleur?',										1),
 
 -- Questions Game 2
@@ -431,28 +433,28 @@ VALUES
     ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM [Role] WHERE [Name] = 'Volunteer'));
 
 
-INSERT INTO UserQuestion ([User_ID], Question_ID)
+INSERT INTO UserQuestion ([User_ID], Question_ID, Answer_ID)
 VALUES
     -- Linking Jan Janssen to two random questions
-    ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM Question WHERE [ID] = 1)),
-    ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM Question WHERE [ID] = 4)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM Question WHERE [ID] = 1), (SELECT ID FROM Answer WHERE Question_ID = 1 AND CorrectAnswer = 1)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'), (SELECT ID FROM Question WHERE [ID] = 4), (SELECT ID FROM Answer WHERE Question_ID = 4 AND CorrectAnswer = 1)),
 
     -- Linking Piet Meijer to one question
-    ((SELECT ID FROM [User] WHERE [Name] = 'Piet Meijer'), (SELECT ID FROM Question WHERE [ID] = 2)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Piet Meijer'), (SELECT ID FROM Question WHERE [ID] = 2), (SELECT ID FROM Answer WHERE Question_ID = 2 AND CorrectAnswer = 1)),
 
     -- Linking Els van Dijk to two random questions
-    ((SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'), (SELECT ID FROM Question WHERE [ID] = 3)),
-    ((SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'), (SELECT ID FROM Question WHERE [ID] = 5)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'), (SELECT ID FROM Question WHERE [ID] = 3), (SELECT ID FROM Answer WHERE Question_ID = 3 AND CorrectAnswer = 1)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'), (SELECT ID FROM Question WHERE [ID] = 5), (SELECT ID FROM Answer WHERE Question_ID = 5 AND CorrectAnswer = 1)),
 
     -- Linking Karla Hermans to one question
-    ((SELECT ID FROM [User] WHERE [Name] = 'Karla Hermans'), (SELECT ID FROM Question WHERE [ID] = 6)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Karla Hermans'), (SELECT ID FROM Question WHERE [ID] = 6), (SELECT ID FROM Answer WHERE Question_ID = 5 AND CorrectAnswer = 1)),
 
     -- Linking Tom Peters to one question
-    ((SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'), (SELECT ID FROM Question WHERE [ID] = 7)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'), (SELECT ID FROM Question WHERE [ID] = 7), (SELECT ID FROM Answer WHERE Question_ID = 7 AND CorrectAnswer = 1)),
 
     -- Linking Sanne Smit to two random questions
-    ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM Question WHERE [ID] = 8)),
-    ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM Question WHERE [ID] = 9));
+    ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM Question WHERE [ID] = 8), (SELECT ID FROM Answer WHERE Question_ID = 8 AND CorrectAnswer = 1)),
+    ((SELECT ID FROM [User] WHERE [Name] = 'Sanne Smit'), (SELECT ID FROM Question WHERE [ID] = 9), (SELECT ID FROM Answer WHERE Question_ID = 9 AND CorrectAnswer = 1));
 
 
 INSERT INTO RoutePointRoutePoint (RoutePoint1_ID, RoutePoint2_ID, Distance)

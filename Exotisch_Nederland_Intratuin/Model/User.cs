@@ -1,4 +1,5 @@
 using Exotisch_Nederland_Intratuin.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -121,7 +122,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public void EditObservation(Observation observation) { }
+        public void EditObservation(Observation observation, string name, string location, string description, byte[] picture, Specie specie, Area area) {
+            if (!observation.GetValidated()) {
+                observation.Edit(name, location, description, picture, specie, area, this, observation.GetValidated());
+            }
+        }
 
         public void ValidateObservation(Observation observation) {
             if (roles.Any(role => role.GetName() == "Validator")) {
@@ -129,11 +134,63 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public void ChangeRoute(Route route) { }
+        public void ChangeRoute(Route route) {
+            currentRoute = route;
+            Edit(GetName(), GetEmail(), GetCurrentLocation(), route, GetRoles());
+        }
 
-        public void PlayGame(Game game) { }
+        public void PlayGame(Game game) {
+            if (!currentRoute.GetGames().Contains(game)) {
+                return;
+            }
 
-        public void AnswerQuestion((Question question, Answer answer) answeredQuestion, bool addToDB) { //If 1 reference consider removing bool
+            Random rng = new Random();
+            List<Question> questions = game.GetQuestions().OrderBy(q => rng.Next()).ToList();
+
+            int score = 0;
+
+            Console.WriteLine($"Currently playing game {game.GetName()}: {game.GetDescription()}");
+
+            for (int i = 0; i < questions.Count; i++) {
+                Question question = questions[i];
+                List<Answer> answers = question.GetAnswers().OrderBy(a => rng.Next()).ToList();
+
+                Console.WriteLine($"\nQuestion {i + 1}: {question.GetQuestionText()}");
+
+                for (int j = 0; j < answers.Count; j++) {
+                    Answer answer = answers[j];
+
+                    Console.WriteLine($"Answer {j + 1}: {answer.GetAnswerText()}");
+                }
+
+                int number;
+                while (true) {
+                    Console.Write("Your answer: ");
+                    string input = Console.ReadLine();
+
+                    if (int.TryParse(input, out number) && number > 0 && number <= answers.Count()) {
+                        break;
+                    } else {
+                        Console.WriteLine("Invalid input");
+                    }
+                }
+
+                Answer givenAnswer = answers[number - 1];
+
+                if (givenAnswer.GetCorrectness()) {
+                    Console.WriteLine("Correct :D");
+                    score++;
+                } else {
+                    Console.WriteLine("Incorrect :(");
+                }
+
+                AnswerQuestion((question, givenAnswer), true);
+            }
+
+            Console.WriteLine($"You have scored {score} point(s)!");
+        }
+
+        private void AnswerQuestion((Question question, Answer answer) answeredQuestion, bool addToDB) {
             if (!answeredQuestions.Contains(answeredQuestion)) {
                 answeredQuestions.Add((answeredQuestion.question, answeredQuestion.answer));
 

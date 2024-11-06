@@ -266,5 +266,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Area GetArea() { return area; }
 
         public List<RoutePoint> GetRoutePoints() { return routePoints; }
+
+        public List<Game> GetGames() { return games; }
     }
 }

@@ -74,7 +74,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetName() { return name; }
 
         public string GetKey() { return key; }
-
-        public List<User> GetUsers() { return users; }
     }
 }

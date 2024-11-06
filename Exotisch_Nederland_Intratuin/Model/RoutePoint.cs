@@ -127,8 +127,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public string GetLocation() { return location; }
 
-        public List<Route> GetRoutes() { return routes; }
-
         public Dictionary<RoutePoint, double> GetNeighbours() { return neighbours; }
     }
 }
