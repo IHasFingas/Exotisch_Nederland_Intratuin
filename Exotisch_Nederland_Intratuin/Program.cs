@@ -82,7 +82,7 @@ namespace Exotisch_Nederland_Intratuin {
             POI poi = new POI("Test name", "Test description", "Test location", routePoints[0]);
             User user = new User("Test name", "Test email", "Test location", routes[0], new List<Role>() { roles[0] });
             Game game = new Game("Test name", "Test location", "Test description", routes[0]);
-            Observation observation = new Observation("Test name", "Test location", "Test description", new byte[] { 0x01, 0x02, 0x03 }, species[0], areas[0], users[0]);
+            Observation observation = new Observation("Test name", "Test location", "Test description", new byte[] { 0x01, 0x02, 0x03 }, species[0], areas[0], users[0], false);
             Question question = new Question("Test text", games[0]);
             Answer answer = new Answer("Text text", questions[0], true);
 
@@ -98,7 +98,7 @@ namespace Exotisch_Nederland_Intratuin {
             poi.Edit("Updated test name", "Updated test description", "Updated test location", routePoints[1]);
             user.Edit("Updated test name", "Updated test email", "Updated test location", routes[1], new List<Role>() { roles[1] });
             game.Edit("Updated test name", "Updated test location", "Updated test description", routes[1]);
-            observation.Edit("Updated test name", "Updated test location", "Updated test description", new byte[] { 0x04, 0x05, 0x06 }, species[1], areas[1], users[1]);
+            observation.Edit("Updated test name", "Updated test location", "Updated test description", new byte[] { 0x04, 0x05, 0x06 }, species[1], areas[1], users[1], false);
             question.Edit("Updated test text", games[1]);
             answer.Edit("Updated test text", questions[1], false);
 

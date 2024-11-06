@@ -43,7 +43,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating an Observation from scratch (automatically adds it to the database)
-        public Observation(string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
+        public Observation(string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isValidated) {
             this.name = name;
             this.location = location;
             this.description = description;
@@ -80,7 +80,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetObservationByID(id);
         }
 
-        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
+        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isValidated) {
             this.name = name;
 
             if (this.name == "") {
@@ -104,6 +104,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
 
             this.user = user;
+            this.isValidated = isValidated;
 
             SqlDal.EditObservation(this);
         }
@@ -113,7 +114,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public override string ToString() {
-            return $"Observation {id}: {specie.GetName()}, {location}, Area {area.GetID()}, User {user.GetID()}";
+            return $"Observation {id}: {specie.GetName()}, {location}, Area {area.GetID()}, User {user.GetID()}, Validated {isValidated}";
         }
 
 

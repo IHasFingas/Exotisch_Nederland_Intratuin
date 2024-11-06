@@ -1,5 +1,6 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class User {
@@ -124,6 +125,14 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
                 //Add new entry to linking table
                 SqlDal.AddUserQuestion(this, question);
+            }
+        }
+
+        public void ValidateObservation(Observation observation)
+        {
+            if (roles.Any(role => role.GetName() == "Validator"))
+            {
+                observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), true);
             }
         }
 
