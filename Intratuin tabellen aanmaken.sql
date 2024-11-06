@@ -90,6 +90,7 @@ CREATE TABLE Observation
     Specie_ID int NOT NULL,
     Area_ID int NOT NULL,
     [User_ID] int NOT NULL,
+	Validated bit NOT NULL,
     FOREIGN KEY (Specie_ID) REFERENCES Specie(ID),
     FOREIGN KEY (Area_ID) REFERENCES Area(ID),
     FOREIGN KEY ([User_ID]) REFERENCES [User](ID));
@@ -137,8 +138,7 @@ CREATE TABLE RoutePointRoutePoint
 	FOREIGN KEY (RoutePoint2_ID) REFERENCES RoutePoint(ID));
 
 
---Enter data
---Placeholder data
+--Enter placeholder data
 SET IDENTITY_INSERT Area ON;
 INSERT INTO Area(ID, [Name], Size) VALUES (-1, 'Placeholder', 0)
 SET IDENTITY_INSERT Area OFF;
@@ -171,7 +171,7 @@ SET IDENTITY_INSERT Question ON;
 INSERT INTO Question(ID, QuestionText, Game_ID) VALUES (-1, 'Placeholder', -1)
 SET IDENTITY_INSERT Question OFF;
 
---Other data
+--Enter other data
 INSERT INTO Area ([Name], Size)
 VALUES
 	('Brunsummerheide',				600),
@@ -273,11 +273,11 @@ VALUES
 	('Lanschappen Quiz',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode Beek'),	'Kies het juiste antwoord op de vraag; landschappen editie!',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'));
 
 
-INSERT INTO Observation ([Name], [Location], [Description], Picture, Specie_ID, Area_ID, [User_ID])
+INSERT INTO Observation ([Name], [Location], [Description], Picture, Specie_ID, Area_ID, [User_ID], Validated)
 VALUES 
-	('Paardenbloem',		'50.8503, 5.6900',	'Deze bloem heeft diep ingesneden, groene bladeren die dicht bij de grond groeien. Het heeft heldergele bloemen op lange, stevige stelen.',										0001, (SELECT ID FROM Specie WHERE [Name] = 'Paardenbloem'),	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'),				(SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk')),
-	('Haas',				'',					'Deze haas heeft een lichtbruine vacht met een witachtige onderkant. Zijn lange oren staan rechtop en zijn ogen zijn groot en zwart, waardoor hij altijd alert is op gevaar.',	0002, (SELECT ID FROM Specie WHERE [Name] = 'Haas'),			(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen'),	(SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen')),
-	('Berenklauw',			'51.0543, 5.1815',	'Deze plant heeft grote, handvormige bladeren en lange, holle stelen met witte bloemen die in een schermvormige bloeiwijze groeien.',											0003, (SELECT ID FROM Specie WHERE [Name] = 'Berenklauw'),		(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel'),				(SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'));
+	('Paardenbloem',		'50.8503, 5.6900',	'Deze bloem heeft diep ingesneden, groene bladeren die dicht bij de grond groeien. Het heeft heldergele bloemen op lange, stevige stelen.',										0001, (SELECT ID FROM Specie WHERE [Name] = 'Paardenbloem'),	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'),				(SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'),	0),
+	('Haas',				'',					'Deze haas heeft een lichtbruine vacht met een witachtige onderkant. Zijn lange oren staan rechtop en zijn ogen zijn groot en zwart, waardoor hij altijd alert is op gevaar.',	0002, (SELECT ID FROM Specie WHERE [Name] = 'Haas'),			(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen'),	(SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'),	0),
+	('Berenklauw',			'51.0543, 5.1815',	'Deze plant heeft grote, handvormige bladeren en lange, holle stelen met witte bloemen die in een schermvormige bloeiwijze groeien.',											0003, (SELECT ID FROM Specie WHERE [Name] = 'Berenklauw'),		(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel'),				(SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'),	0);
 
 
 INSERT INTO Question (QuestionText, Game_ID)
