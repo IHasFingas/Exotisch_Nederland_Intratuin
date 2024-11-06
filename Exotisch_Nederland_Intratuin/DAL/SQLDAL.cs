@@ -1,7 +1,6 @@
 using Exotisch_Nederland_Intratuin.Model;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -11,21 +10,23 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         private readonly string connectionString = "Data Source =.; Initial Catalog = Intratuin; Trusted_Connection = True; MultipleActiveResultSets = True";
         private readonly SqlConnection connection;
 
-        private List<Area> areas = new List<Area>();
-        private List<Role> roles = new List<Role>();
-        private List<Specie> species = new List<Specie>();
-        private List<RoutePoint> routePoints = new List<RoutePoint>();
+        
+        private List<Area> areas;
+        private List<Role> roles;
+        private List<Specie> species;
+        private List<RoutePoint> routePoints;
 
-        private List<Route> routes = new List<Route>();
-        private List<POI> pointsOfInterest = new List<POI>();
+        private List<Route> routes;
+        private List<POI> pointsOfInterest;
 
-        private List<User> users = new List<User>();
-        private List<Game> games = new List<Game>();
+        private List<User> users;
+        private List<Game> games;
 
-        private List<Observation> observations = new List<Observation>();
-        private List<Question> questions = new List<Question>();
+        private List<Observation> observations;
+        private List<Question> questions;
 
-        private List<Answer> answers = new List<Answer>();
+        private List<Answer> answers;
+
 
         private Area placeholderArea;
         private Role placeholderRole;
@@ -53,6 +54,22 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
         private SQLDAL() {
             connection = new SqlConnection(connectionString);
+
+            areas = new List<Area>();
+            roles = new List<Role>();
+            species = new List<Specie>();
+            routePoints = new List<RoutePoint>();
+
+            routes = new List<Route>();
+            pointsOfInterest = new List<POI>();
+
+            users = new List<User>();
+            games = new List<Game>();
+
+            observations = new List<Observation>();
+            questions = new List<Question>();
+
+            answers = new List<Answer>();
         }
 
 
@@ -281,7 +298,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                     string currentLocation = data.Item4;
                     Route route = data.Item5;
 
-                    users.Add(new User(id, name, email, currentLocation, route, GetAllRolesForUser(id)));
+                    users.Add(new User(id, name, email, currentLocation, route, GetAllRolesForUser(id), GetAllAnsweredQuestionsForUser(id)));
                 } catch (Exception e) {
                     Console.WriteLine($"Failed to create User {data.Item1} from database");
                     Console.WriteLine(e.Message);
@@ -934,6 +951,12 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 AddUserRole(user, role);
             }
 
+            DeleteUserQuestion(user);
+
+            foreach ((Question question, Answer answer) answeredQuestion in user.GetAnsweredQuestions()) {
+                AddUserQuestion(user, answeredQuestion);
+            }
+
             connection.Close();
         }
 
@@ -1003,7 +1026,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
         // Remove specific object from database
         public void DeleteArea(Area area) {
-             areas.Remove(area);
+            areas.Remove(area);
 
             foreach (Route route in routes) {
                 if (route.GetArea() == area) {
@@ -1031,7 +1054,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void DeleteRole(Role role) {
             roles.Remove(role);
 
-            foreach(User user in users) {
+            foreach (User user in users) {
                 if (user.GetRoles().Contains(role)) {
                     List<Role> newRoles = user.GetRoles();
                     newRoles.Remove(role);
@@ -1297,23 +1320,32 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             return roles;
         }
 
-        private List<Question> GetAllAnsweredQuestionsForUser(int userID) {
-            List<Question> answeredQuestions = new List<Question>();
+        private List<(Question, Answer)> GetAllAnsweredQuestionsForUser(int userID) {
+            List<(Question, Answer)> answeredQuestions = new List<(Question, Answer)>();
 
             using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
                 secondConnection.Open();
 
-                string query = "SELECT Question_ID FROM UserQuestion WHERE User_ID = @User_ID";
+                string query = "SELECT * FROM UserQuestion WHERE User_ID = @User_ID";
                 using (SqlCommand command = new SqlCommand(query, secondConnection)) {
                     command.Parameters.AddWithValue("@User_ID", userID);
 
                     using (SqlDataReader reader = command.ExecuteReader()) {
                         while (reader.Read()) {
                             int questionID = (int)reader["Question_ID"];
+                            int answerID = (int)reader["Answer_ID"];
 
                             foreach (Question question in this.questions) {
                                 if (questionID == question.GetID()) {
-                                    answeredQuestions.Add(question);
+                                    foreach (Answer answer in this.answers) {
+                                        if (answerID == answer.GetID()) {
+                                            answeredQuestions.Add((question, answer));
+                                        }
+
+                                        break;
+                                    }
+
+                                    break;
                                 }
                             }
                         }
@@ -1407,14 +1439,15 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             }
         }
 
-        public void AddUserQuestion(User user, Question question) {
+        public void AddUserQuestion(User user, (Question question, Answer answer) answeredQuestion) {
             using (SqlConnection secondConnection = new SqlConnection(connection.ConnectionString)) {
                 secondConnection.Open();
 
-                string query = "INSERT INTO UserQuestion(User_ID, Question_ID) VALUES (@User_ID, @Question_ID)";
+                string query = "INSERT INTO UserQuestion(User_ID, Question_ID, Answer_ID) VALUES (@User_ID, @Question_ID, @Answer_ID)";
                 using (SqlCommand command = new SqlCommand(query, secondConnection)) {
                     command.Parameters.AddWithValue("@User_ID", user.GetID());
-                    command.Parameters.AddWithValue("@Question_ID", question.GetID());
+                    command.Parameters.AddWithValue("@Question_ID", answeredQuestion.question.GetID());
+                    command.Parameters.AddWithValue("@Answer_ID", answeredQuestion.answer.GetID());
                     command.ExecuteNonQuery();
                 }
 

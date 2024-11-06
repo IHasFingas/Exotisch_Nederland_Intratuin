@@ -43,7 +43,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating an Observation from scratch (automatically adds it to the database)
-        public Observation(string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isValidated) {
+        public Observation(string name, string location, string description, byte[] picture, Specie specie, Area area, User user) {
             this.name = name;
             this.location = location;
             this.description = description;

@@ -65,7 +65,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public void Edit(string name, Area area, RoutePoint startPoint, RoutePoint endPoint) {
             this.name = name;
 
-            if(this.area != area) {
+            if (this.area != area) {
                 this.area.RemoveRoute(this);
                 this.area = area;
                 this.area.AddRoute(this);
@@ -78,28 +78,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void Delete() {
             SqlDal.DeleteRoute(this);
-        }
-
-        public void AddRoutePoint(RoutePoint routePoint, bool addToDB) {
-            if (!routePoints.Contains(routePoint)) {
-                routePoints.Add(routePoint);
-
-                //Tell routepoint it is used in this route
-                routePoint.AddRoute(this);
-
-                //Add new entry to linking table
-                //Only add if route is from scratch, otherwise these entries are already in DB
-                if (addToDB) {
-                    SqlDal.AddRouteRoutePoint(this, routePoint);
-                }
-            }
-        }
-
-        public void RemoveRoutePoint(RoutePoint routePoint) {
-            if (routePoints.Contains(routePoint)) {
-                routePoints.Remove(routePoint);
-                routePoint.RemoveRoute(this);
-            }
         }
 
         public void AddGame(Game game) {
@@ -123,6 +101,28 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public void RemoveUser(User user) {
             if (users.Contains(user)) {
                 users.Remove(user);
+            }
+        }
+
+        private void AddRoutePoint(RoutePoint routePoint, bool addToDB) {
+            if (!routePoints.Contains(routePoint)) {
+                routePoints.Add(routePoint);
+
+                //Tell routepoint it is used in this route
+                routePoint.AddRoute(this);
+
+                //Add new entry to linking table
+                //Only add if route is from scratch, otherwise these entries are already in DB
+                if (addToDB) {
+                    SqlDal.AddRouteRoutePoint(this, routePoint);
+                }
+            }
+        }
+
+        private void RemoveRoutePoint(RoutePoint routePoint) {
+            if (routePoints.Contains(routePoint)) {
+                routePoints.Remove(routePoint);
+                routePoint.RemoveRoute(this);
             }
         }
 
@@ -172,13 +172,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         private Dictionary<RoutePoint, (double distance, int previousNodeID)> Step(Dictionary<RoutePoint, (double distance, int previousNodeID)> data, RoutePoint currentNode, Dictionary<RoutePoint, double> unvisited) {
-            
-            //Check if current node hasn't already been visited
-            if (!unvisited.TryGetValue(currentNode, out double d)) {
-                Console.WriteLine("Accidentally visited an already visited node, returning...");
-                return data;
-            }
-
             //Mark current node as visited
             unvisited.Remove(currentNode);
 
@@ -199,8 +192,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
                     //Add it to unvisited nodes
                     unvisited.Add(neighbourData.Key, distanceToNeighbour);
 
-                //If yes, is the route via current node shorter than currently shortest path to it?
-                } else if (distanceToNeighbour < data[neighbourData.Key].distance) { 
+                    //If yes, is the route via current node shorter than currently shortest path to it?
+                } else if (distanceToNeighbour < data[neighbourData.Key].distance) {
                     //If yes:
                     //Overwrite value with new Tuple, setting distance to go via current node and setting its previous node ID to current node ID
                     data[neighbourData.Key] = (distanceToNeighbour, currentNode.GetID());

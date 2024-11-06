@@ -21,9 +21,6 @@ namespace Exotisch_Nederland_Intratuin {
         static void Main(string[] args) {
             GetAllData();
 
-            Console.WriteLine("Press enter to write all data");
-            Console.ReadKey();
-
             WriteAllData();
 
             TestAll();
@@ -33,6 +30,9 @@ namespace Exotisch_Nederland_Intratuin {
         }
 
         public static void GetAllData() {
+            Console.WriteLine("Press enter to write all data");
+            Console.ReadKey();
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -80,9 +80,9 @@ namespace Exotisch_Nederland_Intratuin {
             RoutePoint routePoint = new RoutePoint("Test name", "Test location", new Dictionary<RoutePoint, double>() { { routePoints[0], 10 }, { routePoints[1], 20 }, { routePoints[2], 30 } });
             Route route = new Route("Test name", areas[0], routePoints[0], routePoints[5]);
             POI poi = new POI("Test name", "Test description", "Test location", routePoints[0]);
-            User user = new User("Test name", "Test email", "Test location", routes[0], new List<Role>() { roles[0] });
+            User user = new User("Test name", "Test email", "Test location", routes[0]);
             Game game = new Game("Test name", "Test location", "Test description", routes[0]);
-            Observation observation = new Observation("Test name", "Test location", "Test description", new byte[] { 0x01, 0x02, 0x03 }, species[0], areas[0], users[0], false);
+            Observation observation = new Observation("Test name", "Test location", "Test description", new byte[] { 0x01, 0x02, 0x03 }, species[0], areas[0], users[0]);
             Question question = new Question("Test text", games[0]);
             Answer answer = new Answer("Text text", questions[0], true);
 

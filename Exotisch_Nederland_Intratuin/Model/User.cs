@@ -13,40 +13,41 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private Route currentRoute;
         private List<Role> roles;
         private List<Observation> observations;
-        private List<Question> answeredQuestions;
+        private List<(Question, Answer)> answeredQuestions;
+
 
         //Constructor for creating an User from database
-        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<(Question question, Answer answer)> answeredQuestions) {
             this.id = id;
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
             this.observations = new List<Observation>();
-            this.answeredQuestions = new List<Question>();
 
             //Filling roles list
             this.roles = new List<Role>();
-            foreach (Role role in roles) { AddRole(role, false); }
+            foreach (Role role in roles) { AddRole(role, role.GetKey(), false); }
+
+            //Filling questions list
+            this.answeredQuestions = new List<(Question, Answer)>();
+            foreach ((Question question, Answer answer) answeredQuestion in answeredQuestions) { AnswerQuestion(answeredQuestion, false); };
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
         }
 
         //Constructor for creating an User from scratch (automatically adds it to the database)
-        public User(string name, string email, string currentLocation, Route currentRoute, List<Role> roles) {
+        public User(string name, string email, string currentLocation, Route currentRoute) {
             this.name = name;
             this.email = email;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
-            this.observations = new List<Observation>();
-            this.answeredQuestions = new List<Question>();
-
-            this.id = SqlDal.AddUser(this); //Get an ID for User so we can enter roles in UserRole linking table
-
-            //Filling roles list
             this.roles = new List<Role>();
-            foreach (Role role in roles) { AddRole(role, true); }
+            this.observations = new List<Observation>();
+            this.answeredQuestions = new List<(Question, Answer)>();
+
+            this.id = SqlDal.AddUser(this);
 
             //Tell Route this user is on it
             currentRoute.AddUser(this);
@@ -89,7 +90,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
             SqlDal.DeleteUser(this);
         }
 
-        public void AddRole(Role role, bool addToDB) {
+        public void AddRole(Role role, string key, bool addToDB) {
+            if (role.GetKey() != key) {
+                return;
+            }
+
             if (!roles.Contains(role)) {
                 roles.Add(role);
 
@@ -116,23 +121,30 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
-        public void AddAnsweredQuestion(Question question) {
-            if (!answeredQuestions.Contains(question)) {
-                answeredQuestions.Add(question);
+        public void EditObservation(Observation observation) { }
 
-                //Tell question this user has answered it
-                question.AddAnsweredBy(this);
-
-                //Add new entry to linking table
-                SqlDal.AddUserQuestion(this, question);
+        public void ValidateObservation(Observation observation) {
+            if (roles.Any(role => role.GetName() == "Validator")) {
+                observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), true);
             }
         }
 
-        public void ValidateObservation(Observation observation)
-        {
-            if (roles.Any(role => role.GetName() == "Validator"))
-            {
-                observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), true);
+        public void ChangeRoute(Route route) { }
+
+        public void PlayGame(Game game) { }
+
+        public void AnswerQuestion((Question question, Answer answer) answeredQuestion, bool addToDB) { //If 1 reference consider removing bool
+            if (!answeredQuestions.Contains(answeredQuestion)) {
+                answeredQuestions.Add((answeredQuestion.question, answeredQuestion.answer));
+
+                //Tell question this user has answered it
+                answeredQuestion.question.AddAnsweredBy(this);
+
+                //Add new entry to linking table
+                //Only add if user is from scratch, otherwise these entries are already in DB
+                if (addToDB) {
+                    SqlDal.AddUserQuestion(this, answeredQuestion);
+                }
             }
         }
 
@@ -159,6 +171,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public List<Role> GetRoles() { return roles; }
 
-        public List<Question> GetAnsweredQuestions() { return answeredQuestions; }
+        public List<(Question, Answer)> GetAnsweredQuestions() { return answeredQuestions; }
     }
 }
