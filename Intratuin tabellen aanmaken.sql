@@ -90,6 +90,7 @@ CREATE TABLE Observation
     Specie_ID int NOT NULL,
     Area_ID int NOT NULL,
     [User_ID] int NOT NULL,
+	SubmittedByVolunteer bit NOT NULL,
 	Validated bit NOT NULL,
     FOREIGN KEY (Specie_ID) REFERENCES Specie(ID),
     FOREIGN KEY (Area_ID) REFERENCES Area(ID),
@@ -243,9 +244,9 @@ VALUES
 
 INSERT INTO [Route] ([Name], [Length], Area_ID)
 VALUES
-	('Peel Trail',		2.3,	(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel')),				-- Between 'Peelzicht' and 'Peelven' in De Groote Peel
-	('Kempen Path',		5.6,	(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen')),	-- Between 'Kempenbos' and 'Maasvallei' in Nationaal Park Hoge Kempen
-	('Heide Walk',		3.1,	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'));			-- Between 'Heidezicht' and 'Schinveldse Bos' in Brunsummerheide
+	('Heide Walk',		2.99,	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide')),
+	('Peel Trail',		5.83,	(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel')),	
+	('Kempen Path',		4.8,	(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen'));	
 
 
 INSERT INTO POI ([Name], [Description], [Location], RoutePoint_ID)
@@ -275,11 +276,11 @@ VALUES
 	('Lanschappen Quiz',	(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode Beek'),	'Kies het juiste antwoord op de vraag; landschappen editie!',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'));
 
 
-INSERT INTO Observation ([Name], [Location], [Description], Picture, Specie_ID, Area_ID, [User_ID], Validated)
+INSERT INTO Observation ([Name], [Location], [Description], Picture, Specie_ID, Area_ID, [User_ID], SubmittedByVolunteer, Validated)
 VALUES 
-	('Paardenbloem',		'50.8503, 5.6900',	'Deze bloem heeft diep ingesneden, groene bladeren die dicht bij de grond groeien. Het heeft heldergele bloemen op lange, stevige stelen.',										0001, (SELECT ID FROM Specie WHERE [Name] = 'Paardenbloem'),	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'),				(SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'),	0),
-	('Haas',				'',					'Deze haas heeft een lichtbruine vacht met een witachtige onderkant. Zijn lange oren staan rechtop en zijn ogen zijn groot en zwart, waardoor hij altijd alert is op gevaar.',	0002, (SELECT ID FROM Specie WHERE [Name] = 'Haas'),			(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen'),	(SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'),	0),
-	('Berenklauw',			'51.0543, 5.1815',	'Deze plant heeft grote, handvormige bladeren en lange, holle stelen met witte bloemen die in een schermvormige bloeiwijze groeien.',											0003, (SELECT ID FROM Specie WHERE [Name] = 'Berenklauw'),		(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel'),				(SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'),	0);
+	('Paardenbloem',		'50.8503, 5.6900',	'Deze bloem heeft diep ingesneden, groene bladeren die dicht bij de grond groeien. Het heeft heldergele bloemen op lange, stevige stelen.',										0001, (SELECT ID FROM Specie WHERE [Name] = 'Paardenbloem'),	(SELECT ID FROM Area WHERE [Name] = 'Brunsummerheide'),				(SELECT ID FROM [User] WHERE [Name] = 'Els van Dijk'),	0,	0),
+	('Haas',				'',					'Deze haas heeft een lichtbruine vacht met een witachtige onderkant. Zijn lange oren staan rechtop en zijn ogen zijn groot en zwart, waardoor hij altijd alert is op gevaar.',	0002, (SELECT ID FROM Specie WHERE [Name] = 'Haas'),			(SELECT ID FROM Area WHERE [Name] = 'Nationaal Park Hoge Kempen'),	(SELECT ID FROM [User] WHERE [Name] = 'Jan Janssen'),	0,	0),
+	('Berenklauw',			'51.0543, 5.1815',	'Deze plant heeft grote, handvormige bladeren en lange, holle stelen met witte bloemen die in een schermvormige bloeiwijze groeien.',											0003, (SELECT ID FROM Specie WHERE [Name] = 'Berenklauw'),		(SELECT ID FROM Area WHERE [Name] = 'De Groote Peel'),				(SELECT ID FROM [User] WHERE [Name] = 'Tom Peters'),	0,	0);
 
 
 INSERT INTO Question (QuestionText, Game_ID)
@@ -401,12 +402,19 @@ VALUES
 
 INSERT INTO RouteRoutePoint (Route_ID, RoutePoint_ID)
 VALUES
-	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijkpunt Brunssummerheide')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Uitkijktoren')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Kabouterpad De Pelen')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Natuurpunt lake outlook')),
-	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Voormalige grindgroeve'));
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE ID = 1)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE ID = 2)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE ID = 4)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE ID = 7)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk'),		(SELECT ID FROM RoutePoint WHERE ID = 9)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE ID = 11)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE ID = 12)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE ID = 14)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE ID = 16)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail'),		(SELECT ID FROM RoutePoint WHERE ID = 18)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE ID = 19)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE ID = 21)),
+	((SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'),		(SELECT ID FROM RoutePoint WHERE ID = 22));
 
 
 INSERT INTO UserRole ([User_ID], Role_ID)

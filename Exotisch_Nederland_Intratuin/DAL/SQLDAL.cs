@@ -10,7 +10,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         private readonly string connectionString = "Data Source =.; Initial Catalog = Intratuin; Trusted_Connection = True; MultipleActiveResultSets = True";
         private readonly SqlConnection connection;
 
-        
+
         private List<Area> areas;
         private List<Role> roles;
         private List<Specie> species;
@@ -363,7 +363,8 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         int specieID = (int)reader["Specie_ID"];
                         int areaID = (int)reader["Area_ID"];
                         int userID = (int)reader["User_ID"];
-                        bool isValidated = reader.GetBoolean(8);
+                        bool isSubmittedByVolunteer = reader.GetBoolean(8);
+                        bool isValidated = reader.GetBoolean(9);
 
                         try {
                             picture = (byte[])reader["Picture"];
@@ -378,7 +379,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                                         foreach (User user in users) {
                                             if (userID == user.GetID()) {
                                                 try {
-                                                    observations.Add(new Observation(id, name, location, description, picture, specie, area, user, isValidated));
+                                                    observations.Add(new Observation(id, name, location, description, picture, specie, area, user, isSubmittedByVolunteer, isValidated));
                                                 } catch (Exception e) {
                                                     Console.WriteLine($"Failed to create Observation {id} from database");
                                                     Console.WriteLine(e.Message);
@@ -1036,7 +1037,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             foreach (Observation observation in observations) {
                 if (observation.GetArea() == area) {
-                    observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), placeholderArea, observation.GetUser(), observation.GetValidated());
+                    observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), placeholderArea, observation.GetUser(), observation.GetSubmittedByVolunteer(), observation.GetValidated());
                 }
             }
 
@@ -1084,7 +1085,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             foreach (Observation observation in observations) {
                 if (observation.GetSpecie() == specie) {
-                    observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), placeholderSpecie, observation.GetArea(), observation.GetUser(), observation.GetValidated());
+                    observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), placeholderSpecie, observation.GetArea(), observation.GetUser(), observation.GetSubmittedByVolunteer(), observation.GetValidated());
                 }
             }
 
@@ -1188,7 +1189,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             foreach (Observation observation in observations) {
                 if (observation.GetUser() == user) {
-                    observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), placeholderUser, observation.GetValidated());
+                    observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), placeholderUser, observation.GetSubmittedByVolunteer(), observation.GetValidated());
                 }
             }
 

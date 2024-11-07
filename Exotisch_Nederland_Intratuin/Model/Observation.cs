@@ -1,5 +1,6 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class Observation {
@@ -13,11 +14,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private Specie specie;
         private Area area;
         private User user;
+        private bool isSubmittedByVolunteer;
         private bool isValidated;
 
 
         //Constructor for creating an Observation from database
-        public Observation(int id, string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isValidated) {
+        public Observation(int id, string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isSubmittedByVolunteer, bool isValidated) {
             this.id = id;
             this.name = name;
             this.location = location;
@@ -26,6 +28,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.specie = specie;
             this.area = area;
             this.user = user;
+            this.isSubmittedByVolunteer = isSubmittedByVolunteer;
             this.isValidated = isValidated;
 
             if (this.name == "") {
@@ -51,10 +54,15 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.specie = specie;
             this.area = area;
             this.user = user;
+            this.isSubmittedByVolunteer = false;
             this.isValidated = false;
 
             if (this.name == "") {
                 this.name = specie.GetName();
+            }
+            
+            if(this.user.GetRoles().Any(role => role.GetName() == "Volunteer")) {
+                this.isSubmittedByVolunteer = true;
             }
 
             this.id = SqlDal.AddObservation(this);
@@ -80,7 +88,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetObservationByID(id);
         }
 
-        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isValidated) {
+        public void Edit(string name, string location, string description, byte[] picture, Specie specie, Area area, User user, bool isSubmittedByVolunteer, bool isValidated) {
             this.name = name;
 
             if (this.name == "") {
@@ -104,6 +112,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
 
             this.user = user;
+            this.isSubmittedByVolunteer = isSubmittedByVolunteer;
             this.isValidated = isValidated;
 
             SqlDal.EditObservation(this);
@@ -114,7 +123,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public override string ToString() {
-            return $"Observation {id}: {specie.GetName()}, {location}, Area {area.GetID()}, User {user.GetID()}, Validated {isValidated}";
+            return $"Observation {id}: {specie.GetName()}, {location}, Area {area.GetID()}, User {user.GetID()}, Submitted by volunteer: {isSubmittedByVolunteer}, Validated: {isValidated}";
         }
 
 
@@ -135,6 +144,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public Area GetArea() { return area; }
 
         public User GetUser() { return user; }
+
+        public bool GetSubmittedByVolunteer() { return isSubmittedByVolunteer; }
 
         public bool GetValidated() { return isValidated; }
     }
