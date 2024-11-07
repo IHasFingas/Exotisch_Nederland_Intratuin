@@ -389,7 +389,7 @@ VALUES
 -- Answers Question 14
     ('Het Leudal',			(SElECT ID FROM Question WHERE [ID] = '14'), 1), 
     ('Het Amsterdamse Bos',	(SElECT ID FROM Question WHERE [ID] = '14'), 0),
-    ('Het Amsterdamse Bos',	(SElECT ID FROM Question WHERE [ID] = '14'), 0),
+    ('De Biesbosch',		(SElECT ID FROM Question WHERE [ID] = '14'), 0),
     ('De Veluwezoom',		(SElECT ID FROM Question WHERE [ID] = '14'), 0),
 
 -- Answers Question 15
