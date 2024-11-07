@@ -286,9 +286,9 @@ INSERT INTO Question (QuestionText, Game_ID)
 VALUES 
 -- Questions Game 1
     ('Welke van de volgende dieren, die je vaak in de Limburgse bossen kunt vinden, is bekend om zijn felrode staart en eet graag noten?',								1),
-    ('Wat voor soort dier is de ree, dat vaak in Limburgse bossen en velden te zien is, en staat bekend om zijn lange poten en grote ogen?',							1),
+    ('Wat voor soort dier is de ree, bekend om zijn lange poten en grote ogen?',							1),
     ('Welke van de volgende vogels zie je vaak in Limburg en staat bekend om zijn heldere, blauwe kleur en zijn acrobatische vliegkunsten?',							1),
-    ('Wat voor soort dier is een vos, die vaak ''s nachts actief is en bekend staat om zijn slimme jachttechnieken?',													1),
+    ('Wat voor soort dier is een adelaar, bekend om zijn scherpe klauwen en uitstekende gezichtsvermogen?',													1),
     ('Welke amfibie, die vaak in Limburgse poelen en vijvers leeft, staat bekend om zijn grote, platte lichaam en groene kleur?',										1),
 
 -- Questions Game 2
@@ -315,10 +315,10 @@ VALUES
     ('Konijn',				(SElECT ID FROM Question WHERE [ID] = '1'), 0),
 
 -- Answers Question 2
-    ('Ree',					(SElECT ID FROM Question WHERE [ID] = '2'), 1), 
-    ('Hert',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
-    ('Haas',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
-    ('Wild zwijn',			(SElECT ID FROM Question WHERE [ID] = '2'), 0),
+    ('Zoogdier',			(SElECT ID FROM Question WHERE [ID] = '2'), 1), 
+    ('Vogel',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
+    ('Reptiel',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
+    ('Amfibie',				(SElECT ID FROM Question WHERE [ID] = '2'), 0),
 
 -- Answers Question 3
     ('IJsvogel',			(SElECT ID FROM Question WHERE [ID] = '3'), 1), 
@@ -327,10 +327,10 @@ VALUES
     ('Specht',				(SElECT ID FROM Question WHERE [ID] = '3'), 0),
 
 -- Answers Question 4
-    ('Vos',					(SElECT ID FROM Question WHERE [ID] = '4'), 1), 
-    ('Wolf',				(SElECT ID FROM Question WHERE [ID] = '4'), 0),
-    ('Lynx',				(SElECT ID FROM Question WHERE [ID] = '4'), 0),
-    ('Wasbeerhond',			(SElECT ID FROM Question WHERE [ID] = '4'), 0),
+    ('Vogel',				(SElECT ID FROM Question WHERE [ID] = '4'), 1), 
+    ('Reptiel',				(SElECT ID FROM Question WHERE [ID] = '4'), 0),
+    ('Amfibie',				(SElECT ID FROM Question WHERE [ID] = '4'), 0),
+    ('Zoogdier',			(SElECT ID FROM Question WHERE [ID] = '4'), 0),
 
 -- Answers Question 5
     ('Kikker',				(SElECT ID FROM Question WHERE [ID] = '5'), 1), 
