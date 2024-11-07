@@ -61,7 +61,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 this.name = specie.GetName();
             }
             
-            if(this.user.GetActingRole().GetName() == "Validator") {
+            if(this.user.GetActiveRole().GetName() == "Volunteer") {
                 this.isSubmittedByVolunteer = true;
             }
 

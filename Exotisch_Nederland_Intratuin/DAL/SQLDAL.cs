@@ -434,111 +434,67 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public Area GetAreaByID(int id) {
             GetAllAreas();
 
-            foreach (Area area in areas) {
-                if (area.GetID() == id) { return area; }
-            }
-
-            return null;
+            return areas.FirstOrDefault(area => area.GetID() == id);
         }
 
         public Role GetRoleByID(int id) {
             GetAllRoles();
 
-            foreach (Role role in roles) {
-                if (role.GetID() == id) { return role; }
-            }
-
-            return null;
+            return roles.FirstOrDefault(role => role.GetID() == id);
         }
 
         public Specie GetSpecieByID(int id) {
             GetAllSpecies();
 
-            foreach (Specie specie in species) {
-                if (specie.GetID() == id) { return specie; }
-            }
-
-            return null;
+            return species.FirstOrDefault(specie => specie.GetID() == id);
         }
 
         public RoutePoint GetRoutePointByID(int id) {
             GetAllRoutePoints();
 
-            foreach (RoutePoint routePoint in routePoints) {
-                if (routePoint.GetID() == id) { return routePoint; }
-            }
-
-            return null;
+            return routePoints.FirstOrDefault(routePoint => routePoint.GetID() == id);
         }
 
         public Route GetRouteByID(int id) {
             GetAllRoutes();
 
-            foreach (Route route in routes) {
-                if (route.GetID() == id) { return route; }
-            }
-
-            return null;
+            return routes.FirstOrDefault(route => route.GetID() == id);
         }
 
         public POI GetPOIByID(int id) {
             GetAllPOIs();
 
-            foreach (POI poi in pointsOfInterest) {
-                if (poi.GetID() == id) { return poi; }
-            }
-
-            return null;
+            return pointsOfInterest.FirstOrDefault(point => point.GetID() == id);
         }
 
         public User GetUserByID(int id) {
             GetAllUsers();
 
-            foreach (User user in users) {
-                if (user.GetID() == id) { return user; }
-            }
-
-            return null;
+            return users.FirstOrDefault(user => user.GetID() == id);
         }
 
         public Game GetGameByID(int id) {
             GetAllGames();
 
-            foreach (Game game in games) {
-                if (game.GetID() == id) { return game; }
-            }
-
-            return null;
+            return games.FirstOrDefault(game => game.GetID() == id);
         }
 
         public Observation GetObservationByID(int id) {
             GetAllObservations();
 
-            foreach (Observation observation in observations) {
-                if (observation.GetID() == id) { return observation; }
-            }
-
-            return null;
+            return observations.FirstOrDefault(observation => observation.GetID() == id);
         }
 
         public Question GetQuestionByID(int id) {
             GetAllQuestions();
 
-            foreach (Question question in questions) {
-                if (question.GetID() == id) { return question; }
-            }
-
-            return null;
+            return questions.FirstOrDefault(question => question.GetID() == id);
         }
 
         public Answer GetAnswerByID(int id) {
             GetAllAnswers();
 
-            foreach (Answer answer in answers) {
-                if (answer.GetID() == id) { return answer; }
-            }
-
-            return null;
+            return answers.FirstOrDefault(answer => answer.GetID() == id);
         }
 
 
@@ -723,7 +679,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             int id;
 
-            string query = "INSERT INTO Observation(Name, Location, Description, Picture, Specie_ID, Area_ID, User_ID, Validated) VALUES (@Name, @Location, @Description, @Picture, @Specie_ID, @Area_ID, @User_ID, @Validated)";
+            string query = "INSERT INTO Observation(Name, Location, Description, Picture, Specie_ID, Area_ID, User_ID, SubmittedByVolunteer, Validated) VALUES (@Name, @Location, @Description, @Picture, @Specie_ID, @Area_ID, @User_ID, @SubmittedByVolunteer, @Validated)";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", observation.GetName());
                 command.Parameters.AddWithValue("@Location", observation.GetLocation());
@@ -732,6 +688,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Specie_ID", observation.GetSpecie().GetID());
                 command.Parameters.AddWithValue("@Area_ID", observation.GetArea().GetID());
                 command.Parameters.AddWithValue("@User_ID", observation.GetUser().GetID());
+                command.Parameters.AddWithValue("@SubmittedByVolunteer", observation.GetSubmittedByVolunteer());
                 command.Parameters.AddWithValue("@Validated", observation.GetValidated());
 
                 command.ExecuteNonQuery();

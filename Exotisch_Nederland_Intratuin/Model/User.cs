@@ -14,7 +14,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private string password;
         private string currentLocation;
         private Route currentRoute;
-        private Role actingRole;
+        private Role activeRole;
         private List<Role> roles;
         private List<Observation> observations;
         private List<(Question, Answer)> answeredQuestions;
@@ -28,7 +28,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.password = password;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
-            this.actingRole = null;
+            this.activeRole = null;
             this.observations = new List<Observation>();
 
             //Filling roles list
@@ -50,7 +50,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.password = password;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
-            this.actingRole = null;
+            this.activeRole = null;
             this.roles = new List<Role>();
             this.observations = new List<Observation>();
             this.answeredQuestions = new List<(Question, Answer)>();
@@ -123,14 +123,14 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 roles.Remove(role);
             }
 
-            if(actingRole == role) {
-                actingRole = null;
+            if(activeRole == role) {
+                activeRole = null;
             }
         }
 
         public void SetActiveRole(Role role) {
             if (roles.Contains(role)) {
-                actingRole = role;
+                activeRole = role;
             }
         }
 
@@ -147,7 +147,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public void ValidateObservation(Observation observation) {
-            if (actingRole.GetName() == "Validator") {
+            if (activeRole.GetName() == "Validator") {
                 observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), observation.GetSubmittedByVolunteer(), true);
             }
         }
@@ -254,9 +254,11 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public Route GetRoute() { return currentRoute; }
 
-        public Role GetActingRole() { return actingRole; }
+        public Role GetActiveRole() { return activeRole; }
 
         public List<Role> GetRoles() { return roles; }
+
+        public List<Observation> GetObservations() { return observations; }
 
         public List<(Question, Answer)> GetAnsweredQuestions() { return answeredQuestions; }
     }
