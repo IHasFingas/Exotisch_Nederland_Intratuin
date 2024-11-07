@@ -205,7 +205,9 @@ namespace Exotisch_Nederland_Intratuin.Model {
                     score++;
                 } else {
                     Console.WriteLine("Incorrect :(");
-                    //Correct answer displayen
+
+                    Answer correctAnswer = answers.Single(a => a.GetCorrectness());
+                    Console.WriteLine($"Correct answer: {correctAnswer.GetAnswerText()}");
                 }
 
                 AnswerQuestion((question, givenAnswer), true);

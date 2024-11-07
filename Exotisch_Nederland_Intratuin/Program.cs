@@ -21,8 +21,6 @@ namespace Exotisch_Nederland_Intratuin {
         static void Main(string[] args) {
             GetAllData();
 
-            WriteAllData();
-
             Console.WriteLine("Press enter to close");
             Console.ReadKey();
         }
