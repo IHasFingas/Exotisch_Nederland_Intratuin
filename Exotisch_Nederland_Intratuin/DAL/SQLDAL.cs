@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Exotisch_Nederland_Intratuin.DAL {
     internal class SQLDAL {
@@ -39,6 +41,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         private Game placeholderGame;
 
         private Question placeholderQuestion;
+
 
         // Static Instance attribute to ensure singleton
         public static SQLDAL Instance {
@@ -193,7 +196,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             routes.Clear();
             connection.Open();
 
-            List<Tuple<int, string, double, Area>> baseData = new List<Tuple<int, string, double, Area>>();
+            List<(int id, string name, double length, Area area)> baseData = new List<(int id, string name, double length, Area area)>();
 
             string query = "SELECT * FROM Route";
             using (SqlCommand command = new SqlCommand(query, connection)) {
@@ -204,25 +207,17 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         double length = (double)reader["Length"];
                         int areaID = (int)reader["Area_ID"];
 
-                        foreach (Area area in areas) {
-                            if (areaID == area.GetID()) {
-                                baseData.Add(new Tuple<int, string, double, Area>(id, name, length, area));
-                            }
-                        }
+                        Area area = areas.Single(a => a.GetID() == areaID);
+                        baseData.Add((id, name, length, area));
                     }
                 }
             }
 
-            foreach (Tuple<int, string, double, Area> data in baseData) {
+            foreach ((int id, string name, double length, Area area) in baseData) {
                 try {
-                    int id = data.Item1;
-                    string name = data.Item2;
-                    double length = data.Item3;
-                    Area area = data.Item4;
-
                     routes.Add(new Route(id, name, length, area, GetAllRoutePointsForRoute(id)));
                 } catch (Exception e) {
-                    Console.WriteLine($"Failed to create Route {data.Item1} from database");
+                    Console.WriteLine($"Failed to create Route {id} from database");
                     Console.WriteLine(e.Message);
                 }
             }
@@ -247,15 +242,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string location = (string)reader["Location"];
                         int routePointID = (int)reader["RoutePoint_ID"];
 
-                        foreach (RoutePoint routePoint in routePoints) {
-                            if (routePointID == routePoint.GetID()) {
-                                try {
-                                    pointsOfInterest.Add(new POI(id, name, description, location, routePoint));
-                                } catch (Exception e) {
-                                    Console.WriteLine($"Failed to create POI {id} from database");
-                                    Console.WriteLine(e.Message);
-                                }
-                            }
+                        RoutePoint routePoint = routePoints.Single(rp => rp.GetID() == routePointID);
+
+                        try {
+                            pointsOfInterest.Add(new POI(id, name, description, location, routePoint));
+                        } catch (Exception e) {
+                            Console.WriteLine($"Failed to create POI {id} from database");
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }
@@ -269,7 +262,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
             users.Clear();
             connection.Open();
 
-            List<Tuple<int, string, string, string, Route>> baseData = new List<Tuple<int, string, string, string, Route>>();
+            List<(int id, string name, string email, string password, string currentLocation, Route route)> baseData = new List<(int id, string name, string email, string password, string currentLocation, Route route)>();
 
             string query = "SELECT * FROM [User]";
             using (SqlCommand command = new SqlCommand(query, connection)) {
@@ -278,29 +271,21 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         int id = (int)reader["ID"];
                         string name = (string)reader["Name"];
                         string email = (string)reader["Email"];
+                        string password = Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String((string)reader["Password"]), null, DataProtectionScope.CurrentUser));
                         string currentLocation = (string)reader["CurrentLocation"];
                         int routeID = (int)reader["Route_ID"];
 
-                        foreach (Route route in routes) {
-                            if (routeID == route.GetID()) {
-                                baseData.Add(new Tuple<int, string, string, string, Route>(id, name, email, currentLocation, route));
-                            }
-                        }
+                        Route route = routes.Single(r => r.GetID() == routeID);
+                        baseData.Add((id, name, email, password, currentLocation, route));
                     }
                 }
             }
 
-            foreach (Tuple<int, string, string, string, Route> data in baseData) {
+            foreach ((int id, string name, string email, string password, string currentLocation, Route route) in baseData) {
                 try {
-                    int id = data.Item1;
-                    string name = data.Item2;
-                    string email = data.Item3;
-                    string currentLocation = data.Item4;
-                    Route route = data.Item5;
-
-                    users.Add(new User(id, name, email, currentLocation, route, GetAllRolesForUser(id), GetAllAnsweredQuestionsForUser(id)));
+                    users.Add(new User(id, name, email, password, currentLocation, route, GetAllRolesForUser(id), GetAllAnsweredQuestionsForUser(id)));
                 } catch (Exception e) {
-                    Console.WriteLine($"Failed to create User {data.Item1} from database");
+                    Console.WriteLine($"Failed to create User {id} from database");
                     Console.WriteLine(e.Message);
                 }
             }
@@ -325,17 +310,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string description = (string)reader["Description"];
                         int routeID = (int)reader["Route_ID"];
 
-                        foreach (Route route in routes) {
-                            if (routeID == route.GetID()) {
-                                try {
-                                    games.Add(new Game(id, name, location, description, route));
-                                } catch (Exception e) {
-                                    Console.WriteLine($"Failed to create Game {id} from database");
-                                    Console.WriteLine(e.Message);
-                                }
+                        Route route = routes.Single(r => r.GetID() == routeID);
 
-                                break;
-                            }
+                        try {
+                            games.Add(new Game(id, name, location, description, route));
+                        } catch (Exception e) {
+                            Console.WriteLine($"Failed to create Game {id} from database");
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }
@@ -370,31 +351,15 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                             picture = (byte[])reader["Picture"];
                         } catch (Exception) { }
 
-                        foreach (Specie specie in species) {
-                            if (specieID == specie.GetID()) {
+                        Specie specie = species.Single(s => s.GetID() == specieID);
+                        Area area = areas.Single(a => a.GetID() == areaID);
+                        User user = users.Single(u => u.GetID() == userID);
 
-                                foreach (Area area in areas) {
-                                    if (areaID == area.GetID()) {
-
-                                        foreach (User user in users) {
-                                            if (userID == user.GetID()) {
-                                                try {
-                                                    observations.Add(new Observation(id, name, location, description, picture, specie, area, user, isSubmittedByVolunteer, isValidated));
-                                                } catch (Exception e) {
-                                                    Console.WriteLine($"Failed to create Observation {id} from database");
-                                                    Console.WriteLine(e.Message);
-                                                }
-
-                                                break;
-                                            }
-                                        }
-
-                                        break;
-                                    }
-                                }
-
-                                break;
-                            }
+                        try {
+                            observations.Add(new Observation(id, name, location, description, picture, specie, area, user, isSubmittedByVolunteer, isValidated));
+                        } catch (Exception e) {
+                            Console.WriteLine($"Failed to create Observation {id} from database");
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }
@@ -416,17 +381,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string questionText = (string)reader["QuestionText"];
                         int gameID = (int)reader["Game_ID"];
 
-                        foreach (Game game in games) {
-                            if (gameID == game.GetID()) {
-                                try {
-                                    questions.Add(new Question(id, questionText, game));
-                                } catch (Exception e) {
-                                    Console.WriteLine($"Failed to create Question {id} from database");
-                                    Console.WriteLine(e.Message);
-                                }
+                        Game game = games.Single(g => g.GetID() == gameID);
 
-                                break;
-                            }
+                        try {
+                            questions.Add(new Question(id, questionText, game));
+                        } catch (Exception e) {
+                            Console.WriteLine($"Failed to create Question {id} from database");
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }
@@ -452,17 +413,13 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         int questionID = (int)reader["Question_ID"];
                         bool isCorrect = reader.GetBoolean(3);
 
-                        foreach (Question question in questions) {
-                            if (questionID == question.GetID()) {
-                                try {
-                                    answers.Add(new Answer(id, answerText, question, isCorrect));
-                                } catch (Exception e) {
-                                    Console.WriteLine($"Failed to create Answer {id} from database");
-                                    Console.WriteLine(e.Message);
-                                }
+                        Question question = questions.Single(q => q.GetID() == questionID);
 
-                                break;
-                            }
+                        try {
+                            answers.Add(new Answer(id, answerText, question, isCorrect));
+                        } catch (Exception e) {
+                            Console.WriteLine($"Failed to create Answer {id} from database");
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }
@@ -721,10 +678,11 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             int id;
 
-            string query = "INSERT INTO [User](Name, Email, CurrentLocation, Route_ID) VALUES (@Name, @Email, @CurrentLocation, @Route_ID)";
+            string query = "INSERT INTO [User](Name, Email, Password, CurrentLocation, Route_ID) VALUES (@Name, @Email, @Password, @CurrentLocation, @Route_ID)";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", user.GetName());
                 command.Parameters.AddWithValue("@Email", user.GetEmail());
+                command.Parameters.AddWithValue("@Password", Convert.ToBase64String(ProtectedData.Protect(Encoding.Unicode.GetBytes(user.GetPassword()), null, DataProtectionScope.CurrentUser)));
                 command.Parameters.AddWithValue("@CurrentLocation", user.GetCurrentLocation());
                 command.Parameters.AddWithValue("@Route_ID", user.GetRoute().GetID());
                 command.ExecuteNonQuery();
@@ -936,10 +894,11 @@ namespace Exotisch_Nederland_Intratuin.DAL {
         public void EditUser(User user) {
             connection.Open();
 
-            string query = "UPDATE [User] SET Name = @Name, Email = @Email, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE ID = @ID";
+            string query = "UPDATE [User] SET Name = @Name, Email = @Email, Password = @Password, CurrentLocation = @CurrentLocation, Route_ID = @Route_ID WHERE ID = @ID";
             using (SqlCommand command = new SqlCommand(query, connection)) {
                 command.Parameters.AddWithValue("@Name", user.GetName());
                 command.Parameters.AddWithValue("@Email", user.GetEmail());
+                command.Parameters.AddWithValue("@Password", Convert.ToBase64String(ProtectedData.Protect(Encoding.Unicode.GetBytes(user.GetPassword()), null, DataProtectionScope.CurrentUser)));
                 command.Parameters.AddWithValue("@CurrentLocation", user.GetCurrentLocation());
                 command.Parameters.AddWithValue("@Route_ID", user.GetRoute().GetID());
                 command.Parameters.AddWithValue("@ID", user.GetID());
@@ -1059,7 +1018,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 if (user.GetRoles().Contains(role)) {
                     List<Role> newRoles = user.GetRoles();
                     newRoles.Remove(role);
-                    user.Edit(user.GetName(), user.GetEmail(), user.GetCurrentLocation(), user.GetRoute(), newRoles);
+                    user.Edit(user.GetName(), user.GetEmail(), user.GetPassword(), user.GetCurrentLocation(), user.GetRoute(), newRoles);
                 }
             }
 
@@ -1143,7 +1102,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
 
             foreach (User user in users) {
                 if (user.GetRoute() == route) {
-                    user.Edit(user.GetName(), user.GetEmail(), user.GetCurrentLocation(), placeholderRoute, user.GetRoles());
+                    user.Edit(user.GetName(), user.GetEmail(), user.GetPassword(), user.GetCurrentLocation(), placeholderRoute, user.GetRoles());
                 }
             }
 

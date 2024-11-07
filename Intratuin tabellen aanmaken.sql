@@ -69,6 +69,7 @@ CREATE TABLE [User]
     (ID INTEGER NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
     Email VARCHAR(50) NOT NULL,
+	[Password] VARCHAR(MAX) NOT NULL,
     CurrentLocation VARCHAR(50) NOT NULL,
     Route_ID int NOT NULL,
     FOREIGN KEY (Route_ID) REFERENCES Route(ID));
@@ -120,7 +121,7 @@ CREATE TABLE RouteRoutePoint
     (Route_ID int NOT NULL,
     RoutePoint_ID int NOT NULL,
     PRIMARY KEY (Route_ID, RoutePoint_ID),
-    FOREIGN KEY (Route_ID) REFERENCES Route(ID),
+    FOREIGN KEY (Route_ID) REFERENCES [Route](ID),
     FOREIGN KEY (RoutePoint_ID) REFERENCES RoutePoint(ID));
 
 CREATE TABLE UserQuestion
@@ -163,7 +164,7 @@ INSERT INTO [Route](ID, [Name], [Length], Area_ID) VALUES (-1, 'Placeholder', 0,
 SET IDENTITY_INSERT [Route] OFF;
 
 SET IDENTITY_INSERT [User] ON;
-INSERT INTO [User](ID, [Name], Email, CurrentLocation, Route_ID) VALUES (-1, 'Placeholder', '', '', -1)
+INSERT INTO [User](ID, [Name], Email, [Password], CurrentLocation, Route_ID) VALUES (-1, 'Placeholder', '', 'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAAAXVcbmeFtG+kpfJI7YSs35duJBlq2Gx4cYSlvHlBrTsQAAAAAOgAAAAAIAACAAAACMdwL6e2Y9db8JWGGKxjXM+ppFgy8UhUTvZM/TI3cMDzAAAADQwID0uCAdRwSpBbwQ4bCUh7VRT+yG/T/5MT8re1+COMY6xuoUJ/TGnN5jcZ4cm9VAAAAAYv2yDx27moo4IY/MvVwbFeJb5PORVqY1GPQnI6rMzqFuOgH4XRM8NKfgC9mPl6yFtbwIWE8ciKu0GDxNpN9qwQ==', '', -1)
 SET IDENTITY_INSERT [User] OFF;
 
 SET IDENTITY_INSERT Game ON;
@@ -259,14 +260,14 @@ VALUES
     ('Bron van de Roode beek',			'The tranquil source of the Roode Beek, nestled in lush surroundings.',							(SELECT [Location] FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'),		(SELECT ID FROM RoutePoint WHERE [Name] = 'Bron van de Roode beek'));
 
 
-INSERT INTO [User] ([Name], Email, CurrentLocation, Route_ID)
+INSERT INTO [User] ([Name], Email, [Password], CurrentLocation, Route_ID)
 VALUES 
-    ('Jan Janssen',		'jan.janssen@example.com',		'50.8513, 5.6909',	(SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path')),
-	('Piet Meijer',		'piet.meijer@example.com',		'',					(SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail')),
-    ('Els van Dijk',	'els.vandijk@example.com',		'50.8787, 5.9805',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk')),  
-    ('Karla Hermans',	'karla.hermans@example.com',	'50.9849, 5.9704',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk')),
-    ('Tom Peters',		'tom.peters@example.com',		'51.1582, 5.8361',	(SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail')),  
-    ('Sanne Smit',		'sanne.smit@example.com',		'51.1460, 5.8129',	(SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'));
+    ('Jan Janssen',		'jan.janssen@example.com',		'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAACZ5m5XROIlmnIS/G7YiSIbcblKPvwJLqs8uiLxjhlvUQAAAAAOgAAAAAIAACAAAABBqkF6s5zhCI1HSsRmwAn3wDOBzq+X2thZ3t7ska6wTDAAAAAiszrixKIMVw7bR/UdBrKRlqi3oymsc2ssZixs3v026Dkun7cXw4VSM7332Ea1y1FAAAAAuyPQA1QpNr5DjibeIofiHY3HKH2Sq3o/91ZQ6SxJJu3oS4sovs6L3kX50oPUgNyZaNYXysdvi2mhcRvEq/4ybQ==',	'50.8513, 5.6909',	(SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path')),
+	('Piet Meijer',		'piet.meijer@example.com',		'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAADo5KVliL45dGWpmTf6lqzSHR8ysWsfrA0URQg3DgkrAgAAAAAOgAAAAAIAACAAAAAn/RGi/Xp8Y6NUA2UDzV6xMndaFnAWuTjSe9bisl9n2jAAAAAqUbHOoxr/ExzHJcaSjE2edW1muxo7Ov6grrMKZ/UMnFhDm37BUZrqqnKv3de91w1AAAAA9aMvSfIFf1t0b19lWFiBHE8CdmwPSTcCgQPn2UObcu/Q0+HVaXXk7GWFq8wzsdaoZ2J46usGsLpljMBY6Nq+mA==',	'',					(SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail')),
+    ('Els van Dijk',	'els.vandijk@example.com',		'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAAChb8e2FLNP3wjn2suH4mriYWyY0Eh8qriZyXSSn3rtBwAAAAAOgAAAAAIAACAAAAC0copRmv0+HVrKjGKyNt+nJqtvAGsYRpurMQiQ5UzcajAAAABldVMV2lKotM6HGYdaIqD/0fGX8aF7+OvHSCnH87E04mgXxFhU9BBaLNEM1uhSmEtAAAAAhySRTEzRL+aGln+KWnjZrpbaMjWWtiDnd1sFFx70xmX2d6OThK91GjRVcgvjPaJ+CwHfO/Z66QdtNSUvbD1WJQ==',	'50.8787, 5.9805',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk')),  
+    ('Karla Hermans',	'karla.hermans@example.com',	'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAABw6BiuCHs7zLvs3tRDzsoesexM5uV9FRTT+85mHweJmAAAAAAOgAAAAAIAACAAAAA36wr2cbD45Eu+1+ZFMX9r/zb/C72gIo3P+g7yQty6lTAAAADM4I3GafLvQRg/pEPmAWKs4SGH9rXCTz5nSmf86RcsPyiFMbCAXXpsKP20Hv1hZsFAAAAAN2j0mYhdNqdUaWlQoB+mvYaXkaPsbYN01iC8ZLiGvhOevRBJHCnfV/kjmCSr1rIPCnbuudmOHHA/SZN/K1PzQA==',	'50.9849, 5.9704',	(SELECT ID FROM [Route] WHERE [Name] = 'Heide Walk')),
+    ('Tom Peters',		'tom.peters@example.com',		'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAAC2asF0pMzOY1xRfn2WEuKcBWc9by7rWB46kH/KE+TxJwAAAAAOgAAAAAIAACAAAAAhvOBaHD8tvy+Oyg2aCWe0oxCTa4jn0hc5g28ZcgcLxjAAAACC685ElsqcVtXwWOVvx6VM2JMcWgs53601gGemBidMCgOa7M7O6YGuMXjQsQJJGTdAAAAAUp5KfdpiCBjYX/CVu5CmM16KEsY46EUkDABBxnucy4/vWKK/atTlQdcEt2rk8oNpze3NyA/52CMoKLTqO1j0Uw==',	'51.1582, 5.8361',	(SELECT ID FROM [Route] WHERE [Name] = 'Peel Trail')),  
+    ('Sanne Smit',		'sanne.smit@example.com',		'AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALG9Smm1Is0KK4S+n8oQTpgAAAAACAAAAAAAQZgAAAAEAACAAAABQ3303wbdP6msOaD3akXL2sAvk7uNiJMMyVOFzzDFsqwAAAAAOgAAAAAIAACAAAAA9yTHvbXUYRZS0tcSTjZCYL5gwN6szSJzixZxShp7grDAAAAA9N9df530R6hnV8QUwvnYbi3YqmQZJUacvMlCmiObl6IrNEU8+ftCFHz1xSk7kPDdAAAAAXb3mIftL2jvshs3NV+8kwkO7ZVNiJy+nGC8yFFUT9ZrNw8kTv2MzL2fpEPvKuK1Y1sy3wHdotQYdGyopXDdTBg==',	'51.1460, 5.8129',	(SELECT ID FROM [Route] WHERE [Name] = 'Kempen Path'));
 
 
 INSERT INTO Game ([Name], [Location], [Description], Route_ID)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class User {
         private static SQLDAL SqlDal = SQLDAL.Instance;
@@ -10,20 +11,24 @@ namespace Exotisch_Nederland_Intratuin.Model {
         private int id;
         private string name;
         private string email;
+        private string password;
         private string currentLocation;
         private Route currentRoute;
+        private Role actingRole;
         private List<Role> roles;
         private List<Observation> observations;
         private List<(Question, Answer)> answeredQuestions;
 
 
         //Constructor for creating an User from database
-        public User(int id, string name, string email, string currentLocation, Route currentRoute, List<Role> roles, List<(Question question, Answer answer)> answeredQuestions) {
+        public User(int id, string name, string email, string password, string currentLocation, Route currentRoute, List<Role> roles, List<(Question question, Answer answer)> answeredQuestions) {
             this.id = id;
             this.name = name;
             this.email = email;
+            this.password = password;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
+            this.actingRole = null;
             this.observations = new List<Observation>();
 
             //Filling roles list
@@ -39,11 +44,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating an User from scratch (automatically adds it to the database)
-        public User(string name, string email, string currentLocation, Route currentRoute) {
+        public User(string name, string email, string password, string currentLocation, Route currentRoute) {
             this.name = name;
             this.email = email;
+            this.password = password;
             this.currentLocation = currentLocation;
             this.currentRoute = currentRoute;
+            this.actingRole = null;
             this.roles = new List<Role>();
             this.observations = new List<Observation>();
             this.answeredQuestions = new List<(Question, Answer)>();
@@ -65,9 +72,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
             return SqlDal.GetUserByID(id);
         }
 
-        public void Edit(string name, string email, string currentLocation, Route currentRoute, List<Role> newRoles) {
+        public void Edit(string name, string email, string password, string currentLocation, Route currentRoute, List<Role> newRoles) {
             this.name = name;
             this.email = email;
+            this.password = password;
             this.currentLocation = currentLocation;
 
             if (this.currentRoute != currentRoute) {
@@ -114,6 +122,16 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (roles.Contains(role)) {
                 roles.Remove(role);
             }
+
+            if(actingRole == role) {
+                actingRole = null;
+            }
+        }
+
+        public void SetActiveRole(Role role) {
+            if (roles.Contains(role)) {
+                actingRole = role;
+            }
         }
 
         public void AddObservation(Observation observation) {
@@ -129,8 +147,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public void ValidateObservation(Observation observation) {
-            if (roles.Any(role => role.GetName() == "Validator")) {
-                observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), observation.GetSubmittedByVolunteer() ,true);
+            if (actingRole.GetName() == "Validator") {
+                observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), observation.GetSubmittedByVolunteer(), true);
             }
         }
 
@@ -141,7 +159,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         public void ChangeRoute(Route route) {
-            Edit(GetName(), GetEmail(), GetCurrentLocation(), route, GetRoles());
+            Edit(name, email, password, currentLocation, route, roles);
         }
 
         public void PlayGame(Game game) {
@@ -216,7 +234,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
             foreach (Role role in roles) {
                 roleNames += " " + role.GetName();
             }
-            return $"User {id}: {name}, {email}, Roles ={roleNames}";
+            return $"User {id}: {name}, {email}, {password}, Roles ={roleNames}";
         }
 
 
@@ -228,9 +246,13 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public string GetEmail() { return email; }
 
+        public string GetPassword() { return password; }
+
         public string GetCurrentLocation() { return currentLocation; }
 
         public Route GetRoute() { return currentRoute; }
+
+        public Role GetActingRole() { return actingRole; }
 
         public List<Role> GetRoles() { return roles; }
 
