@@ -1,6 +1,5 @@
 using Exotisch_Nederland_Intratuin.DAL;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Exotisch_Nederland_Intratuin.Model {
     internal class Observation {
@@ -60,8 +59,8 @@ namespace Exotisch_Nederland_Intratuin.Model {
             if (this.name == "") {
                 this.name = specie.GetName();
             }
-            
-            if(this.user.GetActiveRole().GetName() == "Volunteer") {
+
+            if (this.user.GetActiveRole().GetName() == "Volunteer") {
                 this.isSubmittedByVolunteer = true;
             }
 

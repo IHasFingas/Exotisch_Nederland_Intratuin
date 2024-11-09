@@ -185,7 +185,7 @@ VALUES
 
 INSERT INTO [Role] ([Name], [Key])
 VALUES
-	('Hiker',			'0000000000'),
+	('Hiker',			'0000'),
 	('Volunteer',		'gT9cR2vLmD'),
 	('Validator',		'Zk3qY7sHpB');
 

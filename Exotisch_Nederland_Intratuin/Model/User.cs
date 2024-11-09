@@ -123,7 +123,7 @@ namespace Exotisch_Nederland_Intratuin.Model {
                 roles.Remove(role);
             }
 
-            if(activeRole == role) {
+            if (activeRole == role) {
                 activeRole = null;
             }
         }
@@ -142,13 +142,19 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public void EditObservation(Observation observation, string name, string location, string description, byte[] picture, Specie specie, Area area) {
             if (!observation.GetValidated() && observations.Contains(observation)) {
-                observation.Edit(name, location, description, picture, specie, area, this, observation.GetSubmittedByVolunteer(), observation.GetValidated());
+                observation.Edit(name, location, description, picture, specie, area, observation.GetUser(), observation.GetSubmittedByVolunteer(), observation.GetValidated());
             }
         }
 
         public void ValidateObservation(Observation observation) {
             if (activeRole.GetName() == "Validator") {
                 observation.Edit(observation.GetName(), observation.GetLocation(), observation.GetDescription(), observation.GetPicture(), observation.GetSpecie(), observation.GetArea(), observation.GetUser(), observation.GetSubmittedByVolunteer(), true);
+            }
+        }
+
+        public void RemoveObservation(Observation observation) {
+            if (observations.Contains(observation)) {
+                observations.Remove(observation);
             }
         }
 

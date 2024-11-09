@@ -272,6 +272,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                         string name = (string)reader["Name"];
                         string email = (string)reader["Email"];
                         string password = Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String((string)reader["Password"]), null, DataProtectionScope.CurrentUser));
+                        //string password = (string)reader["Password"];
                         string currentLocation = (string)reader["CurrentLocation"];
                         int routeID = (int)reader["Route_ID"];
 
@@ -639,6 +640,7 @@ namespace Exotisch_Nederland_Intratuin.DAL {
                 command.Parameters.AddWithValue("@Name", user.GetName());
                 command.Parameters.AddWithValue("@Email", user.GetEmail());
                 command.Parameters.AddWithValue("@Password", Convert.ToBase64String(ProtectedData.Protect(Encoding.Unicode.GetBytes(user.GetPassword()), null, DataProtectionScope.CurrentUser)));
+                //command.Parameters.AddWithValue("@Password", user.GetPassword());
                 command.Parameters.AddWithValue("@CurrentLocation", user.GetCurrentLocation());
                 command.Parameters.AddWithValue("@Route_ID", user.GetRoute().GetID());
                 command.ExecuteNonQuery();

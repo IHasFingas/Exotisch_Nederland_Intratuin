@@ -2,10 +2,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
 
 namespace Exotisch_Nederland_Intratuin {
     internal class Program {
@@ -24,7 +24,7 @@ namespace Exotisch_Nederland_Intratuin {
         static void Main(string[] args) {
             GetAllData();
 
-            GUI();
+            UI();
 
             Console.WriteLine("Press enter to close");
             Console.ReadKey();
@@ -125,17 +125,21 @@ namespace Exotisch_Nederland_Intratuin {
             Console.WriteLine("Succesfully deleted each object from database");
         }
 
-        public static void GUI() {
+        public static void UI() {
+            Console.WriteLine("\nPress enter to start UI");
+            Console.ReadKey();
+
             bool running = true;
             bool loggedIn = false;
 
             while (running) {
-                Console.WriteLine("\n===Login===");
+                Console.Clear();
+                Console.WriteLine("===Login===");
 
                 Console.Write("Email: ");
                 string email = Console.ReadLine();
 
-                User user = users.First(u => u.GetEmail() == email);
+                User user = users.FirstOrDefault(u => u.GetEmail() == email);
 
                 //Logging in
                 if (user != null) {
@@ -155,6 +159,9 @@ namespace Exotisch_Nederland_Intratuin {
 
                     if (Console.ReadLine().ToUpper() == "Y") {
                         while (!loggedIn) {
+                            Console.Clear();
+                            Console.WriteLine("===Registering new account===");
+
                             Console.Write("Enter a username: ");
                             string name = Console.ReadLine();
 
@@ -175,7 +182,7 @@ namespace Exotisch_Nederland_Intratuin {
 
                             try {
                                 user = new User(name, email, password, location, route);
-                                user.AddRole(roles[1], "000000000", true);
+                                user.AddRole(roles[1], "0000", true);
                                 loggedIn = true;
                             } catch (Exception) {
                                 Console.WriteLine("\nFailed to create a new user. Please try again.");
@@ -185,164 +192,51 @@ namespace Exotisch_Nederland_Intratuin {
                 }
 
                 if (loggedIn) { //Once user has logged in
-                    Console.WriteLine($"\n===Welcome {user.GetName()}==="
+                    Console.Clear();
+                    Console.WriteLine($"===Welcome {user.GetName()}==="
                                       + "\nChoose a role:"
                                       + $"\n\t{string.Join("\n\t", user.GetRoles().Select(r => r.GetName()))}");
 
-                    user.SetActiveRole(user.GetRoles().FirstOrDefault(r => r.GetName() == Console.ReadLine()));
+                    string input = null;
+                    while (!user.GetRoles().Any(r => r.GetName() == input)) {
+                        input = Console.ReadLine();
+                    }
+
+                    user.SetActiveRole(user.GetRoles().FirstOrDefault(r => r.GetName() == input));
 
                     while (loggedIn) {
-                        Console.Write("\n===Homepage==="
-                                      + $"\nOptions:            Active role: {user.GetActiveRole().GetName()}"
-                                      + "\n\tRole options"
-                                      + "\n\tAdd observation"
-                                      + "\n\tView observations"
-                                      + "\n\tStart route"
-                                      + "\n\tLogout"
-                                      + "\n\tStop\n");
+                        Console.Clear();
 
-                        if (user.GetActiveRole().GetName() == "Validator") {
-                            Console.WriteLine("\tValidate observations");
+                        if (user.GetActiveRole().GetName() == "Hiker" || user.GetActiveRole().GetName() == "Volunteer") {
+                            Console.Write("===Homepage==="
+                                          + $"\nOptions:            Active role: {user.GetActiveRole().GetName()}"
+                                          + "\n\tRole options"
+                                          + "\n\tAdd observation"
+                                          + "\n\tView observations"
+                                          + "\n\tStart route"
+                                          + "\n\tLogout"
+                                          + "\n\tStop\n");
+                        } else {
+                            Console.Write("===Homepage==="
+                                          + $"\nOptions:            Active role: {user.GetActiveRole().GetName()}"
+                                          + "\n\tRole options"
+                                          + "\n\tValidate observations"
+                                          + "\n\tLogout"
+                                          + "\n\tStop\n");
                         }
 
                         switch (Console.ReadLine().ToLower()) {
                             case "role options":
-                                Console.WriteLine("\n===Role options==="
-                                                  + "\nOptions:"
-                                                  + "\n\tChange active role"
-                                                  + "\n\tAdd role");
-
-                                switch (Console.ReadLine().ToLower()) {
-                                    case "change active role":
-                                        Console.WriteLine("\n===Changing active role==="
-                                                          + "\nChoose a role:"
-                                                          + $"\n\t{string.Join("\n\t", user.GetRoles().Select(r => r.GetName()))}");
-
-                                        user.SetActiveRole(roles.First(r => r.GetName() == Console.ReadLine()));
-                                        break;
-                                    case "add role":
-                                        Console.WriteLine("\n===Adding role==="
-                                                          + "\nWhich role do you want to add:"
-                                                          + $"\n\t{string.Join("\n\t", roles.Skip(1).Select(r => r.GetName()))}");
-
-                                        Role role = roles.First(r => r.GetName() == Console.ReadLine());
-
-                                        Console.Write("Key: ");
-                                        string key = Console.ReadLine();
-
-                                        if (role.GetKey() == key) {
-                                            user.AddRole(role, key, true);
-                                        } else {
-                                            Console.WriteLine("Incorrect key");
-                                        }
-
-                                        break;
-                                    default:
-                                        Console.WriteLine("Invalid input");
-                                        break;
-                                }
-
+                                RoleOptions(user);
                                 break;
                             case "add observation":
-                                Console.Write("\n===Add observation==="
-                                                  + "\nName (leave empty to use specie name): ");
-
-                                string addObsName = Console.ReadLine();
-
-                                Console.Write("Description: ");
-                                string addObsDescription = Console.ReadLine();
-
-                                Console.Write("Picture: ");
-                                byte[] addObsPicture = Encoding.UTF8.GetBytes(Console.ReadLine());
-
-                                Specie addObsSpecie = null;
-                                while (addObsSpecie == null) {
-                                    Console.Write("Specie name: ");
-                                    addObsSpecie = species.First(s => s.GetName() == Console.ReadLine());
-                                }
-
-                                Area addObsArea = null;
-                                while (addObsArea == null) {
-                                    Console.Write("Area name: ");
-                                    addObsArea = areas.First(a => a.GetName() == Console.ReadLine());
-                                }
-
-                                try {
-                                    Observation observation = new Observation(addObsName, user.GetCurrentLocation(), addObsDescription, addObsPicture, addObsSpecie, addObsArea, user);
-                                } catch (Exception e) {
-                                    Console.WriteLine("Failed to create Observation");
-                                    Console.WriteLine(e.Message);
-                                }
-
+                                AddObservation(user);
                                 break;
                             case "view observations":
-                                Console.Write("\n===View observations==="
-                                                  + $"\n{string.Join("\n", user.GetObservations().Select(o => o.GetName() + "\n\tValidated: " + o.GetValidated()))}");
-
-                                if (user.GetObservations().Count > 0) {
-                                    Console.WriteLine("\nDo you want to edit an observation? (Y/N)");
-
-                                    if (Console.ReadLine().ToUpper() != "Y") {
-                                        break;
-                                    }
-
-                                    Console.Write("\n===Edit observations==="
-                                                  + $"\n{string.Join("\n", user.GetObservations().Select((o, i) => $"{i + 1}: {o.GetName()}\n\tValidated: {o.GetValidated()}"))}"
-                                                  + $"\nEnter the number of the observation you wish to edit: ");
-
-                                    Observation editObs = user.GetObservations()[int.Parse(Console.ReadLine()) - 1];
-
-                                    if (editObs.GetValidated()) {
-                                        break;
-                                    }
-
-                                    Console.WriteLine("\n===Edit observation==="
-                                                      + $"\nEditing {editObs.GetName()}:"
-                                                      + $"\n\t{editObs.GetDescription()}"
-                                                      + $"\n\t{editObs.GetPicture()}"
-                                                      + $"\n\t{editObs.GetSpecie().GetName()}"
-                                                      + $"\n\t{editObs.GetArea().GetName()}");
-
-                                    Console.Write("New name: ");
-                                    string editObsName = Console.ReadLine();
-
-                                    Console.Write("New description: ");
-                                    string editObsDescription = Console.ReadLine();
-
-                                    Console.Write("New picture: ");
-                                    byte[] editObsPicture = Encoding.UTF8.GetBytes(Console.ReadLine());
-
-                                    Specie editObsSpecie = null;
-                                    while (editObsSpecie == null) {
-                                        Console.Write("New specie name: ");
-                                        editObsSpecie = species.First(s => s.GetName() == Console.ReadLine());
-                                    }
-
-                                    Area editObsArea = null;
-                                    while (editObsArea == null) {
-                                        Console.Write("New area name: ");
-                                        editObsArea = areas.First(a => a.GetName() == Console.ReadLine());
-                                    }
-
-                                    editObs.Edit(editObsName, user.GetCurrentLocation(), editObsDescription, editObsPicture, editObsSpecie, editObsArea, user, editObs.GetSubmittedByVolunteer(), editObs.GetValidated());
-
-
-                                    break;
-                                }
-
+                                ViewObservations(user);
                                 break;
                             case "start route":
-                                foreach (RoutePoint routePoint in user.GetRoute().GetRoutePoints()) {
-                                    Console.WriteLine("\n===Walking route==="
-                                                  + $"\nNext route point: {routePoint.GetName()}"
-                                                  + $"\n\t{routePoint.GetLocation()}"
-                                                  + $"\n\nPress enter to see the next route point, or type 'Play game' if you'd like to play a game");
-
-                                    if (Console.ReadLine().ToLower() == "play game") {
-                                        user.PlayGame(user.GetRoute().GetGames()[0]);
-                                    }
-                                }
-
+                                StartRoute(user);
                                 break;
                             case "logout":
                                 loggedIn = false;
@@ -352,34 +246,7 @@ namespace Exotisch_Nederland_Intratuin {
                                 running = false;
                                 break;
                             case "validate observations":
-                                Console.Write("\n===Validate observations==="
-                                                  + $"\n{string.Join("\n", Observation.GetAll().Where(o => !o.GetValidated()).Select((o, i) => $"{i + 1}: {o.GetName()}"))}");
-
-                                Console.WriteLine("\nType the number of the observation you want to view, or type -1 to stop");
-                                int valiObsInput = int.Parse(Console.ReadLine());
-
-                                if (valiObsInput == -1) {
-                                    break;
-                                }
-
-                                Observation valiObs = observations[valiObsInput - 1];
-
-                                Console.WriteLine("\n===Validate observation==="
-                                                  + $"\nEditing {valiObs.GetName()}:"
-                                                  + $"\n\t{valiObs.GetLocation()}"
-                                                  + $"\n\t{valiObs.GetDescription()}"
-                                                  + $"\n\t{valiObs.GetPicture()}"
-                                                  + $"\n\t{valiObs.GetSpecie().GetName()}"
-                                                  + $"\n\t{valiObs.GetArea().GetName()}"
-                                                  + $"\n\t{valiObs.GetUser().GetName()} ({valiObs.GetUser().GetID()})"
-                                                  + $"\n\tSubmitted by volunteer: {valiObs.GetSubmittedByVolunteer()}");
-
-                                Console.WriteLine("Do you want to validate this observation? (Y/N):");
-
-                                if (Console.ReadLine().ToUpper() == "Y") {
-                                    user.ValidateObservation(valiObs);
-                                }
-
+                                ValidateObservations(user);
                                 break;
                             default:
                                 Console.WriteLine("Invalid input");
@@ -387,6 +254,250 @@ namespace Exotisch_Nederland_Intratuin {
                         }
                     }
                 }
+            }
+
+            Console.Clear();
+        }
+
+        private static void RoleOptions(User user) {
+            Console.Clear();
+            Console.WriteLine("===Role options==="
+                              + "\nOptions:"
+                              + "\n\tChange active role"
+                              + "\n\tAdd role");
+
+            switch (Console.ReadLine().ToLower()) {
+                case "change active role":
+                    ChangeActiveRole(user);
+                    break;
+                case "add role":
+                    AddRole(user);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static void ChangeActiveRole(User user) {
+            Console.Clear();
+            Console.WriteLine("===Changing active role==="
+                              + "\nChoose a role:"
+                              + $"\n\t{string.Join("\n\t", user.GetRoles().Select(r => r.GetName()))}");
+
+            string input = null;
+            while (!user.GetRoles().Any(r => r.GetName() == input)) {
+                input = Console.ReadLine();
+            }
+
+            user.SetActiveRole(roles.First(r => r.GetName() == input));
+
+            Console.WriteLine("Successfully changed active role"
+                              + "\nPress enter to return to menu");
+            Console.ReadKey();
+        }
+
+        private static void AddRole(User user) {
+            Console.Clear();
+            Console.WriteLine("===Adding role==="
+                              + "\nWhich role do you want to add:"
+                              + $"\n\t{string.Join("\n\t", roles.Skip(1).Select(r => r.GetName()))}");
+
+            string input = null;
+            while (!roles.Any(r => r.GetName() == input)) {
+                input = Console.ReadLine();
+            }
+
+            Role role = roles.First(r => r.GetName() == input);
+
+            Console.Write("Key: ");
+            string key = Console.ReadLine();
+
+            if (role.GetKey() == key) {
+                user.AddRole(roles.First(r => r.GetName() == input), key, true);
+
+                Console.WriteLine("Successfully added role"
+                                  + "\nPress enter to return to menu");
+            } else {
+                Console.WriteLine("Incorrect key");
+            }
+
+            Console.ReadKey();
+        }
+
+        private static void AddObservation(User user) {
+            Console.Clear();
+            Console.Write("===Add observation==="
+                              + "\nName (leave empty to use specie name): ");
+
+            string name = Console.ReadLine();
+
+            Console.Write("Description: ");
+            string description = Console.ReadLine();
+
+            Console.Write("Picture: ");
+            byte[] picture = Encoding.UTF8.GetBytes(Console.ReadLine());
+
+            Console.Write("Specie name: ");
+            string specieName = null;
+            while (!species.Any(s => s.GetName() == specieName)) {
+                specieName = Console.ReadLine();
+            }
+
+            Specie specie = species.First(s => s.GetName() == specieName);
+
+            Console.Write("Area name: ");
+            string areaName = null;
+            while (!areas.Any(s => s.GetName() == areaName)) {
+                areaName = Console.ReadLine();
+            }
+
+            Area area = areas.First(s => s.GetName() == areaName);
+
+            try {
+                Observation observation = new Observation(name, user.GetCurrentLocation(), description, picture, specie, area, user);
+                Console.WriteLine("Successfully created observation"
+                                  + "\nPress enter to return to menu");
+            } catch (Exception e) {
+                Console.WriteLine("Failed to create Observation");
+                Console.WriteLine(e.Message);
+            }
+
+            Console.ReadKey();
+        }
+
+        private static void ViewObservations(User user) {
+            Console.Clear();
+            Console.Write("===View observations==="
+                              + $"\n{string.Join("\n", user.GetObservations().Select(o => o.GetName() + "\n\tValidated: " + o.GetValidated()))}");
+
+            if (user.GetObservations().Count > 0) {
+                Console.WriteLine("\nDo you want to edit an observation? (Y/N)");
+
+                if (Console.ReadLine().ToUpper() != "Y") {
+                    Console.WriteLine("\nPress enter to return to menu");
+                }
+
+                List<Observation> unvalidatedObservations = user.GetObservations().Where(o => !o.GetValidated()).ToList();
+
+                Console.Clear();
+                Console.Write("===Edit observations==="
+                              + $"\n{string.Join("\n", unvalidatedObservations.Select((o, i) => $"{i + 1}: {o.GetName()}\n\tValidated: {o.GetValidated()}"))}"
+                              + $"\nEnter the number of the observation you wish to edit: ");
+
+                Observation observation = unvalidatedObservations[int.Parse(Console.ReadLine()) - 1];
+
+                EditObservation(user, observation, false);
+            }
+        }
+
+        private static void EditObservation(User user, Observation observation, bool calledByValidator) {
+            if (observation.GetValidated()) {
+                return;
+            }
+
+            Console.Clear();
+            if (calledByValidator) {
+                Console.WriteLine("===Edit observation==="
+                                  + $"\nEditing {observation.GetName()}:"
+                                  + $"\n\t{observation.GetLocation()}"
+                                  + $"\n\t{observation.GetDescription()}"
+                                  + $"\n\t{observation.GetPicture()}"
+                                  + $"\n\t{observation.GetSpecie().GetName()}"
+                                  + $"\n\t{observation.GetArea().GetName()}"
+                                  + $"\n\t{observation.GetUser().GetName()} ({observation.GetUser().GetID()})"
+                                  + $"\n\tSubmitted by volunteer: {observation.GetSubmittedByVolunteer()}");
+            } else {
+                Console.WriteLine("===Edit observation==="
+                                  + $"\nEditing {observation.GetName()}:"
+                                  + $"\n\t{observation.GetDescription()}"
+                                  + $"\n\t{observation.GetPicture()}"
+                                  + $"\n\t{observation.GetSpecie().GetName()}"
+                                  + $"\n\t{observation.GetArea().GetName()}");
+            }
+
+            Console.Write("New name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("New description: ");
+            string description = Console.ReadLine();
+
+            Console.Write("New picture: ");
+            byte[] picture = Encoding.UTF8.GetBytes(Console.ReadLine());
+
+            Console.Write("New specie name: ");
+            string specieName = null;
+            while (!species.Any(s => s.GetName() == specieName)) {
+                specieName = Console.ReadLine();
+            }
+
+            Specie specie = species.First(s => s.GetName() == specieName);
+
+            Console.Write("New area name: ");
+            string areaName = null;
+            while (!areas.Any(s => s.GetName() == areaName)) {
+                areaName = Console.ReadLine();
+            }
+
+            Area area = areas.First(s => s.GetName() == areaName);
+
+            user.EditObservation(observation, name, observation.GetLocation(), description, picture, specie, area);
+            Console.WriteLine("Successfully edited observation"
+                              + "Press enter to return to menu ");
+            Console.ReadKey();
+        }
+
+        private static void StartRoute(User user) {
+            foreach (RoutePoint routePoint in user.GetRoute().GetRoutePoints()) {
+                Console.Clear();
+                Console.WriteLine("===Walking route==="
+                              + $"\nNext route point: {routePoint.GetName()}"
+                              + $"\n\t{routePoint.GetLocation()}"
+                              + $"\n\nEnter\t\tNext route point\n'Stop'\t\tStop route\n'Play game'\tPlay a game");
+
+                if (Console.ReadLine().ToLower() == "play game") {
+                    user.PlayGame(user.GetRoute().GetGames()[0]);
+                }
+            }
+        }
+
+        private static void ValidateObservations(User user) {
+            List<Observation> unvalidatedObservations = Observation.GetAll().Where(o => !o.GetValidated()).ToList();
+
+            Console.Clear();
+            Console.Write("===Validate observations==="
+                              + $"\n{string.Join("\n", unvalidatedObservations.Select((o, i) => $"{i + 1}: {o.GetName()}"))}");
+
+            Console.WriteLine("\nType the number of the observation you want to view, or type -1 to stop");
+            int viewInput = int.Parse(Console.ReadLine());
+
+            if (viewInput == -1) {
+                return;
+            }
+
+            Observation observation = unvalidatedObservations[viewInput - 1];
+
+            Console.Clear();
+            Console.WriteLine("===Validate observation==="
+                              + $"\nEditing {observation.GetName()}:"
+                              + $"\n\t{observation.GetLocation()}"
+                              + $"\n\t{observation.GetDescription()}"
+                              + $"\n\t{observation.GetPicture()}"
+                              + $"\n\t{observation.GetSpecie().GetName()}"
+                              + $"\n\t{observation.GetArea().GetName()}"
+                              + $"\n\t{observation.GetUser().GetName()} ({observation.GetUser().GetID()})"
+                              + $"\n\tSubmitted by volunteer: {observation.GetSubmittedByVolunteer()}");
+
+            Console.WriteLine("Type 'edit' if you want to edit this observation\nDo you want to validate this observation? (Y/N):");
+
+            string validateInput = Console.ReadLine();
+
+            if (validateInput.ToUpper() == "Y") {
+                user.ValidateObservation(observation);
+                Console.WriteLine("Successfully validated observation"
+                                  + "\nPress enter to return to menu");
+                Console.ReadKey();
+            } else if (validateInput.ToLower() == "edit") {
+                EditObservation(user, observation, true);
             }
         }
     }

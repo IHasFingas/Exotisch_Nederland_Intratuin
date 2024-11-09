@@ -86,6 +86,12 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public void RemoveAnsweredBy(User user) {
+            if (answeredBy.Contains(user)) {
+                answeredBy.Remove(user);
+            }
+        }
+
         public override string ToString() {
             return $"Question {id}: {questionText}, Game {game.GetID()}";
         }
@@ -99,6 +105,6 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public Game GetGame() { return game; }
 
-        public List<Answer> GetAnswers() {  return answers; }
+        public List<Answer> GetAnswers() { return answers; }
     }
 }
