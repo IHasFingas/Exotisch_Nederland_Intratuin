@@ -7,14 +7,16 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         private int id;
         private string name;
+        private string description;
         private string location;
         private RoutePoint routePoint;
 
 
         //Constructor for creating a POI from database
-        public POI(int id, string name, string location, RoutePoint routePoint) {
+        public POI(int id, string name, string description, string location, RoutePoint routePoint) {
             this.id = id;
             this.name = name;
+            this.description = description;
             this.location = location;
             this.routePoint = routePoint;
 
@@ -23,35 +25,44 @@ namespace Exotisch_Nederland_Intratuin.Model {
         }
 
         //Constructor for creating a POI from scratch (automatically adds it to the database)
-        public POI(string name, string location, RoutePoint routePoint) {
+        public POI(string name, string description, string location, RoutePoint routePoint) {
             this.name = name;
+            this.description = description;
             this.location = location;
             this.routePoint = routePoint;
 
+            this.id = SqlDal.AddPOI(this);
+
             //Tell routepoint this POI is near them
             this.routePoint.AddPointOfInterest(this);
-            SqlDal.AddPOI(this);
         }
 
 
         //Methods
 
-        public static List<POI> GetAllPOIs() {
+        public static List<POI> GetAll() {
             return SqlDal.GetAllPOIs();
         }
 
-        public static POI GetPOIByID(int id) {
+        public static POI GetByID(int id) {
             return SqlDal.GetPOIByID(id);
         }
 
-        public void EditPOI(string name, string location, RoutePoint routePoint) {
+        public void Edit(string name, string description, string location, RoutePoint routePoint) {
             this.name = name;
+            this.description = description;
             this.location = location;
-            this.routePoint = routePoint;
+
+            if (this.routePoint != routePoint) {
+                this.routePoint.RemovePointOfInterest(this);
+                this.routePoint = routePoint;
+                this.routePoint.AddPointOfInterest(this);
+            }
+
             SqlDal.EditPOI(this);
         }
 
-        public void DeletePOI() {
+        public void Delete() {
             SqlDal.DeletePOI(this);
         }
 
@@ -66,10 +77,10 @@ namespace Exotisch_Nederland_Intratuin.Model {
 
         public string GetName() { return name; }
 
+        public string GetDescription() { return description; }
+
         public string GetLocation() { return location; }
 
         public RoutePoint GetRoutePoint() { return routePoint; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

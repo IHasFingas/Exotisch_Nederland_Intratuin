@@ -28,27 +28,28 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.routes = new List<Route>();
             this.observations = new List<Observation>();
 
-            SqlDal.AddArea(this);
+            this.id = SqlDal.AddArea(this);
         }
 
 
         //Methods
 
-        public static List<Area> GetAllAreas() {
+        public static List<Area> GetAll() {
             return SqlDal.GetAllAreas();
         }
 
-        public static Area GetAreaByID(int id) {
+        public static Area GetByID(int id) {
             return SqlDal.GetAreaByID(id);
         }
 
-        public void EditArea(string name, double size) {
+        public void Edit(string name, double size) {
             this.name = name;
             this.size = size;
+
             SqlDal.EditArea(this);
         }
 
-        public void DeleteArea() {
+        public void Delete() {
             SqlDal.DeleteArea(this);
         }
 
@@ -58,15 +59,28 @@ namespace Exotisch_Nederland_Intratuin.Model {
             }
         }
 
+        public void RemoveRoute(Route route) {
+            if (routes.Contains(route)) {
+                routes.Remove(route);
+            }
+        }
+
         public void AddObservation(Observation observation) {
             if (!observations.Contains(observation)) {
                 observations.Add(observation);
             }
         }
 
+        public void RemoveObservation(Observation observation) {
+            if (observations.Contains(observation)) {
+                observations.Remove(observation);
+            }
+        }
+
         public override string ToString() {
             return $"Area {id}: {name}, {size}ha";
         }
+
 
         //Getters and Setters
 
@@ -75,7 +89,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetName() { return name; }
 
         public double GetSize() { return size; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }

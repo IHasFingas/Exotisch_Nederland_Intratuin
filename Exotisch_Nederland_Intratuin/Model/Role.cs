@@ -25,33 +25,40 @@ namespace Exotisch_Nederland_Intratuin.Model {
             this.key = key;
             this.users = new List<User>();
 
-            SqlDal.AddRole(this);
+            this.id = SqlDal.AddRole(this);
         }
 
 
         //Methods
 
-        public static List<Role> GetALlRoles() {
+        public static List<Role> GetAll() {
             return SqlDal.GetAllRoles();
         }
 
-        public static Role GetRoleByID(int id) {
+        public static Role GetByID(int id) {
             return SqlDal.GetRoleByID(id);
         }
 
-        public void EditRole(string name, string key) {
+        public void Edit(string name, string key) {
             this.name = name;
             this.key = key;
+
             SqlDal.EditRole(this);
         }
 
-        public void DeleteRole() {
+        public void Delete() {
             SqlDal.DeleteRole(this);
         }
 
         public void AddUser(User user) {
             if (!users.Contains(user)) {
                 users.Add(user);
+            }
+        }
+
+        public void RemoveUser(User user) {
+            if (users.Contains(user)) {
+                users.Remove(user);
             }
         }
 
@@ -67,7 +74,5 @@ namespace Exotisch_Nederland_Intratuin.Model {
         public string GetName() { return name; }
 
         public string GetKey() { return key; }
-
-        public void SetID(int id) { this.id = id; }
     }
 }
